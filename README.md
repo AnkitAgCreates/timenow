@@ -71,6 +71,10 @@ node scripts/generate-geo-data.mjs
 
 `node scripts/generate-geo-data.mjs --check` exits non-zero when the committed output is stale. Selection rules, quotas and curated overrides live in the script and are described in `DATA_MODEL.md`.
 
+## Continuous integration
+
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.
+
 ## Project structure
 
 ```text

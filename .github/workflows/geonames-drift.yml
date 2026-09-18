@@ -1,0 +1,32 @@
+name: GeoNames drift check
+
+# Manual only. Downloads the current GeoNames dump and re-runs the generator in
+# --check mode. A failure means the committed data/*.generated.ts no longer match
+# today's GeoNames export (populations, names or zones changed upstream) — an
+# expected drift over time, not a code bug. Regenerate locally when you want to
+# take the update: node scripts/generate-geo-data.mjs
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Generated data matches today's GeoNames export
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Download GeoNames sources (CC BY 4.0)
+        run: |
+          mkdir -p data/sources/geonames
+          cd data/sources/geonames
+          for f in cities15000.zip countryInfo.txt admin1CodesASCII.txt timeZones.txt; do
+            curl -fsSLO "https://download.geonames.org/export/dump/$f"
+          done
+          unzip -o cities15000.zip
+      - run: node scripts/generate-geo-data.mjs --check
