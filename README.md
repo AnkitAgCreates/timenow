@@ -1,0 +1,153 @@
+# TimeNow
+
+SEO-first time utility platform: current time, city clocks, time zone abbreviation pages, a DST-aware converter and online timers.
+
+- **Design source of truth:** `references/visual-prd.png` (layout and visual language only).
+- **Time source of truth:** IANA time zone data via `Intl.DateTimeFormat`, through the time engine in `lib/time/`. Never copy times, offsets or DST states from the PRD mockups.
+
+Status: **Sprint 2 complete** (programmatic SEO: ~470 cities in 96 countries, country pages, UTC/GMT hubs and offset pages, 50 time zone abbreviation pages). See `CLAUDE.md` for the full roadmap.
+
+## Stack
+
+| Concern | Choice |
+| --- | --- |
+| Framework | Next.js 16.3 (App Router, Turbopack), React 19.3 |
+| Language | TypeScript 6.0 (strict, `noUncheckedIndexedAccess`) |
+| Styling | Tailwind CSS 4.3 with tokens in `app/globals.css` |
+| Tests | Vitest 5 (Node environment, runs under `TZ=Pacific/Chatham`) |
+| Lint | ESLint 9 + `eslint-config-next` (core-web-vitals + TypeScript) |
+| Runtime deps | `next`, `react`, `react-dom` only |
+| Data | GeoNames (CC BY 4.0) via `scripts/generate-geo-data.mjs`; time facts from IANA tzdata through `Intl` |
+
+TypeScript is pinned to 6.0 and ESLint to 9 because `typescript-eslint` does not yet support TypeScript 7 and the Next ESLint plugins do not yet support ESLint 10.
+
+## Local setup
+
+Requires Node.js ≥ 22.12.
+
+```bash
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+Open http://localhost:3000.
+
+### Environment variables
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Canonical origin for canonicals, sitemaps, robots and Open Graph. No trailing slash. **Required in production.** |
+| `NEXT_PUBLIC_ALLOW_INDEXING` | Must be exactly `true` on production. Any other value forces `noindex` everywhere and `Disallow: /` in robots.txt. |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Optional GA4 ID. When empty, no analytics script loads and `track()` is a no-op. |
+
+`NEXT_PUBLIC_*` values are inlined at build time, so rebuild after changing them.
+
+## Scripts
+
+| Command | What it does |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` | Production build (static generation + ISR) |
+| `npm run start` | Serve the production build |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint over the repo |
+| `npm test` | Vitest unit tests (time engine, DST classification, USNO sun fixtures, data integrity, search, bootstrap parity) |
+| `npm run test:e2e` | Playwright smoke tests against two production builds (indexing on and off), desktop + mobile |
+| `npm run verify` | typecheck → lint → test → build |
+| `npm run verify:full` | `verify` + end-to-end tests |
+
+## Regenerating the city and country data
+
+City and country records are generated from GeoNames (Creative Commons Attribution 4.0; the footer carries the required credit). The raw files are git-ignored; the generated TypeScript is committed.
+
+```bash
+mkdir -p data/sources/geonames && cd data/sources/geonames && curl -O https://download.geonames.org/export/dump/cities15000.zip && curl -O https://download.geonames.org/export/dump/countryInfo.txt && curl -O https://download.geonames.org/export/dump/admin1CodesASCII.txt && curl -O https://download.geonames.org/export/dump/timeZones.txt && unzip -o cities15000.zip && cd -
+```
+
+```bash
+node scripts/generate-geo-data.mjs
+```
+
+`node scripts/generate-geo-data.mjs --check` exits non-zero when the committed output is stale. Selection rules, quotas and curated overrides live in the script and are described in `DATA_MODEL.md`.
+
+## Project structure
+
+```text
+app/                    Routes (Server Components by default)
+  page.tsx              Homepage
+  time/[city]/          City template
+  countries/[country]/  Country template (+ indexable hub)
+  utc/, gmt/            UTC and GMT hubs (canonical for the UTC/GMT abbreviations)
+  utc/[offset]/         UTC offset template (curated: offsets in real use)
+  timezones/[timezone]/ Abbreviation template (+ hub)
+  timer/[duration]/     Timer template (+ hub)
+  convert/[pair]/       Converter template (allowlist only)
+  converter/ world-clock/ tools/   Interim noindex hubs
+  sitemap.xml/ sitemaps/[file]/    Sitemap index + chunked child sitemaps
+  robots.ts  not-found.tsx  api/search-index/
+components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
+data/                   Structured records: cities + countries (generated), timezones (+ timezones-world), timers, converters, tools
+scripts/                generate-geo-data.mjs (GeoNames → data/*.generated.ts, lib/time/zone-names.generated.ts)
+lib/
+  time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
+  clock/                Live-clock runtime: inline bootstrap, stores, formatting
+  content/              Data-driven page copy and FAQs
+  data/                 Accessors over data/
+  seo/                  Metadata, JSON-LD, sitemap registry, site config
+  search/               Search index builder + matcher
+  timezones/            CST/CDT-style status logic
+types/                  Data model types
+proxy.ts                Lowercase URL enforcement
+references/             Visual PRD
+seo/keyword-map.md      Keyword → canonical URL map
+```
+
+## Routes (after Sprint 2)
+
+| Route | Pages | Indexable |
+| --- | --- | --- |
+| `/` | 1 | yes |
+| `/time/[city]/` | ~470 generated cities (all 25 Sprint 1 seeds kept) | yes |
+| `/countries/` and `/countries/[country]/` | hub + 96 countries | yes |
+| `/utc/`, `/gmt/` | UTC and GMT hubs with an offsets directory | yes |
+| `/utc/[offset]/` | ~40 curated offsets (only those used somewhere in the dataset) | yes |
+| `/timezones/[timezone]/` | 50 abbreviations (11 core + 39 world; UTC/GMT live at their hubs) | yes |
+| `/timer/[duration]/` | 12 curated presets | yes |
+| `/convert/[from]-to-[to]/` | 8 allowlisted pairs | yes |
+| `/timezones/`, `/timer/`, `/converter/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
+
+Unknown slugs return 404 (`dynamicParams = false`). Mixed-case URLs 308-redirect to lowercase; timer spelling variants (`/timer/60-minutes/`) 308-redirect to the canonical preset; `/timezones/utc/` → `/utc/`, `/timezones/gmt/` → `/gmt/`, and `/gmt/gmt-minus-5/` → `/utc/utc-minus-5/`.
+
+## Common tasks
+
+Details and field definitions are in `DATA_MODEL.md` and `SEO_ARCHITECTURE.md`.
+
+- **Add a city:** add its GeoNames id to `MUST_INCLUDE` (or raise the country quota) in `scripts/generate-geo-data.mjs`, regenerate, and if the zone is new add it to `ZONE_METADATA` in `lib/time/zone-metadata.ts` (dated eras if its rules changed). Run `npm test`.
+- **Add a country:** give it a quota in the script (its capital is included automatically) and regenerate; the country page appears with the first city.
+- **Add a time zone page:** append a `TimeZoneEntry` to `data/timezones-world.ts`. The data-integrity tests verify every listed zone really switches or stays fixed as described.
+- **UTC offset pages:** derived automatically from the zones in use (`lib/data/offsets.ts`); nothing to add by hand.
+- **Add a timer page:** append a `TimerPreset` to `data/timers.ts` with a canonical slug (`timerSlugForSeconds`). Alias redirects are generated automatically.
+- **Add a converter page:** append a pair to `data/converters.ts`. Only listed pairs are built and indexed.
+- **Control indexation:** per record with `indexable`, globally with `NEXT_PUBLIC_ALLOW_INDEXING`.
+- **Sitemaps:** generated from indexable records by `lib/seo/sitemap.ts`, chunked at 10,000 URLs per file. When indexing is disabled, every sitemap URL returns 404.
+
+### End-to-end tests
+
+`npm run test:e2e` runs `e2e/serve-builds.mjs`, which builds the site twice (sequentially) into `.next-e2e/indexed` and `.next-e2e/noindex`, serves them on ports 3310 and 3311, and runs Playwright:
+
+- **desktop** and **mobile** (Pixel 7) projects: reference pages, hydration/console errors, horizontal overflow, DST-correct clocks at frozen instants, search, timer, mobile menu, redirects and 404s, SEO tags and sitemaps.
+- **kill-switch** project: robots.txt, sitemap 404s and `noindex` on a build with indexing off.
+
+Locally the installed Google Chrome is used. In CI, run `npx playwright install chromium` first. Set `PW_REUSE_SERVER=1` to reuse already-running servers.
+
+The production server logs `Error: Internal: NoFallbackError` when an unknown slug hits a route with `dynamicParams = false`. That is Next.js's internal 404 signal; the response is a correct 404.
+
+## Verification checklist
+
+`npm run verify`, then with a production build:
+
+- `/sitemap.xml` and `/sitemaps/*.xml` list only indexable URLs with the production origin
+- `/robots.txt` references the sitemap (and disallows everything when indexing is off)
+- Each reference page has a unique title, description, canonical and one H1
+- Unknown slugs and unapproved converter pairs return 404

@@ -1,0 +1,32 @@
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+/build
+
+# testing
+/coverage
+/.next-e2e/
+/playwright-report/
+/test-results/
+
+# misc
+.DS_Store
+*.pem
+*.log
+
+# env files
+.env*
+!.env.example
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# shareable bundles
+/exports
+
+# raw third-party data (regenerate with scripts/generate-geo-data.mjs)
+/data/sources/

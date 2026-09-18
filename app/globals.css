@@ -1,0 +1,135 @@
+@import 'tailwindcss';
+
+/*
+ * TimeNow design tokens — see DESIGN_SYSTEM.md.
+ * Every colour, radius and shadow used in components comes from here.
+ */
+@theme {
+  --color-primary: #2563eb;
+  --color-primary-dark: #0f3f8c;
+  --color-primary-hover: #1d4ed8;
+  --color-heading: #0f2344;
+  --color-body: #334155;
+  --color-muted: #64748b;
+  --color-border: #e2e8f0;
+  --color-border-strong: #cbd5e1;
+  --color-surface: #f8fafc;
+  --color-blue-surface: #eff6ff;
+  --color-blue-border: #bfdbfe;
+  --color-white: #ffffff;
+  --color-success: #16a34a;
+  --color-success-dark: #15803d;
+  --color-success-surface: #f0fdf4;
+  --color-warning: #f59e0b;
+  --color-warning-surface: #fffbeb;
+  --color-warning-text: #92400e;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+
+  --shadow-card: 0 1px 2px rgb(15 35 68 / 0.04), 0 1px 3px rgb(15 35 68 / 0.05);
+  --shadow-raised: 0 4px 12px rgb(15 35 68 / 0.08), 0 1px 3px rgb(15 35 68 / 0.06);
+
+  --text-clock-xl: clamp(2.75rem, 11vw, 4.75rem);
+  --text-clock-lg: clamp(2.5rem, 9vw, 3.5rem);
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 4.5rem;
+  }
+
+  body {
+    @apply bg-white font-sans text-body antialiased;
+    font-feature-settings: 'cv11';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-heading;
+    text-wrap: balance;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum', 'cv11';
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 48rem) {
+    padding-inline: 1.5rem;
+  }
+}
+
+@utility card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+/* Fullscreen clock presentation (see ClockControls). */
+[data-clock-panel]:fullscreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+  padding: 2rem;
+}
+
+[data-clock-panel]:fullscreen [data-clock-time] {
+  font-size: clamp(4rem, 16vw, 14rem);
+}
+
+[data-clock-panel]:fullscreen [data-clock-date] {
+  font-size: clamp(1.25rem, 3vw, 2.25rem);
+}
+
+/*
+ * Image-free city artwork: a restrained skyline silhouette on a light-blue
+ * surface. Replaces remote city photography from the Visual PRD at ~1 KB.
+ */
+.skyline {
+  background-color: var(--color-blue-surface);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='xMidYMax slice'%3E%3Cpath fill='%23bfdbfe' d='M0 60V42h8v-8h6v10h7V30h5v-6h4v6h5v16h6V36h9v24h4V20h3v-8h2v8h3v40h5V38h8v-8h6v30h4V26h10v34h5V44h6V32h4v-6h3v6h4v28h6V40h7v20h4V16h2V6h2v10h2v44h6V36h9v24h5V46h8V28h6v32h4V38h7v22h6V30h3v-6h4v6h3v30h5V42h9v18h4V34h8v26h5V44h6v16h7V40h6v20z'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #f5f9ff 0%, #e6f0ff 100%);
+  background-repeat: repeat-x, no-repeat;
+  background-position: bottom center, center;
+  background-size: auto 70%, cover;
+}
+
+.skyline-alt {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' preserveAspectRatio='xMidYMax slice'%3E%3Cpath fill='%23bfdbfe' d='M0 60V46h10V34h6v26h5V22h8v-6h4v44h6V40h6v-8h5v28h7V28h3V18h4v10h3v32h6V44h8v16h5V32h9v28h4V24h4v-10h3v10h3v36h6V42h7v18h5V36h6v-6h5v30h4V20h8v40h6V46h9v14h4V30h5v-8h3v8h4v30h6V40h8v20h5V34h7v26h6V44h8v16h7V38h6v22z'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #f5f9ff 0%, #e6f0ff 100%);
+}
