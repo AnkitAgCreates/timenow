@@ -114,6 +114,15 @@ export default async function TimerPage({ params }: Props) {
           <Section id="all-timers" title="All timers">
             <TimerDirectory currentSlug={preset.slug} compact />
           </Section>
+
+          <Section id="other-tools" title="Stopwatch and alarm">
+            <LinkList
+              items={[
+                { label: 'Online Stopwatch', href: routes.stopwatch(), detail: 'Count up and record laps' },
+                { label: 'Online Alarm Clock', href: routes.alarm(), detail: 'Ring at a time of day' },
+              ]}
+            />
+          </Section>
         </div>
       </div>
     </>

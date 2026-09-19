@@ -77,6 +77,7 @@ export default async function CityPage({ params }: Props) {
         detail: 'Time zone converter',
       })),
     { label: 'Time zone converter', href: routes.converterHub(), detail: `Convert a time from ${city.name}` },
+    { label: 'Meeting planner', href: `${routes.meetingPlanner()}?z=${encodeURIComponent(city.timezone)}`, detail: `Find meeting hours with ${city.name}` },
   ];
 
   return (

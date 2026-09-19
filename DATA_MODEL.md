@@ -194,6 +194,12 @@ Rules enforced by `lib/data/converters.test.ts`: every corridor yields exactly b
 
 **To add an approved converter page:** add a corridor (both directions appear). Unlisted pairs 404 (`dynamicParams = false`).
 
+### Tool logic — `lib/tools/`
+
+Pure, unit-tested modules with no React or DOM: `date-difference.ts` (days/weeks/weekdays, calendar breakdown with month clamping, add days), `hours-calculator.ts` (shifts with overnight handling and breaks, decimal hours, pay), `military-time.ts` (flexible parsing, 12/24/military formats, spoken form, 24-row chart), `unix-timestamp.ts` (seconds vs milliseconds detection, DST-correct wall-time conversion through the time engine, relative time), `stopwatch.ts` (formatting, lap rows), `alarm.ts` (next occurrence, once-per-minute firing, display). The UI components in `components/tools/`, `components/stopwatch/`, `components/alarm/` and `components/meeting/` only call these.
+
+Persisted client state (world clock list, alarms) uses `lib/clock/persisted.ts`: a localStorage-backed external store read with `useSyncExternalStore`, so the server and the first client render agree (null → defaults) and the saved value replaces it after hydration without a state-in-effect.
+
 ### Tools and converter zone options
 
 - `data/tools.ts`: tool registry. `status: 'planned'` tools are never linked.
@@ -210,6 +216,7 @@ Rules enforced by `lib/data/converters.test.ts`: every corridor yields exactly b
 | `lib/time/transitions.test.ts` | Transition wording, difference periods, CST/CDT/IST/GMT status text |
 | `lib/data/data-integrity.test.ts` | Every record and every geography region validated against raw tzdata offsets; allowlist; sitemap uniqueness and the indexing kill switch |
 | `lib/data/dataset.test.ts` | Generated data rules: size, seed cities kept, districts excluded, slug collisions, curated names, zone validity, country consistency (capitals, neighbours, zone groups), offset-page curation, generated-file provenance |
+| `lib/tools/tools.test.ts` | Calculator logic: ISO/leap-day validation, day and weekday counts, calendar breakdown (31 Jan → 1 Mar = 1 month 1 day), overnight shifts and breaks, decimal hours and pay, military time parsing/formatting/spoken form, timestamp unit detection and DST-correct wall times, relative time, stopwatch formatting and lap statistics, alarm scheduling and once-per-minute firing |
 | `lib/data/converters.test.ts` | Converter corridors and sides: both directions, bounds, kinds, no pointless pairs, slug shadowing, related pages, titles/descriptions per kind, DST-boundary correctness (London → New York in March), hub copy |
 | `lib/data/timers.test.ts` | Timer curation rules: 20–40 presets, unique durations/taglines, ≥ 3 use cases, preset-specific FAQ first, related links valid, alias spellings, grouped directory, description length, hub copy from data |
 | `lib/content/country-offset.test.ts` | Country zone groups, descriptions and FAQs (India, United States, Australia, France); offset usage classification and FAQs (UTC-5, UTC+1, Morocco) |

@@ -19,7 +19,10 @@ export const routes = {
   converterHub: () => '/converter/',
   convert: (from: string, to: string) => `/convert/${from}-to-${to}/`,
   tools: () => '/tools/',
+  tool: (slug: string) => `/tools/${slug}/`,
   meetingPlanner: () => '/meeting-planner/',
+  alarm: () => '/alarm/',
+  stopwatch: () => '/stopwatch/',
 } as const;
 
 /** Abbreviation entries served by a dedicated hub instead of /timezones/[slug]/. */

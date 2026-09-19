@@ -66,6 +66,10 @@ The `card` utility = white background + `border` + `radius-lg` + `shadow-card`.
 | `OffsetsDirectory` | `components/timezone` | Table of every UTC offset with a live time (Sprint 2) |
 | `OffsetToLocal` | `components/converter` | Client island comparing a fixed offset with the visitor’s zone (Sprint 2) |
 | `Timer` | `components/timer` | Ring, Start/Pause/Resume, Reset, sound toggle, presets, custom |
+| `WorldClock` | `components/world-clock` | Add via `ZonePicker`, reorder, remove, reset; list persisted with `lib/clock/persisted` (Sprint 5) |
+| `MeetingPlanner` | `components/meeting` | 2–4 pickers, date/length/working hours, 24-column hour grid with per-participant local times and day shifts, suggested slots, copy summary / share link (Sprint 5) |
+| `Stopwatch`, `AlarmClock` | `components/stopwatch`, `components/alarm` | Stopwatch with laps and keyboard shortcuts; alarms list with on/off switches, ringing banner, snooze, limitation callout (Sprint 5) |
+| `ToolPageShell`, `DateDifference`, `HoursCalculator`, `MilitaryTime`, `UnixTimestamp` | `components/tools` | Shared tool-page layout (H1, tool, how-to, FAQs, more tools) and the four calculators (Sprint 5) |
 | `TimeConverter`, `ZonePicker` | `components/converter` | Specific-time converter with swap; each side is a searchable combobox over cities, abbreviations and UTC offsets (common zones listed when empty; the site search index is fetched on first use) — Sprint 4 |
 | `ToolCard` | `components/tools` | Live tools link; planned tools show "Soon" and are not links |
 | `Breadcrumbs`, `Section`, `SectionTabs`, `FAQ`, `InfoRow`, `InfoTile`, `Callout`, `LinkList`, `Icon` | `components/ui` | Shared primitives |

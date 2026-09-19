@@ -207,6 +207,12 @@ export default async function ConvertPage({ params }: Props) {
               >
                 Convert another time zone <Icon name="arrow-right" className="size-4" />
               </Link>
+              <Link
+                href={`${routes.meetingPlanner()}?z=${encodeURIComponent(`${from.zone},${to.zone}`)}`}
+                className="mt-2 flex h-11 items-center justify-center gap-2 rounded-lg border border-border bg-white text-sm font-medium text-heading hover:bg-surface"
+              >
+                Plan a meeting across {from.label} and {to.label}
+              </Link>
             </Section>
           </div>
         </div>

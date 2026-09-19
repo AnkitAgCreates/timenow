@@ -22,6 +22,11 @@ SEO is part of the product architecture: every indexable page is a data record r
 | Timer hub (Sprint 3) | `/timer/` | Online Timer – Free Countdown Timer with Alarm | Online Timer | WebApplication, BreadcrumbList, FAQPage | static |
 | Converter hub (Sprint 4) | `/converter/` | Time Zone Converter – Convert Time Between Cities and Time Zones | Time Zone Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | City converter (Sprint 4) | `/convert/[city]-to-[city]/` | {City} to {City} Time Converter – Time Difference & Best Time to Call | {City} to {City} Time Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
+| World Clock (Sprint 5) | `/world-clock/` | World Clock – Current Time in Cities Around the World | World Clock | WebApplication, BreadcrumbList, FAQPage | 1h |
+| Meeting Planner (Sprint 5) | `/meeting-planner/` | Meeting Planner – Find a Meeting Time Across Time Zones | Meeting Planner | WebApplication, BreadcrumbList, FAQPage | 1h |
+| Alarm / Stopwatch (Sprint 5) | `/alarm/`, `/stopwatch/` | Online Alarm Clock – …, Online Stopwatch – … | Online Alarm Clock / Online Stopwatch | WebApplication, BreadcrumbList, FAQPage | static |
+| Calculators (Sprint 5) | `/tools/[tool]/` | {Tool} – {benefit} | {Tool} | WebApplication, BreadcrumbList, FAQPage | static / 1h |
+| Tools hub, Time zones hub (Sprint 5) | `/tools/`, `/timezones/` | Time Tools – …, Time Zone Abbreviations – … | Time Tools / Time Zone Abbreviations | WebPage, BreadcrumbList, FAQPage | static / 1h |
 | Converter | `/convert/[a]-to-[b]/` | {A} to {B} Converter – {A name} to {B region} | {A} to {B} Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | Country (Sprint 2) | `/countries/[country]/` | Current Time in {Country} – Time Zones, DST & Major Cities | Current Time in {Country} | WebPage, BreadcrumbList, FAQPage | 1h |
 | Countries hub (Sprint 2) | `/countries/` | Current Time by Country – World Time Zones Directory | Current Time by Country | WebPage, BreadcrumbList | 1h |
@@ -53,7 +58,7 @@ Indexation after Sprint 2:
 
 | Indexed | Not indexed (noindex, follow) |
 | --- | --- |
-| `/`, ~470 city pages, `/countries/` + 96 country pages, `/utc/`, `/gmt/`, ~40 UTC offset pages, 50 time zone pages, `/timer/` + 30 timer pages, `/converter/` + 108 zone-pair and 48 city-pair conversion pages | `/timezones/`, `/world-clock/`, `/tools/` (functional interim hubs; indexed in their own sprints), 404 page, `/api/*` |
+| `/`, ~470 city pages, `/countries/` + 96 country pages, `/utc/`, `/gmt/`, ~40 UTC offset pages, `/timezones/` + 50 time zone pages, `/timer/` + 30 timer pages, `/converter/` + 108 zone-pair and 48 city-pair conversion pages, `/world-clock/`, `/meeting-planner/`, `/alarm/`, `/stopwatch/`, `/tools/` + 4 calculators | 404 page, `/api/*`, meeting-planner share links (query strings canonicalise to `/meeting-planner/`) |
 
 Planned features (meeting planner, alarm, stopwatch, date tools) have **no routes and are not linked**, so crawlers never find placeholder pages.
 
@@ -97,7 +102,8 @@ All five reference pages' JSON-LD was parsed and validated during Sprint 1 verif
 | --- | --- |
 | City | Comparison cities (difference table), nearby cities (by distance), its time zone pages (`getTimezonesForZone`), related approved converters, converter hub. Country page once `published` |
 | Time zone | Associated cities (seasonal + year-round zones), related abbreviations (comparison table), approved converters involving it, hub |
-| Timer | Quick-preset chips, related timers (nearest lengths + curated pairs such as 25 ↔ 5 minutes), the grouped directory of all timers, timer hub. Stopwatch and alarm links are added when those routes ship (Sprint 5) |
+| Timer | Quick-preset chips, related timers (nearest lengths + curated pairs such as 25 ↔ 5 minutes), the grouped directory of all timers, timer hub, stopwatch and alarm (Sprint 5) |
+| Tool pages (Sprint 5) | Every other live tool ("More time tools"), the tools hub; the world clock links countries, abbreviations, UTC, converter and planner; converter pairs and city pages link the meeting planner pre-filled with their zones |
 | Converter | Both sides' pages (abbreviation pages or city pages), the reverse pair, related approved converters of the same kind, converter hub. City pages link their city-to-city converters; abbreviation and offset pages link their zone converters |
 | Country (Sprint 2) | Its cities (table + cards), the abbreviation pages for each zone group, neighbouring countries, converter hub, countries hub. City pages link back through the breadcrumb (now a real link) |
 | UTC offset (Sprint 2) | Cities on the offset, abbreviation pages that denote it, their converters, neighbouring offsets, the UTC and GMT hubs; the hubs' offsets directory links every offset page |
@@ -117,5 +123,5 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 1. **`/utc/` and `/gmt/` are canonical** (decided before Sprint 2, implemented in Sprint 2): the `/timezones/` variants redirect, and the hubs add the offsets directory.
 2. **Daylight abbreviation pages (EDT/CDT/MDT/PDT, and now CEST/EEST/WEST/ACDT/AEDT/NZDT/ADT/NDT/AKDT).** Indexable. If Search Console shows them cannibalising the standard pages, canonicalise them to the standard page instead.
-3. **Hub indexation.** `/countries/`, `/timer/` (Sprint 3) and `/converter/` (Sprint 4: searchable converter, corridor directory, city pairs, DST notes, FAQs) are indexable. `/timezones/`, `/world-clock/` and `/tools/` become indexable in Sprint 5 once they have unique, useful content.
+3. **Hub indexation.** Every hub is indexable since Sprint 5: `/countries/`, `/timer/`, `/converter/`, `/timezones/` (abbreviations grouped by region with live times and FAQs), `/world-clock/` (the tool itself plus popular cities and FAQs) and `/tools/` (all ten tools with a which-tool guide and FAQs). No route is noindex except the 404 page and `/api/*`.
 4. **Country vs city intent.** "india time now" targets `/countries/india/`; "delhi time" targets `/time/new-delhi/`. Both pages link to each other.

@@ -46,7 +46,8 @@ test.describe('SEO with indexing enabled', () => {
       urls.push(...[...(await response.text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]!.replace(ORIGIN, '')));
     }
     for (const reference of REFERENCE_PAGES) expect(urls).toContain(reference.path);
-    for (const hub of ['/timezones/', '/world-clock/', '/tools/']) expect(urls).not.toContain(hub);
+    // Sprint 5: every hub and tool page is indexable.
+    for (const path of ['/timezones/', '/world-clock/', '/tools/', '/meeting-planner/', '/alarm/', '/stopwatch/', '/tools/date-difference/', '/tools/hours-calculator/', '/tools/military-time-converter/', '/tools/unix-timestamp/']) expect(urls).toContain(path);
     // Sprint 4: the converter hub is indexable; zone and city conversion pages are curated.
     for (const path of ['/converter/', '/convert/est-to-pst/', '/convert/london-to-new-york/']) expect(urls).toContain(path);
     // Sprint 3: the timer hub is indexable and curated presets grew to 30.

@@ -5,7 +5,7 @@ SEO-first time utility platform: current time, city clocks, time zone abbreviati
 - **Design source of truth:** `references/visual-prd.png` (layout and visual language only).
 - **Time source of truth:** IANA time zone data via `Intl.DateTimeFormat`, through the time engine in `lib/time/`. Never copy times, offsets or DST states from the PRD mockups.
 
-Status: **Sprint 4 complete** (converter: indexable hub with a city/zone/offset picker, ~110 curated time zone conversion pages and ~50 city-to-city pages), on top of Sprints 0–3 (reference pages, ~470 cities, 96 countries, UTC/GMT hubs and offsets, 50 abbreviation pages, timer hub + 30 timers). See `CLAUDE.md` for the full roadmap.
+Status: **Sprint 5 complete** (product expansion: World Clock, Meeting Planner, Alarm, Stopwatch, Date Difference, Hours Calculator, Military Time and Unix Timestamp tools; every hub indexable), on top of Sprints 0–4 (reference pages, ~470 cities, 96 countries, UTC/GMT hubs and offsets, 50 abbreviation pages, 30 timers, 156 conversion pages). See `CLAUDE.md` for the full roadmap.
 
 ## Stack
 
@@ -88,7 +88,10 @@ app/                    Routes (Server Components by default)
   timer/[duration]/     Timer template (+ hub)
   convert/[pair]/       Conversion template: time zone pairs and city pairs (corridor allowlist)
   converter/            Converter hub (indexable; city/zone/offset picker)
-  world-clock/ tools/   Interim noindex hubs
+  world-clock/          World Clock (add/remove places, saved locally)
+  meeting-planner/      Meeting Planner (2–4 places, hour grid, suggested slots, share link)
+  alarm/ stopwatch/     Alarm clock and stopwatch
+  tools/                Tools hub + date-difference, hours-calculator, military-time-converter, unix-timestamp
   sitemap.xml/ sitemaps/[file]/    Sitemap index + chunked child sitemaps
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
@@ -96,6 +99,8 @@ data/                   Structured records: cities + countries (generated), time
 scripts/                generate-geo-data.mjs (GeoNames → data/*.generated.ts, lib/time/zone-names.generated.ts)
 lib/
   time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
+  tools/                Pure calculator logic (date difference, hours, military time, Unix timestamps, stopwatch, alarm)
+  clock/                Live clock store, persisted stores (localStorage via useSyncExternalStore), beep
   clock/                Live-clock runtime: inline bootstrap, stores, formatting
   content/              Data-driven page copy and FAQs
   data/                 Accessors over data/
@@ -121,7 +126,9 @@ seo/keyword-map.md      Keyword → canonical URL map
 | `/timer/` and `/timer/[duration]/` | hub + 30 curated presets (30 s – 24 h) | yes |
 | `/converter/` | hub with the searchable converter | yes |
 | `/convert/[from]-to-[to]/` | curated corridors, both directions: ~110 time zone pairs (IST, EST, PST, CST, MST, GMT, UTC, BST, CET, EET, AEST, NZST, JST, SGT, HKT, GST, PHT) and ~50 city pairs (London, New York, Los Angeles, Chicago, Paris, Berlin, Dubai, New Delhi, Singapore, Hong Kong, Tokyo, Sydney, Toronto) | yes |
-| `/timezones/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
+| `/world-clock/`, `/meeting-planner/`, `/alarm/`, `/stopwatch/` | tools (Sprint 5) | yes |
+| `/tools/date-difference/`, `/tools/hours-calculator/`, `/tools/military-time-converter/`, `/tools/unix-timestamp/` | calculators (Sprint 5) | yes |
+| `/timezones/`, `/tools/` | hubs (indexable since Sprint 5) | yes |
 
 Unknown slugs return 404 (`dynamicParams = false`). Mixed-case URLs 308-redirect to lowercase; timer spelling variants (`/timer/60-minutes/`) 308-redirect to the canonical preset; `/timezones/utc/` → `/utc/`, `/timezones/gmt/` → `/gmt/`, and `/gmt/gmt-minus-5/` → `/utc/utc-minus-5/`.
 

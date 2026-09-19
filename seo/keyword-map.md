@@ -134,14 +134,17 @@ Pattern for every country: `time in {country}`, `{country} time now`, `what time
 
 Daylight variants ("ist to edt") intentionally map to the standard-abbreviation page, which follows real local time and explains EST vs EDT, rather than creating near-duplicate `/convert/ist-to-edt/` pages.
 
-## Tools (planned, Sprint 5)
+## Tools — live since Sprint 5
 
 | Keywords | Canonical |
 | --- | --- |
-| meeting planner, time zone meeting planner | `/meeting-planner/` |
-| online alarm clock | `/alarm/` |
-| online stopwatch | `/stopwatch/` |
-| date calculator, days between dates | `/tools/date-difference/` |
-| hours calculator | `/tools/hours-calculator/` |
-| military time converter | `/tools/military-time-converter/` |
-| unix timestamp converter | `/tools/unix-timestamp/` |
+| world clock, world time clock, current time around the world | `/world-clock/` |
+| meeting planner, time zone meeting planner, best time to meet across time zones | `/meeting-planner/` (share links use query strings and canonicalise here) |
+| online alarm clock, set alarm online, alarm clock online | `/alarm/` |
+| online stopwatch, stopwatch with laps | `/stopwatch/` |
+| date calculator, days between dates, date difference calculator, how many days until | `/tools/date-difference/` |
+| hours calculator, work hours calculator, time card calculator | `/tools/hours-calculator/` |
+| military time converter, military time chart, 24 hour time converter | `/tools/military-time-converter/` |
+| unix timestamp converter, epoch converter, epoch time to date | `/tools/unix-timestamp/` |
+| time tools, online time tools | `/tools/` |
+| time zone abbreviations, list of time zone abbreviations | `/timezones/` |

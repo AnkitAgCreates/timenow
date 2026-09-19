@@ -7,7 +7,7 @@ import { loadSearchIndex } from '@/lib/search/client';
 import { flattenResults, searchItems, type SearchItem } from '@/lib/search/match';
 import { getZoneLabel } from '@/lib/time';
 
-export type ZoneChoice = { zone: string; label: string };
+export type ZoneChoice = { zone: string; label: string; detail?: string };
 
 type Suggestion = ZoneChoice & { detail: string; key: string };
 
@@ -73,7 +73,7 @@ export function ZonePicker({
   }, [query, items, instant]);
 
   const choose = (suggestion: Suggestion) => {
-    onChange({ zone: suggestion.zone, label: suggestion.label });
+    onChange({ zone: suggestion.zone, label: suggestion.label, detail: suggestion.detail });
     setQuery(null);
     setOpen(false);
     setActive(0);

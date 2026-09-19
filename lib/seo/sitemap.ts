@@ -11,6 +11,7 @@ import { getAllConverterPairs } from '@/lib/data/converters';
 import { getPublishedCountries } from '@/lib/data/countries';
 import { getAllOffsetPages } from '@/lib/data/offsets';
 import { getAllTimerPresets } from '@/lib/data/timers';
+import { getLiveTools } from '@/lib/data/tools';
 import { getAllTimezones } from '@/lib/data/timezones';
 import { isTimezoneHubSlug, routes } from '@/lib/routes';
 import { INDEXING_ENABLED, absoluteUrl } from './site';
@@ -24,7 +25,16 @@ type Section = { name: string; entries: () => SitemapEntry[] };
 const SECTIONS: Section[] = [
   {
     name: 'pages',
-    entries: () => [{ path: routes.home(), priority: 1, changeFrequency: 'daily' }],
+    entries: () => [
+      { path: routes.home(), priority: 1, changeFrequency: 'daily' },
+      { path: routes.worldClock(), priority: 0.8, changeFrequency: 'weekly' },
+      { path: routes.timezonesHub(), priority: 0.7, changeFrequency: 'weekly' },
+      { path: routes.tools(), priority: 0.7, changeFrequency: 'weekly' },
+      // Tool pages that don't have their own sitemap section (the converter and timer hubs do).
+      ...getLiveTools()
+        .filter((tool) => tool.href !== routes.converterHub() && tool.href !== routes.timerHub())
+        .map((tool) => ({ path: tool.href, priority: 0.7, changeFrequency: 'weekly' as const })),
+    ],
   },
   {
     name: 'cities',
