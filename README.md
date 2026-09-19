@@ -100,6 +100,10 @@ The site is a standard Next.js build: static pages with hourly ISR, no custom se
 
 Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.
 
+## Supported browsers
+
+`browserslist` in `package.json` targets browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+), so the build ships no polyfills for features such as `Array.prototype.at`. Older browsers are not tested. Widen the list if analytics show a meaningful share of them.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). A third job, "SEO audit", builds the indexed variant and runs `npm run seo:audit`, uploading `seo/reports/` as an artifact. `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.

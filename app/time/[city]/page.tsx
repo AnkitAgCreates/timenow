@@ -116,6 +116,7 @@ export default async function CityPage({ params }: Props) {
                 width={CITY_IMAGE_SIZES.hero.width}
                 height={CITY_IMAGE_SIZES.hero.height}
                 priority
+                fetchPriority="high"
                 sizes="(min-width: 1280px) 1200px, 100vw"
                 className="block h-28 w-full object-cover md:h-40"
               />
