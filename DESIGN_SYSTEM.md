@@ -76,9 +76,11 @@ The `card` utility = white background + `border` + `radius-lg` + `shadow-card`.
 
 Icons are hand-drawn 24×24 stroke SVGs in `components/ui/Icon.tsx`, with no icon dependency.
 
-## Image-free city artwork
+## City photos and the skyline fallback
 
-The PRD uses city photographs. To protect LCP and avoid remote images, cards and the city hero use `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline silhouette on a light-blue gradient, defined once in CSS. It keeps the PRD's card rhythm with no network requests. Real, locally optimised photography could replace it later behind the same class.
+Priority cities (homepage, comparison and seed cities — the `data/sources/city-images.json` list) show a curated Wikimedia Commons photo: a 1600×400 WebP hero on the city page (`h-28`, `md:h-40`, `object-cover`, rendered with `next/image` and `priority` because it sits above the clock) and a 640×256 card crop on `CityCard` (lazy, decorative `alt=""` because the card text names the city). A small white credit chip in the hero's bottom-right corner links the author and licence to the Commons file page. Files are local and pre-sized (heroes 20–215 KB, cards under 55 KB; the unit test caps each at 260 KB), so there are no third-party requests and no layout shift (explicit width/height); `next/image` still serves the responsive variants.
+
+Every other city keeps `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline silhouette on a light-blue gradient, defined once in CSS, which preserves the PRD's card rhythm with no network requests.
 
 ## Live values (no flash, no hydration mismatch)
 

@@ -26,6 +26,28 @@ export type City = {
   aliases?: string[];
   /** GeoNames id the record was generated from (provenance). */
   geonameId?: number;
+  /** Curated photo (only priority cities have one; the CSS skyline is the fallback). */
+  image?: CityImage;
+};
+
+/**
+ * A city photo from Wikimedia Commons, produced by scripts/fetch-city-images.mjs.
+ * Both files live under /public and are served as-is; the attribution fields
+ * are shown next to the hero image and in the page's ImageObject.
+ */
+export type CityImage = {
+  /** Hero crop, 1600×400 WebP, e.g. "/cities/london.webp". */
+  src: string;
+  /** Card crop, 640×256 WebP. */
+  cardSrc: string;
+  alt: string;
+  /** Author as credited on Commons. */
+  author: string;
+  /** Licence short name as recorded on Commons, e.g. "CC BY-SA 4.0". */
+  license: string;
+  licenseUrl: string;
+  /** Commons file page — the attribution and licence source. */
+  sourceUrl: string;
 };
 
 export type Country = {

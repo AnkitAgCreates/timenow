@@ -25,12 +25,12 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop',
-      testMatch: /(smoke|seo|sprint2|sprint3|sprint4|sprint5)\.spec\.ts/,
+      testMatch: /(smoke|seo|sprint2|sprint3|sprint4|sprint5|images)\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], channel, baseURL: `http://127.0.0.1:${INDEXED_PORT}` },
     },
     {
       name: 'mobile',
-      testMatch: /(smoke|sprint2|sprint3|sprint4|sprint5)\.spec\.ts/,
+      testMatch: /(smoke|sprint2|sprint3|sprint4|sprint5|images)\.spec\.ts/,
       use: { ...devices['Pixel 7'], channel, baseURL: `http://127.0.0.1:${INDEXED_PORT}` },
     },
     {

@@ -21,7 +21,36 @@ export function websiteJsonLd(): JsonLdObject {
   };
 }
 
-export function webPageJsonLd({ name, description, path }: { name: string; description: string; path: string }): JsonLdObject {
+export type PageImage = {
+  /** Path under /public. */
+  src: string;
+  width: number;
+  height: number;
+  alt: string;
+  author: string;
+  license: string;
+  licenseUrl: string;
+  sourceUrl: string;
+};
+
+/** ImageObject with the licence fields Google reads for image credits. */
+export function imageObjectJsonLd(path: string, image: PageImage): JsonLdObject {
+  return {
+    '@type': 'ImageObject',
+    '@id': `${absoluteUrl(path)}#primaryimage`,
+    url: absoluteUrl(image.src),
+    contentUrl: absoluteUrl(image.src),
+    width: image.width,
+    height: image.height,
+    caption: image.alt,
+    creditText: image.author,
+    creator: { '@type': 'Person', name: image.author },
+    license: image.licenseUrl || image.sourceUrl,
+    acquireLicensePage: image.sourceUrl,
+  };
+}
+
+export function webPageJsonLd({ name, description, path, image }: { name: string; description: string; path: string; image?: PageImage }): JsonLdObject {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
@@ -31,6 +60,7 @@ export function webPageJsonLd({ name, description, path }: { name: string; descr
     url: absoluteUrl(path),
     inLanguage: 'en',
     isPartOf: { '@id': `${SITE_URL}/#website` },
+    ...(image ? { primaryImageOfPage: imageObjectJsonLd(path, image), image: { '@id': `${absoluteUrl(path)}#primaryimage` } } : {}),
   };
 }
 

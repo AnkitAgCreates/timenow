@@ -13,12 +13,15 @@ export type PageSeo = {
   /** Use the title verbatim (homepage). */
   absoluteTitle?: boolean;
   ogType?: 'website' | 'article';
+  /** Share image (path under /public) with its pixel size and alt text. */
+  image?: { src: string; width: number; height: number; alt: string };
 };
 
 /** Standard metadata for every page: title, description, canonical, robots, Open Graph. */
-export function buildMetadata({ title, description, path, indexable, absoluteTitle, ogType = 'website' }: PageSeo): Metadata {
+export function buildMetadata({ title, description, path, indexable, absoluteTitle, ogType = 'website', image }: PageSeo): Metadata {
   const canIndex = INDEXING_ENABLED && indexable;
   const fullTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`;
+  const images = image ? [{ url: absoluteUrl(image.src), width: image.width, height: image.height, alt: image.alt }] : undefined;
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
@@ -33,7 +36,8 @@ export function buildMetadata({ title, description, path, indexable, absoluteTit
       description,
       url: absoluteUrl(path),
       locale: 'en_US',
+      ...(images ? { images } : {}),
     },
-    twitter: { card: 'summary', title: fullTitle, description },
+    twitter: images ? { card: 'summary_large_image', title: fullTitle, description, images: images.map((i) => i.url) } : { card: 'summary', title: fullTitle, description },
   };
 }

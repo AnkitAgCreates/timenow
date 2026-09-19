@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { CityCard } from '@/components/city/CityCard';
@@ -15,6 +16,7 @@ import { LinkList, type LinkItem } from '@/components/ui/LinkList';
 import { Section } from '@/components/ui/Section';
 import { SectionTabs } from '@/components/ui/SectionTabs';
 import { cityFaqs, cityMetaDescription, cityRegion, getCitySunTimes, getZoneFacts } from '@/lib/content/city';
+import { CITY_IMAGE_SIZES } from '@/data/cities';
 import { getAllCities, getCity, getComparisonCities, getNearbyCities } from '@/lib/data/cities';
 import { getConvertersForCity, getConvertersForTimezone } from '@/lib/data/converters';
 import { getCountryByCode } from '@/lib/data/countries';
@@ -44,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: cityMetaDescription(city, facts),
     path: routes.city(city.slug),
     indexable: city.indexable,
+    image: city.image ? { src: city.image.src, alt: city.image.alt, ...CITY_IMAGE_SIZES.hero } : undefined,
   });
 }
 
@@ -83,7 +86,17 @@ export default async function CityPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={[webPageJsonLd({ name: title, description: cityMetaDescription(city, facts), path }), faqJsonLd(faqs)]} />
+      <JsonLd
+        data={[
+          webPageJsonLd({
+            name: title,
+            description: cityMetaDescription(city, facts),
+            path,
+            image: city.image ? { ...city.image, ...CITY_IMAGE_SIZES.hero } : undefined,
+          }),
+          faqJsonLd(faqs),
+        ]}
+      />
 
       <div className="container-page pt-4 md:pt-6">
         <Breadcrumbs
@@ -95,7 +108,31 @@ export default async function CityPage({ params }: Props) {
         />
 
         <div className="card mt-3 overflow-hidden">
-          <div aria-hidden="true" className="skyline h-20 md:h-28" />
+          {city.image ? (
+            <figure className="relative m-0">
+              <Image
+                src={city.image.src}
+                alt={city.image.alt}
+                width={CITY_IMAGE_SIZES.hero.width}
+                height={CITY_IMAGE_SIZES.hero.height}
+                priority
+                sizes="(min-width: 1280px) 1200px, 100vw"
+                className="block h-28 w-full object-cover md:h-40"
+              />
+              <figcaption className="absolute bottom-1.5 right-2 max-w-[80%] truncate rounded bg-white/90 px-1.5 py-0.5 text-[11px] leading-4 text-body">
+                Photo:{' '}
+                <a href={city.image.sourceUrl} rel="noopener noreferrer" className="underline hover:text-primary">
+                  {city.image.author}
+                </a>
+                {' · '}
+                <a href={city.image.licenseUrl || city.image.sourceUrl} rel="noopener noreferrer license" className="underline hover:text-primary">
+                  {city.image.license}
+                </a>
+              </figcaption>
+            </figure>
+          ) : (
+            <div aria-hidden="true" className="skyline h-20 md:h-28" />
+          )}
           <ClockPanel
             id="city-clock"
             timeZone={city.timezone}

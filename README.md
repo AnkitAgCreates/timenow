@@ -69,7 +69,7 @@ mkdir -p data/sources/geonames && cd data/sources/geonames && curl -O https://do
 node scripts/generate-geo-data.mjs
 ```
 
-`node scripts/generate-geo-data.mjs --check` exits non-zero when the committed output is stale. Selection rules, quotas and curated overrides live in the script and are described in `DATA_MODEL.md`.
+`node scripts/fetch-city-images.mjs` downloads and crops the curated city photos (needs network access; see `DATA_MODEL.md`). `node scripts/generate-geo-data.mjs --check` exits non-zero when the committed output is stale. Selection rules, quotas and curated overrides live in the script and are described in `DATA_MODEL.md`.
 
 ## SEO audit and Search Console workflow
 
@@ -105,7 +105,7 @@ app/                    Routes (Server Components by default)
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
 data/                   Structured records: cities + countries (generated), timezones (+ timezones-world), timers, converters, tools
-scripts/                generate-geo-data.mjs (GeoNames → generated data); seo/audit-site.mts, seo/analyze-gsc.mts (Sprint 6)
+scripts/                generate-geo-data.mjs (GeoNames → generated data); fetch-city-images.mjs (Commons photos → public/cities + manifest); seo/audit-site.mts, seo/analyze-gsc.mts (Sprint 6)
 lib/
   time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
   tools/                Pure calculator logic (date difference, hours, military time, Unix timestamps, stopwatch, alarm)
@@ -146,6 +146,7 @@ Unknown slugs return 404 (`dynamicParams = false`). Mixed-case URLs 308-redirect
 Details and field definitions are in `DATA_MODEL.md` and `SEO_ARCHITECTURE.md`.
 
 - **Add a city:** add its GeoNames id to `MUST_INCLUDE` (or raise the country quota) in `scripts/generate-geo-data.mjs`, regenerate, and if the zone is new add it to `ZONE_METADATA` in `lib/time/zone-metadata.ts` (dated eras if its rules changed). Run `npm test`.
+- **Add a city photo:** add the slug (and alt text, optionally a specific Commons `file`) to `data/sources/city-images.json`, run `node scripts/fetch-city-images.mjs --contact review.jpg`, check the review sheet, and commit the two WebP files under `public/cities/` plus `data/city-images.generated.ts`. Only free Commons licences are accepted; credits render on the page. See `DATA_MODEL.md`.
 - **Add a country:** give it a quota in the script (its capital is included automatically) and regenerate; the country page appears with the first city.
 - **Add a time zone page:** append a `TimeZoneEntry` to `data/timezones-world.ts`. The data-integrity tests verify every listed zone really switches or stays fixed as described.
 - **UTC offset pages:** derived automatically from the zones in use (`lib/data/offsets.ts`); nothing to add by hand.

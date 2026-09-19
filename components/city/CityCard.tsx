@@ -1,6 +1,8 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { LiveTime } from '@/components/clock/LiveTime';
 import { LiveZoneInfo } from '@/components/clock/LiveZoneInfo';
+import { CITY_IMAGE_SIZES } from '@/data/cities';
 import { routes } from '@/lib/routes';
 import type { City } from '@/types/data';
 
@@ -34,10 +36,22 @@ export function CityCard({
         stacked ? 'flex-col' : 'flex-row items-center sm:flex-col sm:items-stretch'
       }`}
     >
-      <span
-        aria-hidden="true"
-        className={`${skylineClass(city.slug)} block shrink-0 ${stacked ? 'h-16 w-full' : 'h-14 w-20 rounded-md sm:h-16 sm:w-full sm:rounded-none'} ${stacked ? '' : 'ml-2 sm:ml-0'}`}
-      />
+      {city.image ? (
+        // Decorative here: the card's text already names the city.
+        <Image
+          src={city.image.cardSrc}
+          alt=""
+          width={CITY_IMAGE_SIZES.card.width}
+          height={CITY_IMAGE_SIZES.card.height}
+          sizes="(min-width: 640px) 280px, 80px"
+          className={`block shrink-0 object-cover ${stacked ? 'h-16 w-full' : 'ml-2 h-14 w-20 rounded-md sm:ml-0 sm:h-16 sm:w-full sm:rounded-none'}`}
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className={`${skylineClass(city.slug)} block shrink-0 ${stacked ? 'h-16 w-full' : 'h-14 w-20 rounded-md sm:h-16 sm:w-full sm:rounded-none'} ${stacked ? '' : 'ml-2 sm:ml-0'}`}
+        />
+      )}
       <span className={`flex min-w-0 flex-1 ${stacked ? 'flex-col px-3 py-2.5' : 'items-center justify-between gap-2 px-3 py-2.5 sm:flex-col sm:items-start sm:justify-start sm:gap-0'}`}>
         <span className="min-w-0">
           <span className="block truncate text-sm font-semibold text-heading group-hover:text-primary">{city.name}</span>

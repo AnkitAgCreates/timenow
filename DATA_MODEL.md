@@ -85,14 +85,29 @@ type City = {
   indexable: boolean;
   aliases?: string[];    // search: "NYC", "Bombay"
   geonameId?: number;    // provenance
+  image?: CityImage;     // curated photo (priority cities only); CSS skyline otherwise
+};
+
+type CityImage = {
+  src: string;           // /cities/<slug>.webp — hero crop, 1600×400
+  cardSrc: string;       // /cities/<slug>-card.webp — card crop, 640×256
+  alt: string;
+  author: string;        // as credited on Wikimedia Commons
+  license: string;       // "CC BY-SA 4.0", "CC BY 4.0", "CC0", "Public domain"
+  licenseUrl: string;
+  sourceUrl: string;     // Commons file page (attribution link)
 };
 ```
+
+`image` is merged into the generated records from `data/city-images.generated.ts`, itself written by `scripts/fetch-city-images.mjs` from the curated list `data/sources/city-images.json`. The files under `public/cities/` are committed and served as static assets; nothing is fetched at runtime. Only free licences are accepted (CC0, public domain, CC BY, CC BY-SA); the author, licence and source page are shown as a credit on the hero image and in the page's `ImageObject`. `lib/data/city-images.test.ts` checks every entry: dataset slug, both files present at the declared sizes and under 260 KB, licence in the allowlist, attribution fields, and that every homepage city has a photo.
 
 Derived, never stored: nearby cities (great-circle distance), comparison cities (`COMPARISON_CITY_SLUGS`, skipping same-zone cities), related time zone pages (`getTimezonesForZone`), related converters.
 
 The 25 Sprint 1 seed cities (Phoenix, Regina, Mexico City, Tijuana, New Delhi, Sydney …) are all retained by the generator, with their original priorities and aliases as overrides.
 
 **To add a city:** add its GeoNames id to `MUST_INCLUDE` (or raise the country quota) in the generator, regenerate, and if the zone is new add it to `ZONE_METADATA`. Run `npm test`.
+
+**To add a city photo:** add `{ "slug": "…", "alt": "…" }` to `data/sources/city-images.json` — optionally `"file": "File:…"` to pick a specific Commons file instead of the city's Wikidata main image — then run `node scripts/fetch-city-images.mjs --contact review.jpg`, look at the review sheet, and commit `public/cities/<slug>.webp`, `public/cities/<slug>-card.webp` and the regenerated manifest. The script skips files whose licence is not free and reports why; `--refresh` re-downloads files that already exist. Run `npm test`.
 
 ### Country — `data/countries.ts`
 

@@ -96,6 +96,8 @@ Builders in `lib/seo/jsonld.ts`, rendered by `components/seo/JsonLd.tsx` (with `
 
 All five reference pages' JSON-LD was parsed and validated during Sprint 1 verification.
 
+- **City photos:** when a city has a curated photo, the WebPage carries `primaryImageOfPage` / `image` as an `ImageObject` with `contentUrl`, `width`/`height`, `caption`, `creditText`, `creator`, `license` and `acquireLicensePage` (the Commons file page) — the fields Google reads for image credits — and the page metadata adds `og:image` / `twitter:card=summary_large_image` with the same file (`buildMetadata({ image })`). Cities without a photo emit neither.
+
 ## Internal linking (from data)
 
 | Page | Links to |
