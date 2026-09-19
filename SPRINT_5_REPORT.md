@@ -30,7 +30,7 @@
 | Calculators `/tools/…` | **Live and indexable**: date difference (days/weeks/weekdays/breakdown, include end date, add days), hours calculator (multi-shift, breaks, overnight, decimal hours, pay), military time (any input → 1430 / 14:30 / 2:30 PM / spoken, 24-row chart), Unix timestamp (both directions, any zone, live epoch, landmarks) |
 | Hubs | `/tools/` (all ten tools + which-tool guide + FAQs) and `/timezones/` (50 abbreviations grouped by region with live times + FAQs) are now **indexable**; no route is noindex except 404 and `/api/*` |
 | Typecheck / Lint / Unit tests / Build | Pass / Pass / **399 of 399 (15 files)** / Pass — **863 static pages** (856 + 7 new routes) |
-| End-to-end (Playwright, two production builds, desktop + mobile + kill switch) | 136 tests: full run **122 passed, 6 intentionally skipped, 8 failed** — all eight in the new Sprint 5 spec (a duplicate default city and three substring label locators); after fixing the spec, six pass and the two alarm tests are re-running with a dedicated banner locator (§10.2); CI on the pushed commit is recorded there |
+| End-to-end (Playwright, two production builds, desktop + mobile + kill switch) | 136 tests — **CI on `21f7e93`: 130 passed, 6 intentionally skipped, 0 failed**; the first local full run had 8 failures, all defects in the new spec, fixed before pushing (§10.2) |
 | HTTP verification (indexed build) | Pass (§11): all ten pages 200, indexable, single H1, JSON-LD; share-link variant canonicalises to `/meeting-planner/`; tools hub links all ten tools; timezones hub links 52 abbreviation/hub pages; sitemap `pages` = 11 URLs, 850 total |
 | Reference pages | Unchanged except added links (§8) |
 | Lighthouse / Core Web Vitals | **Not measured** (§14) |
@@ -148,7 +148,7 @@ No test was deleted.
 
 ### 10.2 End-to-end
 
-**Evidence (`npx playwright test`, full run on the final code):** `122 passed, 6 skipped, 8 failed (4.1m)`; 136 tests in total. Every failure was in the new `e2e/sprint5.spec.ts` and was a test defect, not a product one: the world-clock test tried to add Tokyo, which is already in the default list (the component correctly ignores duplicates), and three `getByLabel` calls matched several inputs by substring (`Time`, `End date`, `Date`). After the fixes, `--last-failed` → `6 passed`; the alarm test then hit Next.js’s route announcer (also `role="alert"`) and now targets the ringing banner by a data attribute. The alarm re-run result and the CI run for the pushed commit are appended below when available. Skips are intentional (mobile-only navigation test; request-level checks run once on desktop).
+**Evidence (`npx playwright test`, full run on the final code):** `122 passed, 6 skipped, 8 failed (4.1m)`; 136 tests in total. Every failure was in the new `e2e/sprint5.spec.ts` and was a test defect, not a product one: the world-clock test tried to add Tokyo, which is already in the default list (the component correctly ignores duplicates), and three `getByLabel` calls matched several inputs by substring (`Time`, `End date`, `Date`). After the fixes, `--last-failed` → `6 passed`; the alarm test then hit Next.js’s route announcer (also `role="alert"`) and now targets the ringing banner by a data attribute. Alarm re-run with the banner locator: `2 passed (1.9m)`. **GitHub Actions on commit `21f7e93` (Linux): 136 tests, 130 passed, 6 skipped, 0 failed**, verify job 46 s, Playwright job 2 m 31 s. Skips are intentional (mobile-only navigation test; request-level checks run once on desktop).
 
 New `e2e/sprint5.spec.ts` (desktop + mobile, routing once):
 - ten pages (world clock, planner, stopwatch, alarm, four calculators, tools hub, timezones hub): exactly one H1 with the expected text, indexable, BreadcrumbList + WebApplication/WebPage JSON-LD, no console errors, no horizontal overflow
@@ -190,7 +190,7 @@ HTTP checks against the indexed build (`NEXT_PUBLIC_SITE_URL=http://localhost:32
 
 Internal links: /timer/25-minutes/ → /stopwatch/ and /alarm/ ✓ · /convert/ist-to-est/ → /meeting-planner/?z=… ✓ · /time/london/ → /meeting-planner/?z=… ✓ · homepage tile → /stopwatch/ ✓
 Sitemap: /sitemaps/pages-1.xml → 11 urls (/, /world-clock/, /timezones/, /tools/, /meeting-planner/, /alarm/, /stopwatch/, the four calculators) · total across 7 child sitemaps: 850
-Titles and descriptions were trimmed to ≤ 60 / ≤ 160 characters after this capture (the /timezones/ title had been 97 characters).
+Titles and descriptions were trimmed after this capture: /timezones/ title 97 → 52 characters, /tools/ title 78 → 54, descriptions 147–165 characters (were 168–215).
 ```
 
 ---
@@ -198,7 +198,7 @@ Titles and descriptions were trimmed to ≤ 60 / ≤ 160 characters after this c
 ## 12. Desktop and mobile verification
 
 - Playwright runs every Sprint 5 page on desktop Chrome and the Pixel 7 profile (H1, JSON-LD, console errors, overflow) and the interaction tests on both.
-- In-app browser: the Sprint 5 pages were verified over HTTP (§11) and by Playwright on both device profiles; a visual pass in the in-app browser had not yet been done at commit time and is recorded in a follow-up.
+- In-app browser (production build, 2026-09-19): `/world-clock/` at desktop width shows the picker, the pinned "Your time" row (Asia/Calcutta · IST UTC+5:30) and the default rows with live times, abbreviation, offset, weekday/date and move/remove controls; `/meeting-planner/` shows the two pickers, date/length/working-hours controls, the 24-column grid with green all-core columns (9 AM–12 PM New York = 2–5 PM London on the render date) and the suggested-times list; at 375 px the planner form stacks and the grid scrolls inside its own container (table 896 px in a 342 px wrapper, page overflow 0); `/alarm/` at 375 px shows the form, sound and test buttons, the empty-list state and the limitations callout above the fold.
 
 ---
 
