@@ -60,10 +60,12 @@ const SECTIONS: Section[] = [
   },
   {
     name: 'timers',
-    entries: () =>
-      getAllTimerPresets()
+    entries: () => [
+      { path: routes.timerHub(), priority: 0.8, changeFrequency: 'monthly' },
+      ...getAllTimerPresets()
         .filter((preset) => preset.indexable)
-        .map((preset) => ({ path: routes.timer(preset.slug), priority: 0.7, changeFrequency: 'monthly' })),
+        .map((preset) => ({ path: routes.timer(preset.slug), priority: 0.7, changeFrequency: 'monthly' as const })),
+    ],
   },
   {
     name: 'converters',

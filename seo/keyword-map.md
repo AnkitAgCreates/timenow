@@ -101,12 +101,18 @@ Pattern for every country: `time in {country}`, `{country} time now`, `what time
 
 | Keywords | Canonical | Redirects |
 | --- | --- | --- |
-| 1 hour timer, timer for 1 hour, 60 minute timer, one hour timer | `/timer/1-hour/` | `/timer/60-minutes/`, `/timer/1-hours/`, `/timer/60-min/` |
+| online timer, countdown timer, timer with alarm, set a timer | `/timer/` | hub — live and indexable since Sprint 3 |
+| 1 hour timer, timer for 1 hour, 60 minute timer, one hour timer | `/timer/1-hour/` | `/timer/60-minutes/`, `/timer/1-hours/`, `/timer/60-min/`, `/timer/1-hr/`, `/timer/3600-seconds/` |
 | 2 hour timer, 120 minute timer | `/timer/2-hours/` | `/timer/120-minutes/` |
 | 3 hour timer | `/timer/3-hours/` | `/timer/180-minutes/` |
-| 1 minute timer, 60 second timer | `/timer/1-minute/` | `/timer/1-minutes/` |
+| 4 / 5 / 6 / 8 / 10 / 12 / 24 hour timer, 8 hour sleep timer, 12 hour fasting timer, 24 hour countdown | `/timer/{n}-hours/` | `/timer/{n}-hour/`, `/timer/{n}-hrs/`, `/timer/{60n}-minutes/` (Sprint 3) |
+| 1 minute timer, 60 second timer | `/timer/1-minute/` | `/timer/1-minutes/`, `/timer/60-seconds/` |
 | 2 / 3 / 5 / 10 / 15 / 20 / 30 / 45 minute timer | `/timer/{n}-minutes/` | `/timer/{n}-min/`, `/timer/{n}-mins/`, `/timer/{n}-minute/` |
-| online timer, countdown timer | `/timer/` | hub, planned indexable in Sprint 3 |
+| 4 / 6 / 7 / 8 / 12 / 40 / 50 / 90 minute timer, tabata timer (4 min), 7 minute workout timer | `/timer/{n}-minutes/` | same spelling aliases (Sprint 3) |
+| 25 minute timer, pomodoro timer | `/timer/25-minutes/` | `/timer/25-min/`, `/timer/1500-seconds/` — Pomodoro maps here; there is no separate `/timer/pomodoro/` |
+| 30 second timer, 90 second timer | `/timer/30-seconds/`, `/timer/90-seconds/` | `/timer/30-sec/`, `/timer/30-secs/`, `/timer/30-second/` (Sprint 3) |
+
+30 curated presets in total (2 in seconds, 18 in minutes, 10 in hours). Lengths without a page (e.g. 11 minutes) return 404; users set them with Custom on any timer page.
 
 ## Converters — `/convert/[from]-to-[to]/` (allowlist)
 

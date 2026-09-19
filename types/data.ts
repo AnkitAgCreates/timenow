@@ -118,8 +118,14 @@ export type TimerPreset = {
   phrase: string;
   /** Short chip label: "1 min", "1 hour". */
   chip: string;
+  /** One unique sentence about this length (meta description, intro, hub card). */
+  tagline: string;
   /** Concrete, duration-specific uses. */
   useCases: string[];
+  /** Questions specific to this length; shown before the shared timer FAQs. */
+  faqs?: Array<{ question: string; answer: string }>;
+  /** Curated related presets (slugs) shown next to the nearest shorter/longer ones. */
+  related?: string[];
   /** Show as a quick preset chip on timer pages. */
   quickPreset: boolean;
   priority: number;

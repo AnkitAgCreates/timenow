@@ -18,7 +18,8 @@ SEO is part of the product architecture: every indexable page is a data record r
 | Home | `/` | Current Time Now – Exact Local Time, World Clocks & Time Zones | Current Time Now | WebSite, WebPage | 1h |
 | City | `/time/[city]/` | Current Time in {City}, {State/Country} – Time Zone & DST | Current Time in {City}, {Country} | WebPage, BreadcrumbList, FAQPage | 1h |
 | Time zone | `/timezones/[tz]/` | {Name} ({ABBR}) – Current Time, UTC±X & DST | {Name} ({ABBR}) | WebPage, BreadcrumbList, FAQPage | 1h |
-| Timer | `/timer/[duration]/` | {Label} Timer – Free Online Countdown with Alarm | {Label} Timer | WebApplication, BreadcrumbList, FAQPage | static |
+| Timer | `/timer/[duration]/` | {N Unit} Timer – Free Online Countdown with Alarm (unit singular: 25 Minute Timer, 1 Hour Timer) | {N Unit} Timer | WebApplication, BreadcrumbList, FAQPage | static |
+| Timer hub (Sprint 3) | `/timer/` | Online Timer – Free Countdown Timer with Alarm | Online Timer | WebApplication, BreadcrumbList, FAQPage | static |
 | Converter | `/convert/[a]-to-[b]/` | {A} to {B} Converter – {A name} to {B region} | {A} to {B} Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | Country (Sprint 2) | `/countries/[country]/` | Current Time in {Country} – Time Zones, DST & Major Cities | Current Time in {Country} | WebPage, BreadcrumbList, FAQPage | 1h |
 | Countries hub (Sprint 2) | `/countries/` | Current Time by Country – World Time Zones Directory | Current Time by Country | WebPage, BreadcrumbList | 1h |
@@ -50,7 +51,7 @@ Indexation after Sprint 2:
 
 | Indexed | Not indexed (noindex, follow) |
 | --- | --- |
-| `/`, ~470 city pages, `/countries/` + 96 country pages, `/utc/`, `/gmt/`, ~40 UTC offset pages, 50 time zone pages, 12 timer pages, 8 converter pages | `/timezones/`, `/timer/`, `/converter/`, `/world-clock/`, `/tools/` (functional interim hubs; indexed in their own sprints), 404 page, `/api/*` |
+| `/`, ~470 city pages, `/countries/` + 96 country pages, `/utc/`, `/gmt/`, ~40 UTC offset pages, 50 time zone pages, `/timer/` + 30 timer pages, 8 converter pages | `/timezones/`, `/converter/`, `/world-clock/`, `/tools/` (functional interim hubs; indexed in their own sprints), 404 page, `/api/*` |
 
 Planned features (meeting planner, alarm, stopwatch, date tools) have **no routes and are not linked**, so crawlers never find placeholder pages.
 
@@ -60,6 +61,7 @@ Planned features (meeting planner, alarm, stopwatch, date tools) have **no route
 - **Countries** exist only for countries that have cities; their content (zone groups, DST behaviour per zone, capital, neighbours) is unique per country.
 - **UTC offsets** exist only for offsets that dataset zones actually use in the current year (~40), never all 24×4 possible values.
 - **Abbreviations** are hand-curated entries (50) with tz-verified geography.
+- **Timers** (Sprint 3) are a curated allowlist of 30 lengths. Each preset must carry a unique tagline, three or more concrete use cases and at least one question specific to that length (enforced by `lib/data/timers.test.ts`), so pages differ in substance and not only in the number. Other lengths 404; spelling variants (`-min`, `-mins`, `-sec`, `-hr`, `N-seconds`) 308-redirect. "Pomodoro" maps to `/timer/25-minutes/` rather than a keyword URL.
 
 ## Sitemaps
 
@@ -92,7 +94,7 @@ All five reference pages' JSON-LD was parsed and validated during Sprint 1 verif
 | --- | --- |
 | City | Comparison cities (difference table), nearby cities (by distance), its time zone pages (`getTimezonesForZone`), related approved converters, converter hub. Country page once `published` |
 | Time zone | Associated cities (seasonal + year-round zones), related abbreviations (comparison table), approved converters involving it, hub |
-| Timer | Quick-preset timer pages, all other timer pages, timer hub |
+| Timer | Quick-preset chips, related timers (nearest lengths + curated pairs such as 25 ↔ 5 minutes), the grouped directory of all timers, timer hub. Stopwatch and alarm links are added when those routes ship (Sprint 5) |
 | Converter | Both time zone pages, reverse pair (if approved), related approved converters, converter hub |
 | Country (Sprint 2) | Its cities (table + cards), the abbreviation pages for each zone group, neighbouring countries, converter hub, countries hub. City pages link back through the breadcrumb (now a real link) |
 | UTC offset (Sprint 2) | Cities on the offset, abbreviation pages that denote it, their converters, neighbouring offsets, the UTC and GMT hubs; the hubs' offsets directory links every offset page |
@@ -112,5 +114,5 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 1. **`/utc/` and `/gmt/` are canonical** (decided before Sprint 2, implemented in Sprint 2): the `/timezones/` variants redirect, and the hubs add the offsets directory.
 2. **Daylight abbreviation pages (EDT/CDT/MDT/PDT, and now CEST/EEST/WEST/ACDT/AEDT/NZDT/ADT/NDT/AKDT).** Indexable. If Search Console shows them cannibalising the standard pages, canonicalise them to the standard page instead.
-3. **Hub indexation.** `/countries/` is indexable (a real directory with live times). `/timezones/`, `/timer/`, `/converter/`, `/world-clock/` and `/tools/` become indexable in Sprints 3–5 once they have unique, useful content.
+3. **Hub indexation.** `/countries/` (directory with live times) and `/timer/` (custom timer, grouped directory with taglines, how-to, timer/stopwatch/alarm comparison, FAQs — Sprint 3) are indexable. `/timezones/`, `/converter/`, `/world-clock/` and `/tools/` become indexable in Sprints 4–5 once they have unique, useful content.
 4. **Country vs city intent.** "india time now" targets `/countries/india/`; "delhi time" targets `/time/new-delhi/`. Both pages link to each other.

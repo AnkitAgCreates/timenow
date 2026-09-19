@@ -2,13 +2,14 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Timer } from '@/components/timer/Timer';
+import { TimerDirectory } from '@/components/timer/TimerDirectory';
 import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 import { FAQ } from '@/components/ui/FAQ';
 import { Icon } from '@/components/ui/Icon';
 import { LinkList } from '@/components/ui/LinkList';
 import { Section } from '@/components/ui/Section';
-import { TIMER_BENEFITS, timerFaqs, timerMetaDescription } from '@/lib/content/timer';
-import { getAllTimerPresets, getQuickPresets, getTimerPreset } from '@/lib/data/timers';
+import { TIMER_BENEFITS, timerFaqs, timerIntro, timerMetaDescription, timerTitle } from '@/lib/content/timer';
+import { getAllTimerPresets, getQuickPresets, getRelatedTimerPresets, getTimerPreset } from '@/lib/data/timers';
 import { routes } from '@/lib/routes';
 import { faqJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const preset = getTimerPreset((await params).duration);
   if (!preset) return {};
   return buildMetadata({
-    title: `${preset.label} Timer – Free Online Countdown with Alarm`,
+    title: `${timerTitle(preset)} – Free Online Countdown with Alarm`,
     description: timerMetaDescription(preset),
     path: routes.timer(preset.slug),
     indexable: preset.indexable,
@@ -37,10 +38,10 @@ export default async function TimerPage({ params }: Props) {
   if (!preset) notFound();
 
   const path = routes.timer(preset.slug);
-  const title = `${preset.label} Timer`;
+  const title = timerTitle(preset);
   const faqs = timerFaqs(preset);
   const quickPresets = getQuickPresets().map(({ slug, chip, seconds }) => ({ slug, chip, seconds }));
-  const others = getAllTimerPresets().filter((p) => p.slug !== preset.slug);
+  const related = getRelatedTimerPresets(preset);
 
   return (
     <>
@@ -68,6 +69,21 @@ export default async function TimerPage({ params }: Props) {
         </div>
 
         <div className="mx-auto mt-8 max-w-4xl space-y-8">
+          <Section id="about" title={`About the ${preset.phrase} timer`}>
+            <p className="text-[15px] leading-relaxed text-body">{timerIntro(preset)}</p>
+          </Section>
+
+          <Section id="ideas" title={`Ideas for a ${preset.phrase} timer`}>
+            <ul className="card divide-y divide-border">
+              {preset.useCases.map((useCase) => (
+                <li key={useCase} className="flex items-center gap-3 px-4 py-3 text-[15px] text-body">
+                  <Icon name="check" className="size-4 shrink-0 text-success" />
+                  {useCase}
+                </li>
+              ))}
+            </ul>
+          </Section>
+
           <Section id="why" title="Why use a timer?">
             <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {TIMER_BENEFITS.map((benefit) => (
@@ -84,26 +100,19 @@ export default async function TimerPage({ params }: Props) {
             </ul>
           </Section>
 
-          <Section id="ideas" title={`Ideas for a ${preset.phrase} timer`}>
-            <ul className="card divide-y divide-border">
-              {preset.useCases.map((useCase) => (
-                <li key={useCase} className="flex items-center gap-3 px-4 py-3 text-[15px] text-body">
-                  <Icon name="check" className="size-4 shrink-0 text-success" />
-                  {useCase}
-                </li>
-              ))}
-            </ul>
-          </Section>
-
           <Section id="faqs" title={`${title} FAQs`}>
             <FAQ items={faqs} />
           </Section>
 
-          <Section id="more-timers" title="More timers">
+          <Section id="related" title="Related timers">
             <LinkList
               columns={3}
-              items={others.map((other) => ({ label: `${other.label} Timer`, href: routes.timer(other.slug) }))}
+              items={related.map((other) => ({ label: timerTitle(other), href: routes.timer(other.slug), detail: other.tagline }))}
             />
+          </Section>
+
+          <Section id="all-timers" title="All timers">
+            <TimerDirectory currentSlug={preset.slug} compact />
           </Section>
         </div>
       </div>

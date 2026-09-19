@@ -5,7 +5,7 @@ SEO-first time utility platform: current time, city clocks, time zone abbreviati
 - **Design source of truth:** `references/visual-prd.png` (layout and visual language only).
 - **Time source of truth:** IANA time zone data via `Intl.DateTimeFormat`, through the time engine in `lib/time/`. Never copy times, offsets or DST states from the PRD mockups.
 
-Status: **Sprint 2 complete** (programmatic SEO: ~470 cities in 96 countries, country pages, UTC/GMT hubs and offset pages, 50 time zone abbreviation pages). See `CLAUDE.md` for the full roadmap.
+Status: **Sprint 3 complete** (timer SEO: indexable timer hub and 30 curated timer pages, on top of Sprint 2's ~470 cities, 96 countries, UTC/GMT hubs and offset pages, 50 abbreviation pages). See `CLAUDE.md` for the full roadmap.
 
 ## Stack
 
@@ -117,9 +117,9 @@ seo/keyword-map.md      Keyword → canonical URL map
 | `/utc/`, `/gmt/` | UTC and GMT hubs with an offsets directory | yes |
 | `/utc/[offset]/` | ~40 curated offsets (only those used somewhere in the dataset) | yes |
 | `/timezones/[timezone]/` | 50 abbreviations (11 core + 39 world; UTC/GMT live at their hubs) | yes |
-| `/timer/[duration]/` | 12 curated presets | yes |
+| `/timer/` and `/timer/[duration]/` | hub + 30 curated presets (30 s – 24 h) | yes |
 | `/convert/[from]-to-[to]/` | 8 allowlisted pairs | yes |
-| `/timezones/`, `/timer/`, `/converter/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
+| `/timezones/`, `/converter/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
 
 Unknown slugs return 404 (`dynamicParams = false`). Mixed-case URLs 308-redirect to lowercase; timer spelling variants (`/timer/60-minutes/`) 308-redirect to the canonical preset; `/timezones/utc/` → `/utc/`, `/timezones/gmt/` → `/gmt/`, and `/gmt/gmt-minus-5/` → `/utc/utc-minus-5/`.
 
@@ -131,7 +131,7 @@ Details and field definitions are in `DATA_MODEL.md` and `SEO_ARCHITECTURE.md`.
 - **Add a country:** give it a quota in the script (its capital is included automatically) and regenerate; the country page appears with the first city.
 - **Add a time zone page:** append a `TimeZoneEntry` to `data/timezones-world.ts`. The data-integrity tests verify every listed zone really switches or stays fixed as described.
 - **UTC offset pages:** derived automatically from the zones in use (`lib/data/offsets.ts`); nothing to add by hand.
-- **Add a timer page:** append a `TimerPreset` to `data/timers.ts` with a canonical slug (`timerSlugForSeconds`). Alias redirects are generated automatically.
+- **Add a timer page:** append a `TimerPreset` to `data/timers.ts` with a canonical slug (`timerSlugForSeconds`), a unique tagline, three or more use cases and at least one length-specific FAQ (tests enforce all of these). Alias redirects are generated automatically.
 - **Add a converter page:** append a pair to `data/converters.ts`. Only listed pairs are built and indexed.
 - **Control indexation:** per record with `indexable`, globally with `NEXT_PUBLIC_ALLOW_INDEXING`.
 - **Sitemaps:** generated from indexable records by `lib/seo/sitemap.ts`, chunked at 10,000 URLs per file. When indexing is disabled, every sitemap URL returns 404.
