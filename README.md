@@ -95,7 +95,7 @@ The site is a standard Next.js build: static pages with hourly ISR, no custom se
    | `NEXT_PUBLIC_ALLOW_INDEXING` | `true` only when the real domain is live | leave unset (previews stay noindex and blocked in robots.txt) |
    | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | optional GA4 id | leave unset |
 
-3. Add the domain (Settings → Domains) and redirect the `www` and apex variants to the one used in `NEXT_PUBLIC_SITE_URL`.
+3. Add the domain (Settings → Domains). `www.whattimein.world` and `whattimein.world` are attached; Vercel redirects `www` to the apex, and the app's proxy redirects every other host (the `*.vercel.app` aliases) to `NEXT_PUBLIC_SITE_URL` once indexing is on. DNS at the registrar: `A @ 76.76.21.21` (or Vercel's current A record) and `CNAME www cname.vercel-dns.com`.
 4. After the first production deploy, open `/robots.txt`, `/sitemap.xml` and a city page and confirm the canonical shows the real domain; then verify the domain in Search Console and submit the sitemap (`seo/SEARCH_CONSOLE_WORKFLOW.md`).
 
 Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.

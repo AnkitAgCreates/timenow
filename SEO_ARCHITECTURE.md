@@ -121,6 +121,10 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 `lib/analytics.ts` `track()` is wired for `search_used`, `city_selected`, `timezone_selected`, `timer_started`, `timer_completed`, `converter_used`. GA4 loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.
 
+## One host, one case (`proxy.ts`)
+
+The proxy permanently redirects (308) two kinds of duplicates before any page renders: mixed-case paths to their lowercase form, and — only when indexing is on — requests that arrive on a non-canonical host (the `*.vercel.app` aliases and per-deployment URLs) to the same path on `NEXT_PUBLIC_SITE_URL`. Local hosts (`localhost`, `127.0.0.1`) are never redirected, so the dev server, the e2e servers and CI keep working; previews have indexing off and are left alone. Logic and tests: `lib/seo/canonical-host.ts`. `www.whattimein.world` is redirected to the apex by Vercel itself (domain-level redirect).
+
 ## Page-quality audit and Search Console workflow (Sprint 6)
 
 - `scripts/seo/audit-site.mts` (rules in `lib/seo/audit-rules.ts`) reads the prerendered HTML and sitemaps of a build. **Errors** fail CI: missing/mismatched canonical, missing title or description on an indexable page, H1 count ≠ 1, invalid JSON-LD, indexable page absent from sitemaps, noindex page in a sitemap, sitemap URL without a page, internal link to a non-page. **Warnings**: title outside 15–70 characters (site suffix included), description outside 50–170, duplicate titles/descriptions, no inbound internal links, `<main>` under 200 words, missing BreadcrumbList/WebPage schema.
