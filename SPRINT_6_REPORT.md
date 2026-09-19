@@ -32,6 +32,7 @@
 | Thin content | Homepage gained a three-question FAQ (with FAQPage schema); it was the only page under 200 words |
 | Typecheck / Lint / Unit tests / Build | Pass / Pass / **409 of 409 (16 files)** / Pass — 863 static pages |
 | End-to-end (Playwright) | **130 passed, 6 skipped (intentional), 0 failed** in 4.3 min, desktop + mobile + kill-switch projects, run after the last change |
+| CI (run 35437745673) | All three jobs green, including the new SEO audit job: 0 errors, 0 warnings in CI |
 | Automated publishing | None — every suggestion is a human decision that goes through data/template edits, tests and CI |
 | Roadmap | All six sprints in `CLAUDE.md` delivered |
 
@@ -157,7 +158,15 @@ All are metadata or additive content, driven by the audit; no layout changed.
 
 `.github/workflows/ci.yml` gains job **SEO audit (indexed build)**: `npm ci` → `npm run build` with `NEXT_PUBLIC_ALLOW_INDEXING=true`, `NEXT_PUBLIC_SITE_URL=https://timenow.example`, `TIMENOW_DIST_DIR=.next-audit` → `node scripts/seo/audit-site.mts --dist .next-audit --site-url https://timenow.example` → `seo/reports/` uploaded as an artifact (30 days). Errors fail the job; warnings are reported.
 
-CI has not run for Sprint 6 yet: the changes are uncommitted until the commit and push are requested. The job's commands were run locally in the same order (build into `.next-audit` with indexing on, then the audit); the result is §5.5.
+**Evidence (GitHub Actions run 35437745673 on commit `e931b20`, https://github.com/AnkitAgCreates/timenow/actions/runs/35437745673):** all three jobs succeeded.
+
+| Job | Result | Duration | Key log line |
+| --- | --- | ---: | --- |
+| Typecheck, lint, unit tests, build | success | 56 s | — |
+| Playwright (two production builds, desktop + mobile + kill switch) | success | 2 min 3 s | `130 passed (1.5m)` |
+| SEO audit (indexed build) | success | 48 s | `Audited 850 pages (850 indexable): 0 errors, 0 warnings → seo/reports/site-audit.md` |
+
+The audit report is attached to the run as the `seo-audit` artifact.
 
 ---
 
