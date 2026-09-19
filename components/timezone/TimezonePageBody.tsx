@@ -239,9 +239,9 @@ export function TimezonePageBody({ entry, renderedAt, path, breadcrumbs, afterHe
             <LinkList
               columns={3}
               items={converters.map((pair) => ({
-                label: `${pair.fromZone.abbreviation} to ${pair.toZone.abbreviation}`,
+                label: `${pair.fromSide.label} to ${pair.toSide.label}`,
                 href: routes.convert(pair.from, pair.to),
-                detail: `${pair.fromZone.name} → ${pair.toZone.name}`,
+                detail: `${pair.fromSide.name} → ${pair.toSide.name}`,
               }))}
             />
           </Section>

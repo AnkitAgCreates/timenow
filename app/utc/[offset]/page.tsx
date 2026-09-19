@@ -74,7 +74,7 @@ export default async function UtcOffsetPage({ params }: Props) {
       .flatMap((tz) => getConvertersForTimezone(tz.slug))
       .filter((pair, index, all) => all.findIndex((p) => p.slug === pair.slug) === index)
       .slice(0, 4)
-      .map((pair) => ({ label: `${pair.fromZone.abbreviation} to ${pair.toZone.abbreviation}`, href: routes.convert(pair.from, pair.to), detail: 'Converter' })),
+      .map((pair) => ({ label: `${pair.fromSide.label} to ${pair.toSide.label}`, href: routes.convert(pair.from, pair.to), detail: 'Converter' })),
     ...adjacent.map((other) => ({ label: `${other.label} time now`, href: routes.utcOffset(other.slug), detail: 'Neighbouring offset' })),
     { label: 'UTC time now', href: routes.utcHub(), detail: 'All UTC offsets' },
     { label: 'GMT time now', href: routes.gmtHub(), detail: 'Greenwich Mean Time' },

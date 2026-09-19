@@ -183,12 +183,16 @@ Alias redirects (`60-minutes`, `1-hours`, `60-min`, `1-hr`, `30-sec`, `30-secs`,
 ### Converter pair — `data/converters.ts`
 
 ```ts
-type ConverterPair = { from: string; to: string; priority: number; indexable: boolean }; // timezone slugs
+type ConverterCorridor = { a: string; b: string; priority: 1 | 2 | 3 };
+// ZONE_CORRIDORS: a/b are abbreviation slugs (ist, est, cet …); CITY_CORRIDORS: a/b are city slugs (london, new-york …).
+// CONVERTER_PAIRS = both directions of every corridor → { from, to, priority, indexable }.
 ```
 
-This is an **allowlist**: only listed pairs get `/convert/[from]-to-[to]/` pages, and anything else is a 404. Conversions use each side's `referenceZone`, so "IST to EST" follows real Eastern Time (EDT in summer) and explains strict EST separately.
+Sprint 4 resolves each side to a `ConverterSide` (`lib/data/converters.ts`): `{ kind: 'zone' | 'city', slug, zone (IANA), label ("IST" / "London"), name, href, entry?, city? }`. Abbreviation slugs win over city slugs (a test forbids collisions). Content (`lib/content/converter.ts`) never branches on raw slugs: titles ("IST to EST Converter", "London to New York Time Converter"), descriptions, subtitles, the hourly table, difference periods (boundaries dated in the zone that switches), best-time-to-call slots and FAQs are all derived from the two sides and an explicit instant. The hub groups zone pairs by source zone and lists city pairs.
 
-**To add a converter page:** append a pair of existing timezone slugs.
+Rules enforced by `lib/data/converters.test.ts`: every corridor yields exactly both directions; 40–140 zone pairs and 20–80 city pairs; both sides resolve and share a kind; the two IANA zones differ; no standard ↔ its own daylight counterpart (est-to-edt); no UTC ↔ GMT; related pages share a side and a kind; unique descriptions.
+
+**To add an approved converter page:** add a corridor (both directions appear). Unlisted pairs 404 (`dynamicParams = false`).
 
 ### Tools and converter zone options
 
@@ -206,6 +210,7 @@ This is an **allowlist**: only listed pairs get `/convert/[from]-to-[to]/` pages
 | `lib/time/transitions.test.ts` | Transition wording, difference periods, CST/CDT/IST/GMT status text |
 | `lib/data/data-integrity.test.ts` | Every record and every geography region validated against raw tzdata offsets; allowlist; sitemap uniqueness and the indexing kill switch |
 | `lib/data/dataset.test.ts` | Generated data rules: size, seed cities kept, districts excluded, slug collisions, curated names, zone validity, country consistency (capitals, neighbours, zone groups), offset-page curation, generated-file provenance |
+| `lib/data/converters.test.ts` | Converter corridors and sides: both directions, bounds, kinds, no pointless pairs, slug shadowing, related pages, titles/descriptions per kind, DST-boundary correctness (London → New York in March), hub copy |
 | `lib/data/timers.test.ts` | Timer curation rules: 20–40 presets, unique durations/taglines, ≥ 3 use cases, preset-specific FAQ first, related links valid, alias spellings, grouped directory, description length, hub copy from data |
 | `lib/content/country-offset.test.ts` | Country zone groups, descriptions and FAQs (India, United States, Australia, France); offset usage classification and FAQs (UTC-5, UTC+1, Morocco) |
 | `lib/time/zone-metadata.test.ts` | Every metadata era declares exactly the offsets its zone uses in the test year; era ranges are contiguous; ambiguous abbreviations carry per-zone offsets |

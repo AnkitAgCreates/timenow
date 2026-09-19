@@ -19,6 +19,7 @@ export function buildSearchIndex(): SearchItem[] {
       label: city.name,
       detail: [city.state, city.country].filter(Boolean).join(', '),
       href: routes.city(city.slug),
+      zone: city.timezone,
       terms: [city.name, ...(city.aliases ?? []), `${city.name} ${city.country}`, city.state ?? '', city.country]
         .filter(Boolean)
         .map(normalizeSearch),
@@ -45,6 +46,7 @@ export function buildSearchIndex(): SearchItem[] {
       label: tz.abbreviation,
       detail: `${tz.name} · ${formatOffset(tz.offsetMinutes)}`,
       href: routes.timezone(tz.slug),
+      zone: tz.referenceZone,
       terms: [tz.abbreviation, tz.name, tz.referenceLabel, formatOffset(tz.offsetMinutes), formatOffset(tz.offsetMinutes, 'GMT')].map(
         normalizeSearch,
       ),
@@ -57,6 +59,7 @@ export function buildSearchIndex(): SearchItem[] {
     label: page.label,
     detail: `UTC offset · GMT${page.label.slice(3)} · ${page.iso}`,
     href: routes.utcOffset(page.slug),
+    zone: page.zoneId,
     terms: [page.label, `GMT${page.label.slice(3)}`, page.label.replace(/[+-]/, (s) => ` ${s === '+' ? 'plus' : 'minus'} `), page.iso].map(normalizeSearch),
     priority: 3,
   }));

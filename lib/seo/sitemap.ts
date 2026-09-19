@@ -69,10 +69,12 @@ const SECTIONS: Section[] = [
   },
   {
     name: 'converters',
-    entries: () =>
-      getAllConverterPairs()
+    entries: () => [
+      { path: routes.converterHub(), priority: 0.9, changeFrequency: 'weekly' },
+      ...getAllConverterPairs()
         .filter((pair) => pair.indexable)
-        .map((pair) => ({ path: routes.convert(pair.from, pair.to), priority: 0.8, changeFrequency: 'weekly' })),
+        .map((pair) => ({ path: routes.convert(pair.from, pair.to), priority: pair.priority === 1 ? 0.8 : 0.7, changeFrequency: 'weekly' as const })),
+    ],
   },
 ];
 

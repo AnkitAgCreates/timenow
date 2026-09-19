@@ -15,19 +15,21 @@ import { Section } from '@/components/ui/Section';
 import {
   bestTimesToCall,
   conversionTable,
+  converterDocumentTitle,
   converterFaqs,
   converterMetaDescription,
+  converterSubtitle,
   converterTitle,
   differencePeriods,
   sideName,
+  sideSummary,
 } from '@/lib/content/converter';
 import { yearRoundExampleCities } from '@/lib/content/timezone';
-import { converterSlug, getAllConverterPairs, getConverterPair, getRelatedConverterPairs } from '@/lib/data/converters';
+import { converterSlug, getAllConverterPairs, getConverterPair, getRelatedConverterPairs, type ConverterSide } from '@/lib/data/converters';
 import { routes } from '@/lib/routes';
 import { faqJsonLd, webApplicationJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { formatDate, getZoneLabel, getZonedDate, observesDST, getZonedParts } from '@/lib/time';
-import type { TimeZoneEntry } from '@/types/data';
 import { getRenderInstant } from '@/lib/server/render-instant';
 
 export const revalidate = 3600;
@@ -43,25 +45,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const pair = getConverterPair((await params).pair);
   if (!pair) return {};
   return buildMetadata({
-    title: `${converterTitle(pair)} – ${pair.fromZone.name} to ${pair.toZone.referenceLabel.split(' (')[0]}`,
+    title: converterDocumentTitle(pair),
     description: converterMetaDescription(pair, getRenderInstant()),
     path: routes.convert(pair.from, pair.to),
     indexable: pair.indexable,
   });
 }
 
-function LiveSide({ entry, renderedAt, align }: { entry: TimeZoneEntry; renderedAt: number; align: 'left' | 'right' }) {
+function LiveSide({ side, renderedAt, align }: { side: ConverterSide; renderedAt: number; align: 'left' | 'right' }) {
   return (
     <div className={`min-w-0 ${align === 'right' ? 'text-right' : 'text-left'}`}>
-      <p className="truncate text-xs text-muted">{sideName(entry, renderedAt)}</p>
+      <p className="truncate text-xs text-muted">{side.kind === 'zone' ? sideName(side, renderedAt) : side.name}</p>
       <p className="text-sm font-semibold text-heading">
-        (<LiveZoneInfo timeZone={entry.referenceZone} field="abbreviation" renderedAt={renderedAt} />)
+        {side.kind === 'city' && `${side.label} `}(<LiveZoneInfo timeZone={side.zone} field="abbreviation" renderedAt={renderedAt} />)
       </p>
       <p className="mt-1.5">
-        <LiveTime timeZone={entry.referenceZone} kind="time-short" className="tabular text-[clamp(1.5rem,6vw,2rem)] font-bold leading-none text-heading" />
+        <LiveTime timeZone={side.zone} kind="time-short" className="tabular text-[clamp(1.5rem,6vw,2rem)] font-bold leading-none text-heading" />
       </p>
       <p className="mt-1 text-xs text-muted">
-        <LiveTime timeZone={entry.referenceZone} kind="date-weekday-short" renderedAt={renderedAt} />
+        <LiveTime timeZone={side.zone} kind="date-weekday-short" renderedAt={renderedAt} />
       </p>
     </div>
   );
@@ -73,21 +75,22 @@ export default async function ConvertPage({ params }: Props) {
 
   const renderedAt = getRenderInstant();
   const path = routes.convert(pair.from, pair.to);
-  const { fromZone: from, toZone: to } = pair;
+  const { fromSide: from, toSide: to } = pair;
   const title = converterTitle(pair);
   const fromName = sideName(from, renderedAt);
   const toName = sideName(to, renderedAt);
   const reverse = getConverterPair(converterSlug(pair.to, pair.from));
-  const tableDate = getZonedDate(renderedAt, from.referenceZone);
+  const tableDate = getZonedDate(renderedAt, from.zone);
   const rows = conversionTable(pair, tableDate);
   const calls = bestTimesToCall(pair, renderedAt);
   const periods = differencePeriods(pair, renderedAt);
   const faqs = converterFaqs(pair, renderedAt);
   const related = getRelatedConverterPairs(pair);
-  // Explain strict-abbreviation vs. real local time for any side whose region observes DST.
-  const seasonalSides = [from, to].filter(
-    (entry) => entry.kind !== 'universal' && observesDST(entry.referenceZone, getZonedParts(renderedAt, entry.referenceZone).year),
-  );
+  // Explain strict-abbreviation vs. real local time for any abbreviation side whose region observes DST.
+  const seasonalEntries = [from, to]
+    .filter((side) => side.kind === 'zone' && side.entry!.kind !== 'universal' && observesDST(side.zone, getZonedParts(renderedAt, side.zone).year))
+    .map((side) => side.entry!);
+  const pairLabel = `${from.label} to ${to.label}`;
 
   return (
     <>
@@ -98,28 +101,25 @@ export default async function ConvertPage({ params }: Props) {
           items={[
             { name: 'Home', path: routes.home() },
             { name: 'Converter', path: routes.converterHub() },
-            { name: `${from.abbreviation} to ${to.abbreviation}`, path },
+            { name: pairLabel, path },
           ]}
         />
 
         <div className="mt-3 text-center">
           <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{title}</h1>
-          <p className="mx-auto mt-1.5 max-w-xl text-sm text-muted md:text-base">
-            Convert time between {from.name} ({from.abbreviation}) and {toName}
-            {to.kind === 'universal' ? '' : ` (${to.abbreviation}${to.counterpart ? `/${to.counterpart.toUpperCase()}` : ''})`}.
-          </p>
+          <p className="mx-auto mt-1.5 max-w-xl text-sm text-muted md:text-base">{converterSubtitle(pair, renderedAt)}</p>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div className="space-y-5">
             <section aria-label="Current time in both zones" className="card px-4 py-4">
               <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-                <LiveSide entry={from} renderedAt={renderedAt} align="left" />
+                <LiveSide side={from} renderedAt={renderedAt} align="left" />
                 {reverse ? (
                   <Link
                     href={routes.convert(reverse.from, reverse.to)}
                     className="inline-flex size-11 items-center justify-center rounded-full bg-blue-surface text-primary hover:bg-blue-border"
-                    aria-label={`Switch to ${to.abbreviation} to ${from.abbreviation} converter`}
+                    aria-label={`Switch to ${to.label} to ${from.label} converter`}
                   >
                     <Icon name="swap" className="size-5" />
                   </Link>
@@ -128,13 +128,17 @@ export default async function ConvertPage({ params }: Props) {
                     <Icon name="swap" className="size-5" />
                   </span>
                 )}
-                <LiveSide entry={to} renderedAt={renderedAt} align="right" />
+                <LiveSide side={to} renderedAt={renderedAt} align="right" />
               </div>
             </section>
 
             <Section id="convert-time" title="Convert a specific time">
               <div className="card p-4">
-                <TimeConverter defaultFrom={from.referenceZone} defaultTo={to.referenceZone} renderedAt={renderedAt} />
+                <TimeConverter
+                  defaultFrom={{ zone: from.zone, label: from.kind === 'city' ? from.name : from.label }}
+                  defaultTo={{ zone: to.zone, label: to.kind === 'city' ? to.name : to.label }}
+                  renderedAt={renderedAt}
+                />
               </div>
             </Section>
           </div>
@@ -143,15 +147,7 @@ export default async function ConvertPage({ params }: Props) {
             <Section id="time-difference" title="Time Difference">
               <div className="card px-4 py-3">
                 <p className="text-[15px] font-semibold text-heading">
-                  <LiveDifference
-                    fromZone={from.referenceZone}
-                    toZone={to.referenceZone}
-                    renderedAt={renderedAt}
-                    format="sentence"
-                    subject={fromName}
-                    reference={toName}
-                  />{' '}
-                  right now.
+                  <LiveDifference fromZone={from.zone} toZone={to.zone} renderedAt={renderedAt} format="sentence" subject={fromName} reference={toName} /> right now.
                 </p>
                 <ul className="mt-2 space-y-1.5 text-sm text-body">
                   {periods.map((period) => (
@@ -165,7 +161,7 @@ export default async function ConvertPage({ params }: Props) {
                 </ul>
               </div>
               <div className="mt-3 space-y-2">
-                {seasonalSides.map((entry) => (
+                {seasonalEntries.map((entry) => (
                   <AbbreviationStatus key={entry.slug} entry={entry} renderedAt={renderedAt} yearRoundExamples={yearRoundExampleCities(entry)} />
                 ))}
               </div>
@@ -180,10 +176,10 @@ export default async function ConvertPage({ params }: Props) {
                     <thead className="bg-surface text-left text-xs text-muted">
                       <tr>
                         <th scope="col" className="px-4 py-2 font-medium">
-                          {from.abbreviation} ({fromName})
+                          {from.kind === 'zone' ? `${from.label} (${fromName})` : `${from.label} (${getZoneLabel(from.zone, renderedAt).abbreviation})`}
                         </th>
                         <th scope="col" className="px-4 py-2 font-medium">
-                          {getZoneLabel(to.referenceZone, renderedAt).abbreviation} ({toName})
+                          {to.kind === 'zone' ? `${getZoneLabel(to.zone, renderedAt).abbreviation} (${toName})` : `${to.label} (${getZoneLabel(to.zone, renderedAt).abbreviation})`}
                         </th>
                       </tr>
                     </thead>
@@ -216,22 +212,20 @@ export default async function ConvertPage({ params }: Props) {
         </div>
 
         <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-12">
-          <Section id="conversion-table" title={`${from.abbreviation} to ${to.abbreviation} conversion table`} className="lg:col-span-5">
+          <Section id="conversion-table" title={`${pairLabel} conversion table`} className="lg:col-span-5">
             <p className="-mt-1 mb-2 text-sm text-muted">
-              For {formatDate(renderedAt, from.referenceZone, 'full')} in {fromName}.
+              For {formatDate(renderedAt, from.zone, 'full')} in {fromName}.
             </p>
             <div className="card overflow-hidden">
               <table className="w-full text-sm">
-                <caption className="sr-only">
-                  Hourly conversion from {from.abbreviation} to {toName}
-                </caption>
+                <caption className="sr-only">Hourly conversion from {from.label} to {toName}</caption>
                 <thead className="bg-surface text-left text-xs text-muted">
                   <tr>
                     <th scope="col" className="px-4 py-2 font-medium">
-                      {getZoneLabel(from.referenceZone, renderedAt).abbreviation}
+                      {from.kind === 'zone' ? getZoneLabel(from.zone, renderedAt).abbreviation : `${from.label} (${getZoneLabel(from.zone, renderedAt).abbreviation})`}
                     </th>
                     <th scope="col" className="px-4 py-2 font-medium">
-                      {getZoneLabel(to.referenceZone, renderedAt).abbreviation}
+                      {to.kind === 'zone' ? getZoneLabel(to.zone, renderedAt).abbreviation : `${to.label} (${getZoneLabel(to.zone, renderedAt).abbreviation})`}
                     </th>
                   </tr>
                 </thead>
@@ -251,22 +245,22 @@ export default async function ConvertPage({ params }: Props) {
           </Section>
 
           <div className="space-y-8 lg:col-span-7">
-            <Section id="about-zones" title="About these time zones">
+            <Section id="about-zones" title={pair.kind === 'zone' ? 'About these time zones' : 'About these cities'}>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {[from, to].map((entry) => (
-                  <div key={entry.slug} className="card px-4 py-3">
+                {[from, to].map((side) => (
+                  <div key={side.slug} className="card px-4 py-3">
                     <h3 className="text-[15px] font-semibold">
-                      <Link href={routes.timezone(entry.slug)} className="inline-block py-3.5 -my-3.5 hover:text-primary hover:underline">
-                        {entry.name} ({entry.abbreviation})
+                      <Link href={side.href} className="inline-block py-3.5 -my-3.5 hover:text-primary hover:underline">
+                        {side.kind === 'zone' ? `${side.name} (${side.label})` : `Current time in ${side.label}`}
                       </Link>
                     </h3>
-                    <p className="mt-1 text-sm leading-relaxed text-body">{entry.summary}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-body">{sideSummary(side, renderedAt)}</p>
                   </div>
                 ))}
               </div>
             </Section>
 
-            <Section id="faqs" title={`${from.abbreviation} to ${to.abbreviation} FAQs`}>
+            <Section id="faqs" title={`${pairLabel} FAQs`}>
               <FAQ items={faqs} />
             </Section>
 
@@ -274,9 +268,9 @@ export default async function ConvertPage({ params }: Props) {
               <Section id="related" title="Related conversions">
                 <LinkList
                   items={related.map((other) => ({
-                    label: `${other.fromZone.abbreviation} to ${other.toZone.abbreviation}`,
+                    label: `${other.fromSide.label} to ${other.toSide.label}`,
                     href: routes.convert(other.from, other.to),
-                    detail: `${other.fromZone.name} → ${other.toZone.name}`,
+                    detail: other.kind === 'zone' ? `${other.fromSide.name} → ${other.toSide.name}` : 'City to city',
                   }))}
                 />
               </Section>

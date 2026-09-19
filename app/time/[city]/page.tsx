@@ -16,7 +16,7 @@ import { Section } from '@/components/ui/Section';
 import { SectionTabs } from '@/components/ui/SectionTabs';
 import { cityFaqs, cityMetaDescription, cityRegion, getCitySunTimes, getZoneFacts } from '@/lib/content/city';
 import { getAllCities, getCity, getComparisonCities, getNearbyCities } from '@/lib/data/cities';
-import { getConvertersForTimezone } from '@/lib/data/converters';
+import { getConvertersForCity, getConvertersForTimezone } from '@/lib/data/converters';
 import { getCountryByCode } from '@/lib/data/countries';
 import { getTimezonesForZone } from '@/lib/data/timezones';
 import { routes } from '@/lib/routes';
@@ -63,12 +63,16 @@ export default async function CityPage({ params }: Props) {
 
   const related: LinkItem[] = [
     ...zoneEntries.map((tz) => ({ label: `${tz.name} (${tz.abbreviation})`, href: routes.timezone(tz.slug), detail: 'Time zone' })),
+    ...getConvertersForCity(city.slug)
+      .filter((pair) => pair.from === city.slug)
+      .slice(0, 4)
+      .map((pair) => ({ label: `${city.name} to ${pair.toSide.label} time`, href: routes.convert(pair.from, pair.to), detail: 'City converter' })),
     ...zoneEntries
       .flatMap((tz) => getConvertersForTimezone(tz.slug))
       .filter((pair, index, all) => all.findIndex((p) => p.slug === pair.slug) === index)
       .slice(0, 4)
       .map((pair) => ({
-        label: `${pair.fromZone.abbreviation} to ${pair.toZone.abbreviation} converter`,
+        label: `${pair.fromSide.label} to ${pair.toSide.label} converter`,
         href: routes.convert(pair.from, pair.to),
         detail: 'Time zone converter',
       })),

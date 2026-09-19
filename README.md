@@ -5,7 +5,7 @@ SEO-first time utility platform: current time, city clocks, time zone abbreviati
 - **Design source of truth:** `references/visual-prd.png` (layout and visual language only).
 - **Time source of truth:** IANA time zone data via `Intl.DateTimeFormat`, through the time engine in `lib/time/`. Never copy times, offsets or DST states from the PRD mockups.
 
-Status: **Sprint 3 complete** (timer SEO: indexable timer hub and 30 curated timer pages, on top of Sprint 2's ~470 cities, 96 countries, UTC/GMT hubs and offset pages, 50 abbreviation pages). See `CLAUDE.md` for the full roadmap.
+Status: **Sprint 4 complete** (converter: indexable hub with a city/zone/offset picker, ~110 curated time zone conversion pages and ~50 city-to-city pages), on top of Sprints 0–3 (reference pages, ~470 cities, 96 countries, UTC/GMT hubs and offsets, 50 abbreviation pages, timer hub + 30 timers). See `CLAUDE.md` for the full roadmap.
 
 ## Stack
 
@@ -86,8 +86,9 @@ app/                    Routes (Server Components by default)
   utc/[offset]/         UTC offset template (curated: offsets in real use)
   timezones/[timezone]/ Abbreviation template (+ hub)
   timer/[duration]/     Timer template (+ hub)
-  convert/[pair]/       Converter template (allowlist only)
-  converter/ world-clock/ tools/   Interim noindex hubs
+  convert/[pair]/       Conversion template: time zone pairs and city pairs (corridor allowlist)
+  converter/            Converter hub (indexable; city/zone/offset picker)
+  world-clock/ tools/   Interim noindex hubs
   sitemap.xml/ sitemaps/[file]/    Sitemap index + chunked child sitemaps
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
@@ -118,8 +119,9 @@ seo/keyword-map.md      Keyword → canonical URL map
 | `/utc/[offset]/` | ~40 curated offsets (only those used somewhere in the dataset) | yes |
 | `/timezones/[timezone]/` | 50 abbreviations (11 core + 39 world; UTC/GMT live at their hubs) | yes |
 | `/timer/` and `/timer/[duration]/` | hub + 30 curated presets (30 s – 24 h) | yes |
-| `/convert/[from]-to-[to]/` | 8 allowlisted pairs | yes |
-| `/timezones/`, `/converter/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
+| `/converter/` | hub with the searchable converter | yes |
+| `/convert/[from]-to-[to]/` | curated corridors, both directions: ~110 time zone pairs (IST, EST, PST, CST, MST, GMT, UTC, BST, CET, EET, AEST, NZST, JST, SGT, HKT, GST, PHT) and ~50 city pairs (London, New York, Los Angeles, Chicago, Paris, Berlin, Dubai, New Delhi, Singapore, Hong Kong, Tokyo, Sydney, Toronto) | yes |
+| `/timezones/`, `/world-clock/`, `/tools/` | hubs | no (until their sprint) |
 
 Unknown slugs return 404 (`dynamicParams = false`). Mixed-case URLs 308-redirect to lowercase; timer spelling variants (`/timer/60-minutes/`) 308-redirect to the canonical preset; `/timezones/utc/` → `/utc/`, `/timezones/gmt/` → `/gmt/`, and `/gmt/gmt-minus-5/` → `/utc/utc-minus-5/`.
 
@@ -132,7 +134,7 @@ Details and field definitions are in `DATA_MODEL.md` and `SEO_ARCHITECTURE.md`.
 - **Add a time zone page:** append a `TimeZoneEntry` to `data/timezones-world.ts`. The data-integrity tests verify every listed zone really switches or stays fixed as described.
 - **UTC offset pages:** derived automatically from the zones in use (`lib/data/offsets.ts`); nothing to add by hand.
 - **Add a timer page:** append a `TimerPreset` to `data/timers.ts` with a canonical slug (`timerSlugForSeconds`), a unique tagline, three or more use cases and at least one length-specific FAQ (tests enforce all of these). Alias redirects are generated automatically.
-- **Add a converter page:** append a pair to `data/converters.ts`. Only listed pairs are built and indexed.
+- **Add a converter page:** add a corridor to `ZONE_CORRIDORS` (two abbreviation slugs) or `CITY_CORRIDORS` (two city slugs) in `data/converters.ts`; both directions are generated. Tests reject same-zone pairs, EST↔EDT-style pairs, UTC↔GMT and city slugs that shadow abbreviations.
 - **Control indexation:** per record with `indexable`, globally with `NEXT_PUBLIC_ALLOW_INDEXING`.
 - **Sitemaps:** generated from indexable records by `lib/seo/sitemap.ts`, chunked at 10,000 URLs per file. When indexing is disabled, every sitemap URL returns 404.
 

@@ -11,6 +11,8 @@ export type SearchItem = {
   href: string;
   /** Pre-normalised search terms. */
   terms: string[];
+  /** IANA zone (or fixed-offset pseudo-zone) the item stands for; used by the converter picker. */
+  zone?: string;
   priority: number;
 };
 

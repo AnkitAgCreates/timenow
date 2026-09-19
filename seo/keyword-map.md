@@ -126,7 +126,11 @@ Pattern for every country: `time in {country}`, `{country} time now`, `what time
 | utc to ist | `/convert/utc-to-ist/` | live |
 | cst to est, central to eastern time | `/convert/cst-to-est/` | live |
 | est to pst, eastern to pacific time | `/convert/est-to-pst/` | live |
-| time zone converter, convert time zones | `/converter/` | hub, planned indexable in Sprint 4 |
+| time zone converter, convert time zones, time converter | `/converter/` | hub — live and indexable since Sprint 4 |
+| est to pst, eastern to pacific; pst to est | `/convert/est-to-pst/`, `/convert/pst-to-est/` | live (Sprint 4) |
+| gmt to est / est to gmt, gmt to cet, cet to gmt, gmt to ist … | `/convert/{a}-to-{b}/` | live — 54 corridors × 2 directions (Sprint 4); see `data/converters.ts` |
+| london to new york time, new york to london time | `/convert/london-to-new-york/`, `/convert/new-york-to-london/` | live (Sprint 4) |
+| {city} to {city} time (24 curated corridors: London, New York, Los Angeles, Chicago, Paris, Berlin, Dubai, New Delhi, Singapore, Hong Kong, Tokyo, Sydney, Toronto) | `/convert/{city}-to-{city}/` | live (Sprint 4); other city pairs 404 and are served by the hub's picker |
 
 Daylight variants ("ist to edt") intentionally map to the standard-abbreviation page, which follows real local time and explains EST vs EDT, rather than creating near-duplicate `/convert/ist-to-edt/` pages.
 

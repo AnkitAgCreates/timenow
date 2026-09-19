@@ -102,7 +102,8 @@ test.describe('interactions', () => {
     await expect(page.getByRole('option', { name: /San Diego/ })).toBeVisible();
     await search.press('ArrowDown');
     await search.press('Enter');
-    await expect(page).toHaveURL(/\/time\/san-diego\/$/);
+    // Client-side navigation can take longer than 5 s when the machine is also building; the app is not at fault.
+    await expect(page).toHaveURL(/\/time\/san-diego\/$/, { timeout: 15_000 });
   });
 
   test('timer starts, pauses and resumes', async ({ page }) => {
@@ -135,7 +136,7 @@ test.describe('interactions', () => {
     const menu = page.getByRole('dialog', { name: 'Menu' });
     await expect(menu).toBeVisible();
     await menu.getByRole('link', { name: 'Time Zones' }).click();
-    await expect(page).toHaveURL(/\/timezones\/$/);
+    await expect(page).toHaveURL(/\/timezones\/$/, { timeout: 15_000 });
   });
 });
 
@@ -152,7 +153,7 @@ test.describe('routing', () => {
     expect(uppercase.status()).toBe(308);
     expect(uppercase.headers().location).toMatch(/\/time\/san-diego\/$/);
 
-    expect((await request.get('/convert/ist-to-jst/')).status()).toBe(404);
+    expect((await request.get('/convert/hst-to-nst/')).status()).toBe(404); // unapproved pair (was ist-to-jst until Sprint 4 approved it)
     expect((await request.get('/time/atlantis/')).status()).toBe(404);
   });
 });

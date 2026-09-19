@@ -134,16 +134,17 @@ describe('timer presets', () => {
 });
 
 describe('converter allowlist', () => {
-  it('references known timezones, has no duplicates and rejects unlisted pairs', () => {
-    const slugs = new Set(TIMEZONES.map((t) => t.slug));
+  it('references known time zones or cities, has no duplicates and rejects unlisted pairs', () => {
+    // Sprint 4: a pair's sides are either two abbreviation pages or two dataset cities.
+    const slugs = new Set([...TIMEZONES.map((t) => t.slug), ...CITIES.map((c) => c.slug)]);
     for (const pair of CONVERTER_PAIRS) {
-      expect(slugs.has(pair.from)).toBe(true);
-      expect(slugs.has(pair.to)).toBe(true);
+      expect(slugs.has(pair.from), pair.from).toBe(true);
+      expect(slugs.has(pair.to), pair.to).toBe(true);
       expect(pair.from).not.toBe(pair.to);
     }
     expect(unique(CONVERTER_PAIRS.map((p) => `${p.from}-to-${p.to}`))).toBe(true);
     expect(getConverterPair('ist-to-est')).toBeDefined();
-    expect(getConverterPair('ist-to-jst')).toBeUndefined();
+    expect(getConverterPair('hst-to-nst')).toBeUndefined(); // was ist-to-jst until Sprint 4 approved that corridor
   });
 });
 

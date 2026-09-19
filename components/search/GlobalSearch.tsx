@@ -4,20 +4,9 @@ import { useRouter } from 'next/navigation';
 import { useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { Icon } from '@/components/ui/Icon';
 import { track } from '@/lib/analytics';
+import { loadSearchIndex } from '@/lib/search/client';
 import { GROUP_LABELS, GROUP_ORDER, flattenResults, searchItems, type SearchItem } from '@/lib/search/match';
 
-let indexPromise: Promise<SearchItem[]> | null = null;
-
-/** Fetch the static search index once per session, on first interaction. */
-function loadIndex(): Promise<SearchItem[]> {
-  indexPromise ??= fetch('/api/search-index/')
-    .then((response) => (response.ok ? (response.json() as Promise<SearchItem[]>) : []))
-    .catch(() => {
-      indexPromise = null;
-      return [];
-    });
-  return indexPromise;
-}
 
 type GlobalSearchProps = {
   size?: 'md' | 'lg';
@@ -47,7 +36,7 @@ export function GlobalSearch({ size = 'md', autoFocus, onNavigate, className = '
   const activeItem = activeIndex >= 0 ? flat[activeIndex] : undefined;
 
   const ensureIndex = () => {
-    if (!items) void loadIndex().then(setItems);
+    if (!items) void loadSearchIndex().then(setItems);
   };
 
   const select = (item: SearchItem) => {

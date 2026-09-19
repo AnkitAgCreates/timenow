@@ -66,7 +66,7 @@ The `card` utility = white background + `border` + `radius-lg` + `shadow-card`.
 | `OffsetsDirectory` | `components/timezone` | Table of every UTC offset with a live time (Sprint 2) |
 | `OffsetToLocal` | `components/converter` | Client island comparing a fixed offset with the visitor’s zone (Sprint 2) |
 | `Timer` | `components/timer` | Ring, Start/Pause/Resume, Reset, sound toggle, presets, custom |
-| `TimeConverter` | `components/converter` | Specific-time converter with swap |
+| `TimeConverter`, `ZonePicker` | `components/converter` | Specific-time converter with swap; each side is a searchable combobox over cities, abbreviations and UTC offsets (common zones listed when empty; the site search index is fetched on first use) — Sprint 4 |
 | `ToolCard` | `components/tools` | Live tools link; planned tools show "Soon" and are not links |
 | `Breadcrumbs`, `Section`, `SectionTabs`, `FAQ`, `InfoRow`, `InfoTile`, `Callout`, `LinkList`, `Icon` | `components/ui` | Shared primitives |
 
