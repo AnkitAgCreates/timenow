@@ -1,0 +1,27 @@
+name: IndexNow submit
+
+# Manual: tell Bing/Yandex/Naver/Seznam about changed URLs. Leave "urls" empty to
+# resubmit every URL in the live sitemaps (for example after a content release).
+on:
+  workflow_dispatch:
+    inputs:
+      urls:
+        description: Comma-separated paths (e.g. /time/london/,/timer/1-hour/); empty = all sitemap URLs
+        required: false
+        default: ''
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - run: |
+          if [ -n "${{ github.event.inputs.urls }}" ]; then
+            node scripts/seo/indexnow.mts --site-url https://whattimein.world --urls "${{ github.event.inputs.urls }}"
+          else
+            node scripts/seo/indexnow.mts --site-url https://whattimein.world
+          fi

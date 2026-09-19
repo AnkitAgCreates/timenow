@@ -125,6 +125,10 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 The proxy permanently redirects (308) two kinds of duplicates before any page renders: mixed-case paths to their lowercase form, and — only when indexing is on — requests that arrive on a non-canonical host (the `*.vercel.app` aliases and per-deployment URLs) to the same path on `NEXT_PUBLIC_SITE_URL`. Local hosts (`localhost`, `127.0.0.1`) are never redirected, so the dev server, the e2e servers and CI keep working; previews have indexing off and are left alone. Logic and tests: `lib/seo/canonical-host.ts`. `www.whattimein.world` is redirected to the apex by Vercel itself (domain-level redirect).
 
+## IndexNow
+
+`npm run seo:indexnow` (`scripts/seo/indexnow.mts`, helpers in `lib/seo/indexnow.ts`) submits URLs to the shared IndexNow endpoint, which forwards them to Bing, Yandex, Naver, Seznam and the other participating engines. With no arguments it reads the live sitemap index and submits every URL (one request holds up to 10,000); `--urls /a/,/b/` submits specific paths; `--dry-run` prints the payload. The key is public by design and lives in `lib/seo/indexnow.ts` and `public/<key>.txt`; the engines verify it by fetching that file, and the script refuses to run if the live file does not match. The manual workflow `.github/workflows/indexnow.yml` runs the same script from GitHub. Google does not use IndexNow; it relies on the sitemaps.
+
 ## Page-quality audit and Search Console workflow (Sprint 6)
 
 - `scripts/seo/audit-site.mts` (rules in `lib/seo/audit-rules.ts`) reads the prerendered HTML and sitemaps of a build. **Errors** fail CI: missing/mismatched canonical, missing title or description on an indexable page, H1 count ≠ 1, invalid JSON-LD, indexable page absent from sitemaps, noindex page in a sitemap, sitemap URL without a page, internal link to a non-page. **Warnings**: title outside 15–70 characters (site suffix included), description outside 50–170, duplicate titles/descriptions, no inbound internal links, `<main>` under 200 words, missing BreadcrumbList/WebPage schema.

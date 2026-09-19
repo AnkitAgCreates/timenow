@@ -78,6 +78,7 @@ node scripts/generate-geo-data.mjs
 ```bash
 npm run seo:audit -- --site-url https://timenow.example      # audits the build in .next → seo/reports/site-audit.md (+ site-inventory.json)
 npm run seo:gsc -- --queries Queries.csv --pages Pages.csv    # Search Console exports → seo/reports/gsc-opportunities.md
+npm run seo:indexnow -- --urls /time/london/                  # IndexNow (Bing, Yandex, …); no --urls = every sitemap URL
 ```
 
 The audit checks every prerendered page (title/description length and duplicates, one H1, canonical, robots vs sitemap, JSON-LD, broken internal links, orphans, thin pages) and fails CI on errors; the analysis turns Search Console exports into a reviewed list of opportunities (low CTR, positions 5–20, missing pages by intent, cannibalisation, internal-link and metadata suggestions). Nothing is published automatically. Details in `seo/SEARCH_CONSOLE_WORKFLOW.md`; synthetic samples in `seo/samples/`.
@@ -129,7 +130,7 @@ app/                    Routes (Server Components by default)
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
 data/                   Structured records: cities + countries (generated), timezones (+ timezones-world), timers, converters, tools
-scripts/                generate-geo-data.mjs (GeoNames → generated data); fetch-city-images.mjs (Commons photos → public/cities + manifest); seo/audit-site.mts, seo/analyze-gsc.mts (Sprint 6)
+scripts/                generate-geo-data.mjs (GeoNames → generated data); fetch-city-images.mjs (Commons photos → public/cities + manifest); seo/audit-site.mts, seo/analyze-gsc.mts, seo/indexnow.mts
 lib/
   time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
   tools/                Pure calculator logic (date difference, hours, military time, Unix timestamps, stopwatch, alarm)

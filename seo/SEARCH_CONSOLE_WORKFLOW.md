@@ -42,3 +42,7 @@ Nothing in the report changes the site. Every change still goes through the norm
 ## Cadence
 
 Monthly after launch, or after each sprint that adds pages. Keep the exports outside git (`seo/reports/` and `seo/exports/` are ignored); the synthetic samples in `seo/samples/` are for trying the tooling only.
+
+## Bing and IndexNow
+
+Bing Webmaster Tools imports the property and sitemap from Search Console (done 2026-09-19). For changed or new URLs, run `npm run seo:indexnow -- --urls /path/,/other/` (or the manual "IndexNow submit" GitHub workflow) so Bing, Yandex and the other IndexNow engines fetch them within minutes; with no `--urls` every sitemap URL is resubmitted. Google ignores IndexNow and follows the sitemaps.
