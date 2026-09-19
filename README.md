@@ -101,6 +101,10 @@ The site is a standard Next.js build: static pages with hourly ISR, no custom se
 
 Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.
 
+## Analytics (Google Analytics 4)
+
+Off by default. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` (Production only on Vercel) and redeploy: the site then shows a consent banner on the first visit and loads the Google tag only after **Accept** (no request to Google and no cookie before that; **Decline** is remembered on the device, and the privacy page lets visitors change their choice). Advertising signals are denied in the tag's consent defaults. Page views, including client-side navigations, come from GA4's enhanced measurement, which is on by default in the property; the site sends its own events too: `search_used`, `city_selected`, `timer_started`, `timer_completed`, `converter_used`, `meeting_planner_used`, `tool_selected` (`lib/analytics.ts`). The e2e suite renders the banner with a fake id and intercepts every request to Google.
+
 ## Supported browsers
 
 `browserslist` in `package.json` declares the support policy: browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+). Older browsers are not tested. Widen the list if analytics show a meaningful share of them. Note that Next.js ships its own small polyfill set (`Array.prototype.at`, `Object.hasOwn`, …) inside its runtime chunk regardless of this list; Lighthouse reports it as about 14 KB of legacy JavaScript, and it cannot be removed from app configuration.

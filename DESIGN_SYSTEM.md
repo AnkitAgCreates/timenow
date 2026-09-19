@@ -82,6 +82,10 @@ Priority cities (homepage, comparison and seed cities — the `data/sources/city
 
 Every other city keeps `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline silhouette on a light-blue gradient, defined once in CSS, which preserves the PRD's card rhythm with no network requests.
 
+## Consent banner
+
+When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a fixed bar (card style, restrained shadow) above the mobile bottom navigation and at the bottom on desktop: one sentence, a Privacy link, Decline and Accept buttons with 44 px targets. It is `position: fixed`, so it never shifts content (CLS stays 0), and it is rendered only after hydration so returning visitors never see it flash. It appears once; the privacy page offers a "Change my choice" control.
+
 ## Live values (no flash, no hydration mismatch)
 
 Clock text is filled **before first paint** by an inline bootstrap (`lib/clock/bootstrap.ts`, following the Next.js "Preventing flash before hydration" guide), then kept current by a single shared once-per-second store (`lib/clock/stores.ts`).

@@ -1,5 +1,7 @@
 import Link from 'next/link';
+import { AnalyticsChoice } from '@/components/analytics/AnalyticsChoice';
 import { InfoPage, InfoSection } from '@/components/site/InfoPage';
+import { ANALYTICS_CONFIGURED } from '@/lib/analytics-config';
 import { routes } from '@/lib/routes';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { SITE_NAME } from '@/lib/seo/site';
@@ -62,16 +64,40 @@ export default function PrivacyPage() {
       </InfoSection>
 
       <InfoSection id="analytics" title="Analytics and advertising">
-        <p>
-          None. No analytics script and no advertising script loads on any page today. The site is prepared for a privacy-respecting analytics service in future; if that is
-          switched on, this page will describe what it measures before it goes live.
-        </p>
+        {ANALYTICS_CONFIGURED ? (
+          <>
+            <p>
+              No advertising. For analytics we use Google Analytics 4, and only if you accept the banner shown on your first visit. Until you accept, nothing is requested
+              from Google and no analytics cookie is set; if you decline, the same is true and the banner does not return.
+            </p>
+            <p>
+              After you accept, Google Analytics records which pages are viewed, which tools are used (for example that a timer was started or a conversion was made), the type
+              of device and browser, and an approximate location derived from your IP address at country or city level. Google does not store the IP address itself. It sets
+              first-party cookies named <code>_ga</code> and <code>_ga_…</code> on this domain so that repeat visits count as one visitor; they expire after two years. All
+              advertising features are switched off, and we do not link analytics data to any identity, because there is none to link to.
+            </p>
+            <p>
+              Google processes this data on our behalf under the{' '}
+              <a href="https://policies.google.com/privacy" rel="noopener noreferrer">
+                Google privacy policy
+              </a>
+              .
+            </p>
+            <AnalyticsChoice />
+          </>
+        ) : (
+          <p>
+            None. No analytics script and no advertising script loads on any page today. The site is prepared for Google Analytics behind a consent banner; if that is
+            switched on, this section changes to describe exactly what it measures.
+          </p>
+        )}
       </InfoSection>
 
       <InfoSection id="third-parties" title="Third-party content">
         <p>
-          Fonts, scripts, styles and city photographs are served from this site&rsquo;s own domain, so opening a page makes no requests to other companies. Where a page links
-          out, for example to GeoNames, Wikimedia Commons or GitHub, those sites have their own privacy policies once you follow the link.
+          Fonts, scripts, styles and city photographs are served from this site&rsquo;s own domain, so opening a page makes no requests to other companies
+          {ANALYTICS_CONFIGURED ? ', apart from Google Analytics after you have accepted it' : ''}. Where a page links out, for example to GeoNames, Wikimedia Commons or
+          GitHub, those sites have their own privacy policies once you follow the link.
         </p>
       </InfoSection>
 

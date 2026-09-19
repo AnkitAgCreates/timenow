@@ -12,7 +12,8 @@ const VARIANTS = [
   {
     name: 'indexed',
     port: 3310,
-    env: { NEXT_PUBLIC_ALLOW_INDEXING: 'true', NEXT_PUBLIC_SITE_URL: 'https://timenow.example' },
+    // The fake GA id only makes the consent banner render; tests intercept every request to Google.
+    env: { NEXT_PUBLIC_ALLOW_INDEXING: 'true', NEXT_PUBLIC_SITE_URL: 'https://timenow.example', NEXT_PUBLIC_GA_MEASUREMENT_ID: 'G-E2ETEST000' },
   },
   {
     name: 'noindex',
