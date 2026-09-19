@@ -102,7 +102,7 @@ Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.
 
 ## Supported browsers
 
-`browserslist` in `package.json` targets browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+), so the build ships no polyfills for features such as `Array.prototype.at`. Older browsers are not tested. Widen the list if analytics show a meaningful share of them.
+`browserslist` in `package.json` declares the support policy: browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+). Older browsers are not tested. Widen the list if analytics show a meaningful share of them. Note that Next.js ships its own small polyfill set (`Array.prototype.at`, `Object.hasOwn`, …) inside its runtime chunk regardless of this list; Lighthouse reports it as about 14 KB of legacy JavaScript, and it cannot be removed from app configuration.
 
 ## Continuous integration
 
