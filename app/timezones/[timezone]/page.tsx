@@ -25,7 +25,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = getTimezone((await params).timezone);
   if (!entry) return {};
   return buildMetadata({
-    title: fitTitle(`${timezonePageTitle(entry)} – Current Time, ${formatOffset(entry.offsetMinutes)} & DST`, `${entry.abbreviation} Time Now – ${entry.name.replace(/ Time$/, '')}, ${formatOffset(entry.offsetMinutes)}`),
+    title: fitTitle(
+      fitTitle(`${timezonePageTitle(entry)} – Current Time, ${formatOffset(entry.offsetMinutes)} & DST`, `${entry.abbreviation} Time Now – ${entry.name.replace(/ Time$/, '')}, ${formatOffset(entry.offsetMinutes)}`),
+      `${entry.abbreviation} Time Now – ${formatOffset(entry.offsetMinutes)}`,
+    ),
     description: timezoneMetaDescription(entry),
     path: routes.timezone(entry.slug),
     indexable: entry.indexable,

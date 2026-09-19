@@ -14,7 +14,7 @@ import { getRenderInstant } from '@/lib/server/render-instant';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Time Zone Converter – Cities, Time Zones & UTC Offsets',
+  title: 'Time Zone Converter – Cities, Zones & UTC Offsets',
   description: converterHubDescription(),
   path: routes.converterHub(),
   indexable: true,

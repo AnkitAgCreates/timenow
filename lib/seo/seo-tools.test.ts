@@ -18,7 +18,7 @@ const SITE = 'https://timenow.example';
 
 const page = (over: Partial<PageRecord>): PageRecord => ({
   path: '/time/london/',
-  title: 'Current Time in London, United Kingdom – Time Zone & DST | TimeNow',
+  title: 'Current Time in London – Time Zone & DST | whattimein.world',
   description: 'What time is it in London? Live local time, time zone and DST, sunrise and sunset, and differences with major cities.',
   canonical: `${SITE}/time/london/`,
   robots: 'index, follow',
@@ -85,10 +85,10 @@ describe('site audit rules', () => {
 const inventory: Inventory = {
   paths: ['/', '/time/london/', '/time/new-york/', '/countries/india/', '/timezones/est/', '/timezones/cst/', '/utc/', '/timer/25-minutes/', '/timer/1-hour/', '/convert/est-to-ist/', '/convert/london-to-new-york/', '/timezones/'],
   titles: {
-    '/time/london/': 'Current Time in London, United Kingdom – Time Zone & DST | TimeNow',
-    '/time/new-york/': 'Current Time in New York, New York – Time Zone & DST | TimeNow',
-    '/timezones/est/': 'Eastern Standard Time (EST) – Current Time, UTC-5 & DST | TimeNow',
-    '/timer/25-minutes/': '25 Minute Timer – Free Online Countdown with Alarm | TimeNow',
+    '/time/london/': 'Current Time in London – Time Zone & DST | whattimein.world',
+    '/time/new-york/': 'Current Time in New York, New York – Time Zone & DST | whattimein.world',
+    '/timezones/est/': 'Eastern Standard Time (EST) – Current Time, UTC-5 & DST | whattimein.world',
+    '/timer/25-minutes/': '25 Minute Timer – Free Online Countdown with Alarm | whattimein.world',
   },
   links: {
     '/': ['/time/london/', '/timezones/est/', '/timer/1-hour/'],

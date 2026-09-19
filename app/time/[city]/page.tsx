@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   const facts = getZoneFacts(city.timezone, getRenderInstant());
   return buildMetadata({
-    title: fitTitle(`Current Time in ${city.name}, ${cityRegion(city)} – Time Zone & DST`, `Current Time in ${city.name} – Time Zone & DST`),
+    title: fitTitle(fitTitle(`Current Time in ${city.name}, ${cityRegion(city)} – Time Zone & DST`, `Current Time in ${city.name} – Time Zone & DST`), `Current Time in ${city.name}`),
     description: cityMetaDescription(city, facts),
     path: routes.city(city.slug),
     indexable: city.indexable,

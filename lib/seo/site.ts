@@ -1,6 +1,7 @@
 /** Site-wide constants and environment-driven SEO switches. */
 
-export const SITE_NAME = 'TimeNow';
+/** The brand is the domain (renamed from TimeNow on 2026-09-19). */
+export const SITE_NAME = 'whattimein.world';
 export const SITE_TAGLINE = 'The world’s time, made simple.';
 export const SITE_DESCRIPTION =
   'Check the current time anywhere, compare time zones, convert times with daylight saving handled correctly, and run free online timers.';

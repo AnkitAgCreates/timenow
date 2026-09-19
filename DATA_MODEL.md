@@ -1,4 +1,4 @@
-# TimeNow Data Model
+# whattimein.world Data Model
 
 Pages are generated from typed records in `data/` (types in `types/data.ts`). Nothing is hand-built per city, country, time zone, timer or converter. All time facts come from the time engine in `lib/time/`, evaluated for an explicit instant.
 

@@ -20,7 +20,7 @@ const TITLE = 'Time Zone Abbreviations';
 const DESCRIPTION = 'EST, CST, PST, IST, GMT, UTC, CET, AEST, JST and 40 more abbreviations with their UTC offsets, the current time where each is used, and which one is in effect today.';
 
 export const metadata = buildMetadata({
-  title: 'Time Zone Abbreviations – Current Time & UTC Offsets',
+  title: 'Time Zone Abbreviations – Times & UTC Offsets',
   description: DESCRIPTION,
   path: routes.timezonesHub(),
   indexable: true,

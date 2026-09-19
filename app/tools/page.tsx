@@ -12,7 +12,7 @@ const TITLE = 'Time Tools';
 const DESCRIPTION = 'Ten free online time tools: world clock, time zone converter, meeting planner, timer, alarm, stopwatch, date difference, hours, military time and Unix timestamp.';
 
 export const metadata = buildMetadata({
-  title: 'Time Tools – Free Online Time Calculators & Converters',
+  title: 'Time Tools – Free Online Calculators & Converters',
   description: DESCRIPTION,
   path: routes.tools(),
   indexable: true,

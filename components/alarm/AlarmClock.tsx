@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Callout } from '@/components/ui/Callout';
 import { Icon } from '@/components/ui/Icon';
+import { SITE_NAME } from '@/lib/seo/site';
 import { track } from '@/lib/analytics';
 import { createBeepContext, playBeepPattern } from '@/lib/clock/beep';
 import { createPersistedStore, usePersisted } from '@/lib/clock/persisted';
@@ -68,7 +69,7 @@ export function AlarmClock() {
   useEffect(() => {
     if (!ringing) return;
     const original = document.title;
-    document.title = `⏰ ${ringing.label || 'Alarm'} · TimeNow`;
+    document.title = `⏰ ${ringing.label || 'Alarm'} · ${SITE_NAME}`;
     return () => {
       document.title = original;
     };

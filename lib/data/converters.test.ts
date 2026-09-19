@@ -112,7 +112,7 @@ describe('converter copy', () => {
   it('titles and describes zone pairs as before and city pairs as "time converters"', () => {
     const ist = pair('ist-to-est');
     expect(converterTitle(ist)).toBe('IST to EST Converter');
-    expect(converterDocumentTitle(ist)).toBe('IST to EST Converter – India Standard Time to Eastern Time');
+    expect(converterDocumentTitle(ist)).toBe('IST to EST Converter – Time Difference & Table');
     expect(converterSubtitle(ist, winter)).toBe('Convert time between India Standard Time (IST) and Eastern Time (EST/EDT).');
     const city = pair('london-to-new-york');
     expect(converterTitle(city)).toBe('London to New York Time Converter');

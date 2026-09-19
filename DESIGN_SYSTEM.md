@@ -1,4 +1,4 @@
-# TimeNow Design System
+# whattimein.world Design System
 
 The Visual PRD (`references/visual-prd.png`) defines the visual language: white/light surfaces, dark navy type, a restrained blue accent, thin borders, light shadows, 8–12px radii, large tabular clocks and dense information cards. This document records how that is implemented. The PRD is **never** a source for time values.
 

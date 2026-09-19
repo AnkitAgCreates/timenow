@@ -15,7 +15,7 @@ import { getRenderInstant } from '@/lib/server/render-instant';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'World Clock – Current Time in Cities Around the World',
+  title: 'World Clock – Current Time in Cities Worldwide',
   description: worldClockDescription(),
   path: routes.worldClock(),
   indexable: true,

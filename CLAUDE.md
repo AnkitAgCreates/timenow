@@ -1,10 +1,10 @@
-# CLAUDE.md — TimeNow
+# CLAUDE.md — whattimein.world
 
 ## Project Mission
 
 Build a production-ready, SEO-first time utility platform based on the supplied 3:4 Visual PRD.
 
-The working product name is **TimeNow**. The product should help users instantly check, compare, convert, and calculate time while acquiring the majority of traffic through organic search.
+The product name is **whattimein.world** — the brand is the domain (renamed from the working name TimeNow on 2026-09-19; internal identifiers such as the package name, `TIMENOW_DIST_DIR` and the `timenow:*` localStorage keys keep the old name). The product should help users instantly check, compare, convert, and calculate time while acquiring the majority of traffic through organic search.
 
 The Visual PRD is the design source of truth. Do not reinterpret the product as a generic SaaS/AI landing page.
 
@@ -143,7 +143,7 @@ These establish the reusable UI and SEO templates for later expansion.
 # Homepage
 
 Header:
-- TimeNow logo
+- whattimein.world logo (wordmark)
 - World Clock
 - Time Zones
 - Converter

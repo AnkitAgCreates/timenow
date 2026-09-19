@@ -47,9 +47,12 @@ export function converterTitle(pair: ResolvedConverterPair): string {
 /** Full <title>: the H1 plus the part a searcher needs to disambiguate. */
 export function converterDocumentTitle(pair: ResolvedConverterPair): string {
   if (pair.kind === 'zone') {
-    return fitTitle(`${converterTitle(pair)} – ${pair.fromSide.name} to ${pair.toSide.entry!.referenceLabel.split(' (')[0]}`, `${converterTitle(pair)} – Time Difference & Table`);
+    return fitTitle(
+      fitTitle(`${converterTitle(pair)} – ${pair.fromSide.name} to ${pair.toSide.entry!.referenceLabel.split(' (')[0]}`, `${converterTitle(pair)} – Time Difference & Table`),
+      `${converterTitle(pair)} – Time Difference`,
+    );
   }
-  return fitTitle(`${converterTitle(pair)} – Time Difference & Best Time to Call`, `${converterTitle(pair)} – Time Difference`);
+  return fitTitle(fitTitle(`${converterTitle(pair)} – Time Difference & Best Time to Call`, `${converterTitle(pair)} – Time Difference`), converterTitle(pair));
 }
 
 export function converterMetaDescription(pair: ResolvedConverterPair, now: number): string {

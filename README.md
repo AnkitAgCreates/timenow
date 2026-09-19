@@ -1,4 +1,6 @@
-# TimeNow
+# whattimein.world
+
+Formerly TimeNow: the brand was renamed to match the domain on 2026-09-19. Internal identifiers (npm package name, `TIMENOW_DIST_DIR`, `timenow:*` localStorage keys, launch config names, the GitHub repository) keep the old name on purpose.
 
 SEO-first time utility platform: current time, city clocks, time zone abbreviation pages, a DST-aware converter and online timers.
 

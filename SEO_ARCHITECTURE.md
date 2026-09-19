@@ -1,4 +1,4 @@
-# TimeNow SEO Architecture
+# whattimein.world SEO Architecture
 
 SEO is part of the product architecture: every indexable page is a data record rendered by a validated template, with server-rendered useful content, unique metadata, a canonical URL, breadcrumbs, structured data and internal links.
 
@@ -22,18 +22,18 @@ SEO is part of the product architecture: every indexable page is a data record r
 | Timer hub (Sprint 3) | `/timer/` | Online Timer – Free Countdown Timer with Alarm | Online Timer | WebApplication, BreadcrumbList, FAQPage | static |
 | Converter hub (Sprint 4) | `/converter/` | Time Zone Converter – Convert Time Between Cities and Time Zones | Time Zone Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | City converter (Sprint 4) | `/convert/[city]-to-[city]/` | {City} to {City} Time Converter – Time Difference & Best Time to Call | {City} to {City} Time Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
-| World Clock (Sprint 5) | `/world-clock/` | World Clock – Current Time in Cities Around the World | World Clock | WebApplication, BreadcrumbList, FAQPage | 1h |
-| Meeting Planner (Sprint 5) | `/meeting-planner/` | Meeting Planner – Find a Meeting Time Across Time Zones | Meeting Planner | WebApplication, BreadcrumbList, FAQPage | 1h |
+| World Clock (Sprint 5) | `/world-clock/` | World Clock – Current Time in Cities Worldwide | World Clock | WebApplication, BreadcrumbList, FAQPage | 1h |
+| Meeting Planner (Sprint 5) | `/meeting-planner/` | Meeting Planner – Find a Time Across Time Zones | Meeting Planner | WebApplication, BreadcrumbList, FAQPage | 1h |
 | Alarm / Stopwatch (Sprint 5) | `/alarm/`, `/stopwatch/` | Online Alarm Clock – …, Online Stopwatch – … | Online Alarm Clock / Online Stopwatch | WebApplication, BreadcrumbList, FAQPage | static |
 | Calculators (Sprint 5) | `/tools/[tool]/` | {Tool} – {benefit} | {Tool} | WebApplication, BreadcrumbList, FAQPage | static / 1h |
 | Tools hub, Time zones hub (Sprint 5) | `/tools/`, `/timezones/` | Time Tools – …, Time Zone Abbreviations – … | Time Tools / Time Zone Abbreviations | WebPage, BreadcrumbList, FAQPage | static / 1h |
 | Converter | `/convert/[a]-to-[b]/` | {A} to {B} Converter – {A name} to {B region} | {A} to {B} Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | Country (Sprint 2) | `/countries/[country]/` | Current Time in {Country} – Time Zones, DST & Major Cities | Current Time in {Country} | WebPage, BreadcrumbList, FAQPage | 1h |
-| Countries hub (Sprint 2) | `/countries/` | Current Time by Country – World Time Zones Directory | Current Time by Country | WebPage, BreadcrumbList | 1h |
+| Countries hub (Sprint 2) | `/countries/` | Current Time by Country – Time Zones Directory | Current Time by Country | WebPage, BreadcrumbList | 1h |
 | UTC / GMT hubs (Sprint 2) | `/utc/`, `/gmt/` | UTC Time Now – Coordinated Universal Time (UTC+0) & All UTC Offsets | Coordinated Universal Time (UTC) | WebPage, BreadcrumbList, FAQPage | 1h |
 | UTC offset (Sprint 2) | `/utc/[offset]/` | {UTC±X} Time Now – Current Time at {UTC±X} (GMT±X) | {UTC±X} Time Now | WebPage, BreadcrumbList, FAQPage | 1h |
 
-The `| TimeNow` suffix is appended by the layout's title template.
+The `| whattimein.world` suffix is appended by the layout's title template.
 
 ### Rendering strategy
 
@@ -125,7 +125,7 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 - `scripts/seo/audit-site.mts` (rules in `lib/seo/audit-rules.ts`) reads the prerendered HTML and sitemaps of a build. **Errors** fail CI: missing/mismatched canonical, missing title or description on an indexable page, H1 count ≠ 1, invalid JSON-LD, indexable page absent from sitemaps, noindex page in a sitemap, sitemap URL without a page, internal link to a non-page. **Warnings**: title outside 15–70 characters (site suffix included), description outside 50–170, duplicate titles/descriptions, no inbound internal links, `<main>` under 200 words, missing BreadcrumbList/WebPage schema.
 - `scripts/seo/analyze-gsc.mts` (logic in `lib/seo/gsc-analysis.ts`) takes Search Console exports and the audit's inventory and reports high-impression/low-CTR pages, positions 5–20, missing pages by intent (city/country, abbreviation, timer length, converter corridor — each mapped to the candidate path but never created automatically), cannibalisation, internal-link suggestions from the link graph, and titles that lack their top query's wording. See `seo/SEARCH_CONSOLE_WORKFLOW.md`.
-- **Title budget:** 60 characters before " | TimeNow" (`lib/seo/title.ts` `fitTitle` picks a compact pattern when the descriptive one does not fit). **Description budget:** 160 characters (`fitDescription`, same idea: city, country and abbreviation templates fall back to an abbreviation-only form when the zone's long name would not fit). Every template was tightened in Sprint 6 after the first audit (city, country, abbreviation, UTC offset and zone-converter descriptions; converter, city, country, abbreviation, UTC/GMT and converter-hub titles).
+- **Title budget:** 51 characters before the " | whattimein.world" suffix — derived in `lib/seo/title.ts` as 70 minus the suffix length, so the audit's 70-character limit holds including the brand (`fitTitle` picks a compact pattern when the descriptive one does not fit). **Description budget:** 160 characters (`fitDescription`, same idea: city, country and abbreviation templates fall back to an abbreviation-only form when the zone's long name would not fit). Every template was tightened in Sprint 6 after the first audit (city, country, abbreviation, UTC offset and zone-converter descriptions; converter, city, country, abbreviation, UTC/GMT and converter-hub titles).
 - **Orphans:** country pages list every city in the country (not only the 12 major ones), so every city page has at least one inbound link besides nearby-city links.
 - **Ambiguous city names** (Columbus, Ohio vs Columbus, Georgia) are qualified in descriptions so no two pages share one.
 

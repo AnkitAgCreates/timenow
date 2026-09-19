@@ -14,7 +14,7 @@ export type ToolContent = {
 export const TOOL_CONTENT: Record<string, ToolContent> = {
   'meeting-planner': {
     title: 'Meeting Planner',
-    documentTitle: 'Meeting Planner – Find a Meeting Time Across Time Zones',
+    documentTitle: 'Meeting Planner – Find a Time Across Time Zones',
     description: 'Plan a meeting across two to four time zones: every hour side by side, your working hours, suggested slots that suit everyone, and a link to share.',
     subtitle: 'Compare up to four places hour by hour, set working hours, and pick a slot that works for everyone.',
     howTo: [
@@ -138,7 +138,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   'hours-calculator': {
     title: 'Hours Calculator',
-    documentTitle: 'Hours Calculator – Add Up Hours Worked Between Times',
+    documentTitle: 'Hours Calculator – Add Up Hours Between Times',
     description: 'Hours and minutes between a start and end time, minus breaks, across several shifts, shown as hours:minutes and decimal hours for payroll.',
     subtitle: 'Hours between two times, minus breaks, across as many shifts as you like — shown as hours and minutes and as decimal hours.',
     howTo: [
@@ -167,7 +167,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   'military-time': {
     title: 'Military Time Converter',
-    documentTitle: 'Military Time Converter – 24-Hour to 12-Hour Time Chart',
+    documentTitle: 'Military Time Converter – 24-Hour to 12-Hour Chart',
     description: 'Convert military (24-hour) time to 12-hour AM/PM time and back, with a full 24-hour conversion chart and how each time is spoken (“fourteen thirty hours”).',
     subtitle: 'Type a time either way — 2:30 PM or 1430 — and see it in every format, plus the full 24-hour chart.',
     howTo: [
@@ -196,7 +196,7 @@ export const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   'unix-timestamp': {
     title: 'Unix Timestamp Converter',
-    documentTitle: 'Unix Timestamp Converter – Epoch Time to Date and Back',
+    documentTitle: 'Unix Timestamp Converter – Epoch to Date and Back',
     description: 'Convert a Unix timestamp (seconds or milliseconds) to a date in UTC, your zone or any city, and a date back to a timestamp. Shows the current epoch time live.',
     subtitle: 'Epoch seconds or milliseconds to a date in UTC or any time zone, and back again. The current Unix time is shown live.',
     howTo: [

@@ -32,7 +32,7 @@ const SOURCE = path.join(ROOT, 'data/sources/city-images.json');
 const CITIES_FILE = path.join(ROOT, 'data/cities.generated.ts');
 const OUT_DIR = path.join(ROOT, 'public/cities');
 const MANIFEST = path.join(ROOT, 'data/city-images.generated.ts');
-const USER_AGENT = 'TimeNow/1.0 (https://github.com/AnkitAgCreates/timenow; city image fetch script)';
+const USER_AGENT = 'whattimein.world/1.0 (https://github.com/AnkitAgCreates/timenow; city image fetch script)';
 
 export const HERO = { width: 1600, height: 400 };
 export const CARD = { width: 640, height: 256 };

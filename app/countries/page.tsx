@@ -16,7 +16,7 @@ const TITLE = 'Current Time by Country';
 const DESCRIPTION = 'Live local time in every country, grouped by continent, with each time zone abbreviation. Open a country for its zones, major cities and daylight saving rules.';
 
 export const metadata = buildMetadata({
-  title: `${TITLE} – World Time Zones Directory`,
+  title: `${TITLE} – Time Zones Directory`,
   description: DESCRIPTION,
   path: routes.countriesHub(),
   indexable: true,

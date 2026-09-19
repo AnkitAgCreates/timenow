@@ -16,6 +16,7 @@ import { getAdjacentOffsetPages, getAllOffsetPages, getOffsetPage } from '@/lib/
 import { routes } from '@/lib/routes';
 import { faqJsonLd, webPageJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { fitTitle } from '@/lib/seo/title';
 import { getRenderInstant } from '@/lib/server/render-instant';
 import { formatOffset, formatTimeFields } from '@/lib/time';
 
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!page) return {};
   const usage = getOffsetUsage(page, getRenderInstant());
   return buildMetadata({
-    title: `${offsetTitle(page)} – Current Time at ${page.label} (GMT${page.label.slice(3)})`, // ≤ 60 characters for every offset
+    title: fitTitle(`${offsetTitle(page)} – Current Time at ${page.label} (GMT${page.label.slice(3)})`, `${offsetTitle(page)} – Current Time (GMT${page.label.slice(3)})`),
     description: offsetMetaDescription(page, usage),
     path: routes.utcOffset(page.slug),
     indexable: true,
