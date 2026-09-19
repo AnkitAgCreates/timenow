@@ -35,3 +35,5 @@ next-env.d.ts
 # generated SEO reports and private Search Console exports
 /seo/reports/
 /seo/exports/
+
+.vercel

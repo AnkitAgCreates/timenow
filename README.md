@@ -82,6 +82,24 @@ npm run seo:gsc -- --queries Queries.csv --pages Pages.csv    # Search Console e
 
 The audit checks every prerendered page (title/description length and duplicates, one H1, canonical, robots vs sitemap, JSON-LD, broken internal links, orphans, thin pages) and fails CI on errors; the analysis turns Search Console exports into a reviewed list of opportunities (low CTR, positions 5–20, missing pages by intent, cannibalisation, internal-link and metadata suggestions). Nothing is published automatically. Details in `seo/SEARCH_CONSOLE_WORKFLOW.md`; synthetic samples in `seo/samples/`.
 
+## Deploying to Vercel
+
+The site is a standard Next.js build: static pages with hourly ISR, no custom server, no database. Vercel auto-detects the framework; no `vercel.json` is needed.
+
+1. The Vercel project is `whattimein` (created 2026-09-19 with `vercel link --project whattimein`, GitHub repository `AnkitAgCreates/timenow` connected, production alias https://whattimein.vercel.app). To deploy from a machine that is signed in: `npx vercel deploy --prod --archive=tgz` — `.vercelignore` keeps local builds, test output and raw datasets out of the upload. Pushes to `main` deploy through the GitHub connection.
+2. Set the environment variables (Project → Settings → Environment Variables). They are read at build time, so set them before the first production build and redeploy after changing them.
+
+   | Variable | Production | Preview |
+   | --- | --- | --- |
+   | `NEXT_PUBLIC_SITE_URL` | `https://whattimein.world` once the domain is attached; the `*.vercel.app` URL until then | leave unset |
+   | `NEXT_PUBLIC_ALLOW_INDEXING` | `true` only when the real domain is live | leave unset (previews stay noindex and blocked in robots.txt) |
+   | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | optional GA4 id | leave unset |
+
+3. Add the domain (Settings → Domains) and redirect the `www` and apex variants to the one used in `NEXT_PUBLIC_SITE_URL`.
+4. After the first production deploy, open `/robots.txt`, `/sitemap.xml` and a city page and confirm the canonical shows the real domain; then verify the domain in Search Console and submit the sitemap (`seo/SEARCH_CONSOLE_WORKFLOW.md`).
+
+Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). A third job, "SEO audit", builds the indexed variant and runs `npm run seo:audit`, uploading `seo/reports/` as an artifact. `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.

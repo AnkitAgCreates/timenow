@@ -1,0 +1,13 @@
+# Only the source is needed: Vercel builds from it. Keep local builds, test output,
+# raw datasets and reports out of the upload (the CLI deploys the working tree).
+.git
+node_modules
+.next
+.next-*
+test-results
+playwright-report
+seo/reports
+seo/exports
+data/sources/geonames
+references
+.env*.local
