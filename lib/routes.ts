@@ -23,6 +23,9 @@ export const routes = {
   meetingPlanner: () => '/meeting-planner/',
   alarm: () => '/alarm/',
   stopwatch: () => '/stopwatch/',
+  about: () => '/about/',
+  privacy: () => '/privacy/',
+  contact: () => '/contact/',
 } as const;
 
 /** Abbreviation entries served by a dedicated hub instead of /timezones/[slug]/. */

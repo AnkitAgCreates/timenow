@@ -17,6 +17,12 @@ const SECONDARY_LINKS = [
   { label: '1 hour timer', href: routes.timer('1-hour') },
 ];
 
+const SITE_LINKS = [
+  { label: 'About', href: routes.about() },
+  { label: 'Privacy', href: routes.privacy() },
+  { label: 'Contact', href: routes.contact() },
+];
+
 /** Slide-in navigation sheet for mobile (hamburger and bottom-nav "More"). */
 export function MobileMenu() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -69,6 +75,16 @@ export function MobileMenu() {
           <p className="mt-5 px-3 text-xs font-semibold uppercase tracking-wide text-muted">Popular</p>
           <ul className="mt-1">
             {SECONDARY_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="flex min-h-11 items-center rounded-md px-3 text-sm text-body hover:bg-surface">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-5 px-3 text-xs font-semibold uppercase tracking-wide text-muted">Site</p>
+          <ul className="mt-1">
+            {SITE_LINKS.map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="flex min-h-11 items-center rounded-md px-3 text-sm text-body hover:bg-surface">
                   {link.label}

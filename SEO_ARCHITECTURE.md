@@ -24,6 +24,7 @@ SEO is part of the product architecture: every indexable page is a data record r
 | City converter (Sprint 4) | `/convert/[city]-to-[city]/` | {City} to {City} Time Converter – Time Difference & Best Time to Call | {City} to {City} Time Converter | WebApplication, BreadcrumbList, FAQPage | 1h |
 | World Clock (Sprint 5) | `/world-clock/` | World Clock – Current Time in Cities Worldwide | World Clock | WebApplication, BreadcrumbList, FAQPage | 1h |
 | Meeting Planner (Sprint 5) | `/meeting-planner/` | Meeting Planner – Find a Time Across Time Zones | Meeting Planner | WebApplication, BreadcrumbList, FAQPage | 1h |
+| Site pages | `/about/`, `/privacy/`, `/contact/` | fixed titles (About This Site…, Privacy Policy…, Contact…) | About whattimein.world / Privacy Policy / Contact | WebPage, BreadcrumbList | static |
 | Alarm / Stopwatch (Sprint 5) | `/alarm/`, `/stopwatch/` | Online Alarm Clock – …, Online Stopwatch – … | Online Alarm Clock / Online Stopwatch | WebApplication, BreadcrumbList, FAQPage | static |
 | Calculators (Sprint 5) | `/tools/[tool]/` | {Tool} – {benefit} | {Tool} | WebApplication, BreadcrumbList, FAQPage | static / 1h |
 | Tools hub, Time zones hub (Sprint 5) | `/tools/`, `/timezones/` | Time Tools – …, Time Zone Abbreviations – … | Time Tools / Time Zone Abbreviations | WebPage, BreadcrumbList, FAQPage | static / 1h |

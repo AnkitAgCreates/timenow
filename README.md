@@ -161,6 +161,7 @@ seo/keyword-map.md      Keyword → canonical URL map
 | `/converter/` | hub with the searchable converter | yes |
 | `/convert/[from]-to-[to]/` | curated corridors, both directions: ~110 time zone pairs (IST, EST, PST, CST, MST, GMT, UTC, BST, CET, EET, AEST, NZST, JST, SGT, HKT, GST, PHT) and ~50 city pairs (London, New York, Los Angeles, Chicago, Paris, Berlin, Dubai, New Delhi, Singapore, Hong Kong, Tokyo, Sydney, Toronto) | yes |
 | `/world-clock/`, `/meeting-planner/`, `/alarm/`, `/stopwatch/` | tools (Sprint 5) | yes |
+| `/about/`, `/privacy/`, `/contact/` | site pages (`components/site/InfoPage.tsx`) | yes |
 | `/tools/date-difference/`, `/tools/hours-calculator/`, `/tools/military-time-converter/`, `/tools/unix-timestamp/` | calculators (Sprint 5) | yes |
 | `/timezones/`, `/tools/` | hubs (indexable since Sprint 5) | yes |
 

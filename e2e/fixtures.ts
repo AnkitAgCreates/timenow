@@ -6,6 +6,9 @@ export const REFERENCE_PAGES = [
   { path: '/timezones/cst/', h1: 'Central Standard Time (CST)' },
   { path: '/timer/1-hour/', h1: '1 Hour Timer' },
   { path: '/convert/ist-to-est/', h1: 'IST to EST Converter' },
+  { path: '/about/', h1: 'About whattimein.world' },
+  { path: '/privacy/', h1: 'Privacy Policy' },
+  { path: '/contact/', h1: 'Contact' },
 ] as const;
 
 /**

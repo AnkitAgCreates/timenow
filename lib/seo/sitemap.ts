@@ -30,6 +30,9 @@ const SECTIONS: Section[] = [
       { path: routes.worldClock(), priority: 0.8, changeFrequency: 'weekly' },
       { path: routes.timezonesHub(), priority: 0.7, changeFrequency: 'weekly' },
       { path: routes.tools(), priority: 0.7, changeFrequency: 'weekly' },
+      { path: routes.about(), priority: 0.3, changeFrequency: 'monthly' },
+      { path: routes.privacy(), priority: 0.2, changeFrequency: 'monthly' },
+      { path: routes.contact(), priority: 0.3, changeFrequency: 'monthly' },
       // Tool pages that don't have their own sitemap section (the converter and timer hubs do).
       ...getLiveTools()
         .filter((tool) => tool.href !== routes.converterHub() && tool.href !== routes.timerHub())

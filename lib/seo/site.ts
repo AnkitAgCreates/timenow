@@ -20,6 +20,12 @@ export const SITE_URL = normaliseOrigin(process.env.NEXT_PUBLIC_SITE_URL);
  */
 export const INDEXING_ENABLED = process.env.NEXT_PUBLIC_ALLOW_INDEXING === 'true';
 
+/** Public source repository (linked from About and Contact). */
+export const REPO_URL = 'https://github.com/AnkitAgCreates/timenow';
+
+/** Optional public contact address shown on the contact page; unset = GitHub issues only. */
+export const CONTACT_EMAIL = (process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? '').trim() || null;
+
 export function absoluteUrl(path: string): string {
   return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`;
 }
