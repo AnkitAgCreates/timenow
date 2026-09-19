@@ -2,6 +2,7 @@
 import { getCitiesInZones } from '@/lib/data/cities';
 import { getSeasonalZones, getTimezone, getYearRoundZones } from '@/lib/data/timezones';
 import type { FaqItem } from '@/lib/seo/jsonld';
+import { fitDescription } from '@/lib/seo/title';
 import { formatOffset, getZoneGenericName, getZonedParts, observesDST } from '@/lib/time';
 import { getDstTransitionsInYear } from '@/lib/time/transitions';
 import { joinList } from '@/lib/text';
@@ -23,10 +24,17 @@ export function watchZoneFor(entry: TimeZoneEntry, now: number): string | null {
 export function timezoneMetaDescription(entry: TimeZoneEntry): string {
   const offset = formatOffset(entry.offsetMinutes);
   const counterpart = entry.counterpart ? getTimezone(entry.counterpart) : undefined;
+  const lead = `${entry.abbreviation} (${entry.name}) is ${offset}.`;
   if (counterpart) {
-    return `${entry.name} (${entry.abbreviation}) is ${offset}. See the current ${entry.referenceLabel} time, whether ${entry.abbreviation} or ${counterpart.abbreviation} is in effect today, where ${entry.abbreviation} is used and how it compares with other time zones.`;
+    return fitDescription(
+      `${lead} ${entry.referenceLabel} right now, whether ${entry.abbreviation} or ${counterpart.abbreviation} applies today, where it is used, and comparisons with other zones.`,
+      `${lead} Current time, whether ${entry.abbreviation} or ${counterpart.abbreviation} applies today, where it is used, and comparisons with other zones.`,
+    );
   }
-  return `${entry.name} (${entry.abbreviation}) is ${offset}. See the current ${entry.abbreviation} time, where it is used, whether it changes for daylight saving time and how it compares with other time zones.`;
+  return fitDescription(
+    `${lead} Current ${entry.abbreviation} time, where it is used, whether it changes for daylight saving, and comparisons with other zones.`,
+    `${lead} Current ${entry.abbreviation} time, where it is used, daylight saving and comparisons with other zones.`,
+  );
 }
 
 export function timezoneFaqs(entry: TimeZoneEntry, now: number): FaqItem[] {

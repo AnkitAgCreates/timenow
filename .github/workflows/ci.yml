@@ -58,3 +58,28 @@ jobs:
             playwright-report
             test-results
           retention-days: 7
+
+  seo-audit:
+    name: SEO audit (indexed build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # The audit needs the indexed variant (sitemaps are only generated when indexing is on).
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://timenow.example
+          NEXT_PUBLIC_ALLOW_INDEXING: "true"
+          TIMENOW_DIST_DIR: .next-audit
+      - run: node scripts/seo/audit-site.mts --dist .next-audit --site-url https://timenow.example
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: seo-audit
+          path: seo/reports
+          retention-days: 30

@@ -116,7 +116,7 @@ describe('converter copy', () => {
     expect(converterSubtitle(ist, winter)).toBe('Convert time between India Standard Time (IST) and Eastern Time (EST/EDT).');
     const city = pair('london-to-new-york');
     expect(converterTitle(city)).toBe('London to New York Time Converter');
-    expect(converterDocumentTitle(city)).toBe('London to New York Time Converter – Time Difference & Best Time to Call');
+    expect(converterDocumentTitle(city)).toBe('London to New York Time Converter – Time Difference'); // the longer form exceeds the 60-character title budget
     expect(converterSubtitle(city, winter)).toBe('Convert time between London, United Kingdom and New York, United States.');
     expect(converterMetaDescription(city, winter)).toContain('Convert London time to New York time');
     for (const p of getCityConverterPairs()) expect(converterMetaDescription(p, winter).length, p.slug).toBeLessThanOrEqual(165);

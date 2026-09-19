@@ -5,6 +5,7 @@
 import { getCitiesInCountry, getComparisonCitiesForZone } from '@/lib/data/cities';
 import { countryPhrase, getCountryByCode } from '@/lib/data/countries';
 import type { FaqItem } from '@/lib/seo/jsonld';
+import { fitDescription } from '@/lib/seo/title';
 import { joinList } from '@/lib/text';
 import { describeDifference, formatDate, formatOffset, getDSTState, getTimeDifference, getZoneLabel, getZonedParts, observesDST, utcMs } from '@/lib/time';
 import { getDstTransitionsInYear } from '@/lib/time/transitions';
@@ -105,7 +106,10 @@ export function countryMetaDescription(country: Country, groups: ZoneGroup[]): s
   if (groups.length === 1) {
     const g = groups[0]!;
     const dst = g.daylightOffset === null ? 'no daylight saving time' : 'daylight saving dates';
-    return `What time is it in ${name}? Live local time, the ${g.name} time zone (${g.standardAbbreviation}, ${formatOffset(g.standardOffset)}), ${dst}, major cities and time differences with the rest of the world.`;
+    return fitDescription(
+      `What time is it in ${name}? Live local time, time zone ${g.name} (${g.standardAbbreviation}, ${formatOffset(g.standardOffset)}), ${dst}, major cities and time differences.`,
+      `What time is it in ${name}? Live local time, ${g.standardAbbreviation} (${formatOffset(g.standardOffset)}), ${dst}, major cities and time differences.`,
+    );
   }
   const first = groups[0]!;
   const last = groups[groups.length - 1]!;

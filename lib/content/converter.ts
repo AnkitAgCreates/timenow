@@ -1,6 +1,7 @@
 /** Data-driven content for converter pages. All values are for explicit dates. */
 import { getCityConverterPairs, getZoneConverterPairs, type ConverterSide, type ResolvedConverterPair } from '@/lib/data/converters';
 import type { FaqItem } from '@/lib/seo/jsonld';
+import { fitTitle } from '@/lib/seo/title';
 import {
   convertTime,
   dayShiftLabel,
@@ -46,15 +47,15 @@ export function converterTitle(pair: ResolvedConverterPair): string {
 /** Full <title>: the H1 plus the part a searcher needs to disambiguate. */
 export function converterDocumentTitle(pair: ResolvedConverterPair): string {
   if (pair.kind === 'zone') {
-    return `${converterTitle(pair)} – ${pair.fromSide.name} to ${pair.toSide.entry!.referenceLabel.split(' (')[0]}`;
+    return fitTitle(`${converterTitle(pair)} – ${pair.fromSide.name} to ${pair.toSide.entry!.referenceLabel.split(' (')[0]}`, `${converterTitle(pair)} – Time Difference & Table`);
   }
-  return `${converterTitle(pair)} – Time Difference & Best Time to Call`;
+  return fitTitle(`${converterTitle(pair)} – Time Difference & Best Time to Call`, `${converterTitle(pair)} – Time Difference`);
 }
 
 export function converterMetaDescription(pair: ResolvedConverterPair, now: number): string {
   const { fromSide: from, toSide: to } = pair;
   if (pair.kind === 'zone') {
-    return `Convert ${from.label} to ${to.label}: live ${sideName(from, now)} and ${sideName(to, now)} clocks, a converter for any date and time, a daylight-saving-aware conversion table and the best hours to call.`;
+    return `Convert ${from.label} to ${to.label}: live ${sideName(from, now)} and ${sideName(to, now)} clocks, a converter for any date, a DST-aware hourly table and the best hours to call.`;
   }
   return `Convert ${from.label} time to ${to.label} time: live clocks, the current difference with daylight saving applied, an hourly table and the best hours to call.`;
 }

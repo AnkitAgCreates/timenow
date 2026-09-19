@@ -10,10 +10,10 @@ import { getRenderInstant } from '@/lib/server/render-instant';
 export const revalidate = 3600;
 
 const DESCRIPTION =
-  'Current GMT time (Greenwich Mean Time, UTC+0), updated live. See whether the UK is on GMT or BST right now, GMT in your own time zone, and the current time at every GMT offset.';
+  'Current GMT time (Greenwich Mean Time, UTC+0), updated live: whether the UK is on GMT or BST right now, GMT in your time zone, and every GMT offset.';
 
 export const metadata = buildMetadata({
-  title: 'GMT Time Now – Greenwich Mean Time (UTC+0) & GMT Offsets',
+  title: 'GMT Time Now – Greenwich Mean Time & Offsets',
   description: DESCRIPTION,
   path: routes.gmtHub(),
   indexable: true,

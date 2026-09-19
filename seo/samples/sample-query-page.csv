@@ -1,0 +1,13 @@
+Query,Page,Clicks,Impressions,CTR,Position
+time in london,https://timenow.example/time/london/,"1,204","18,930",6.36%,3.4
+london time now,https://timenow.example/time/london/,402,"6,100",6.59%,3.1
+uk time now,https://timenow.example/time/london/,88,"4,300",2.05%,6.2
+uk time now,https://timenow.example/countries/united-kingdom/,61,"3,900",1.56%,7.8
+est to pst,https://timenow.example/convert/est-to-pst/,140,"7,200",1.94%,5.6
+est to pst,https://timenow.example/timezones/est/,9,"1,400",0.64%,11.2
+pomodoro timer,https://timenow.example/timer/25-minutes/,22,"6,800",0.32%,8.7
+25 minute timer,https://timenow.example/timer/25-minutes/,310,"9,400",3.3%,2.1
+mst time now,https://timenow.example/timezones/mst/,45,"3,600",1.25%,4.2
+1 hour timer,https://timenow.example/timer/1-hour/,980,"21,000",4.67%,1.9
+ist to est,https://timenow.example/convert/ist-to-est/,410,"12,500",3.28%,3.6
+unix timestamp converter,https://timenow.example/tools/unix-timestamp/,55,"9,700",0.57%,9.4

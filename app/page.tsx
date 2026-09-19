@@ -11,13 +11,29 @@ import { getPopularCities } from '@/lib/data/cities';
 import { getPopularTimezones } from '@/lib/data/timezones';
 import { getHomeTools } from '@/lib/data/tools';
 import { routes } from '@/lib/routes';
-import { webPageJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
+import { faqJsonLd, webPageJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
+import { FAQ } from '@/components/ui/FAQ';
 import { buildMetadata } from '@/lib/seo/metadata';
 import { getRenderInstant } from '@/lib/server/render-instant';
 
 // Server-rendered abbreviations on city cards stay fresh around DST changes;
 // clients recompute them live after hydration regardless.
 export const revalidate = 3600;
+
+const HOME_FAQS = [
+  {
+    question: 'How do I find the exact time right now?',
+    answer: 'The clock at the top shows your current local time from your device clock, with the time zone your browser reports and its UTC offset. It updates every second; no location permission is needed.',
+  },
+  {
+    question: 'Why is the time shown different from my phone?',
+    answer: 'Both use a device clock, so a difference means one device’s clock or time zone setting is off. Compare with UTC on the UTC page: it is the same everywhere and never changes for daylight saving.',
+  },
+  {
+    question: 'How do I check the time in another city or convert a time?',
+    answer: 'Search for any city, country or time zone above, or use the World Clock for a list of places, the Converter for a specific date and time, and the Meeting Planner to find hours that suit several time zones.',
+  },
+];
 
 const TITLE = 'Current Time Now – Exact Local Time, World Clocks & Time Zones';
 const DESCRIPTION =
@@ -33,7 +49,7 @@ export default function HomePage() {
 
   return (
     <>
-      <JsonLd data={[websiteJsonLd(), webPageJsonLd({ name: TITLE, description: DESCRIPTION, path: '/' })]} />
+      <JsonLd data={[websiteJsonLd(), webPageJsonLd({ name: TITLE, description: DESCRIPTION, path: '/' }), faqJsonLd(HOME_FAQS)]} />
 
       <div className="bg-gradient-to-b from-blue-surface to-white">
         <div className="container-page pb-8 pt-6 md:pb-12 md:pt-10">
@@ -115,6 +131,10 @@ export default function HomePage() {
             </li>
           </ul>
         </section>
+
+        <Section id="faqs" title="Current time FAQs">
+          <FAQ items={HOME_FAQS} />
+        </Section>
       </div>
     </>
   );

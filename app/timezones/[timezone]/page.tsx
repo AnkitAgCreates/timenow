@@ -5,6 +5,7 @@ import { timezoneMetaDescription } from '@/lib/content/timezone';
 import { getAllTimezones, getTimezone } from '@/lib/data/timezones';
 import { isTimezoneHubSlug, routes } from '@/lib/routes';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { fitTitle } from '@/lib/seo/title';
 import { getRenderInstant } from '@/lib/server/render-instant';
 import { formatOffset } from '@/lib/time';
 
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const entry = getTimezone((await params).timezone);
   if (!entry) return {};
   return buildMetadata({
-    title: `${timezonePageTitle(entry)} – Current Time, ${formatOffset(entry.offsetMinutes)} & DST`,
+    title: fitTitle(`${timezonePageTitle(entry)} – Current Time, ${formatOffset(entry.offsetMinutes)} & DST`, `${entry.abbreviation} Time Now – ${entry.name.replace(/ Time$/, '')}, ${formatOffset(entry.offsetMinutes)}`),
     description: timezoneMetaDescription(entry),
     path: routes.timezone(entry.slug),
     indexable: entry.indexable,

@@ -4,6 +4,8 @@
  */
 import { getCountryByCode } from '@/lib/data/countries';
 import type { FaqItem } from '@/lib/seo/jsonld';
+import { fitDescription } from '@/lib/seo/title';
+import { getAllCities } from '@/lib/data/cities';
 import {
   describeDifference,
   formatDate,
@@ -97,9 +99,20 @@ export function zoneSummary(facts: ZoneFacts): string {
   return nameWithDetail(facts.generic ?? facts.timeZone, `${standard}${daylight}`);
 }
 
+/** "Columbus, Georgia" when another dataset city shares the name, otherwise just the name. */
+export function cityQualifiedName(city: City): string {
+  const shared = getAllCities().some((other) => other.slug !== city.slug && other.name === city.name);
+  return shared ? `${city.name}, ${city.state ?? city.country}` : city.name;
+}
+
 export function cityMetaDescription(city: City, facts: ZoneFacts): string {
   const dst = facts.observesDST ? 'daylight saving dates' : 'no daylight saving time';
-  return `What time is it in ${city.name}? See the live local time and date, its time zone — ${zoneSummary(facts)} — ${dst}, sunrise and sunset, and time differences with major cities.`;
+  const lead = `What time is it in ${cityQualifiedName(city)}? Live local time, `;
+  const abbreviations = `${facts.standardAbbreviation} (${facts.standardOffsetLabel})${facts.daylightAbbreviation ? ` / ${facts.daylightAbbreviation} (${facts.daylightOffsetLabel})` : ''}`;
+  return fitDescription(
+    `${lead}${zoneSummary(facts)}, ${dst}, sunrise, sunset and time differences with major cities.`,
+    `${lead}${abbreviations}, ${dst}, sunrise, sunset and time differences.`,
+  );
 }
 
 export function cityFaqs(city: City, facts: ZoneFacts, now: number, comparison: City | undefined): FaqItem[] {

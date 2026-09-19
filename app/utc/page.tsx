@@ -10,10 +10,10 @@ import { getRenderInstant } from '@/lib/server/render-instant';
 export const revalidate = 3600;
 
 const DESCRIPTION =
-  'Current UTC time (Coordinated Universal Time), updated live. See UTC in your own time zone, which places use UTC+0, and the current time at every UTC offset from UTC-12 to UTC+14.';
+  'Current UTC time (Coordinated Universal Time), updated live: UTC in your own time zone, where UTC+0 is used, and the current time at every UTC offset.';
 
 export const metadata = buildMetadata({
-  title: 'UTC Time Now – Coordinated Universal Time (UTC+0) & All UTC Offsets',
+  title: 'UTC Time Now – Coordinated Universal Time & Offsets',
   description: DESCRIPTION,
   path: routes.utcHub(),
   indexable: true,

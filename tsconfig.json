@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
@@ -41,7 +42,9 @@
     ".next-e2e/indexed/types/**/*.ts",
     ".next-e2e/indexed/dev/types/**/*.ts",
     ".next-e2e/noindex/types/**/*.ts",
-    ".next-e2e/noindex/dev/types/**/*.ts"
+    ".next-e2e/noindex/dev/types/**/*.ts",
+    ".next-audit/types/**/*.ts",
+    ".next-audit/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

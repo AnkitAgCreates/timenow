@@ -9,6 +9,7 @@
 # testing
 /coverage
 /.next-e2e/
+/.next-audit/
 /playwright-report/
 /test-results/
 
@@ -30,3 +31,7 @@ next-env.d.ts
 
 # raw third-party data (regenerate with scripts/generate-geo-data.mjs)
 /data/sources/
+
+# generated SEO reports and private Search Console exports
+/seo/reports/
+/seo/exports/

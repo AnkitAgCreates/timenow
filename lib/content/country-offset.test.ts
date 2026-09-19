@@ -13,7 +13,7 @@ describe('country page content', () => {
     const groups = getCountryZoneGroups(india, SEPT);
     expect(groups).toHaveLength(1);
     expect(describeZoneGroup(groups[0]!)).toBe('India Standard Time (IST, UTC+5:30) all year');
-    expect(countryMetaDescription(india, groups)).toContain('India Standard Time time zone (IST, UTC+5:30), no daylight saving time');
+    expect(countryMetaDescription(india, groups)).toContain('time zone India Standard Time (IST, UTC+5:30), no daylight saving time');
     const faqs = countryFaqs(india, groups, SEPT);
     expect(faqs[0]).toEqual({ question: 'What time zone is India in?', answer: 'India uses India Standard Time (IST, UTC+5:30) all year.' });
     expect(faqs[1]?.answer).toMatch(/^No\. India does not change its clocks/);
@@ -78,7 +78,8 @@ describe('UTC offset page content', () => {
     expect(describeOffset(-300)).toBe('5 hours behind Coordinated Universal Time');
     expect(describeOffset(345)).toBe('5 hours 45 minutes ahead of Coordinated Universal Time');
     const usage = getOffsetUsage(minus5, JAN);
-    expect(offsetMetaDescription(minus5, usage)).toMatch(/^Current time at UTC-5 \(UTC−05:00\), the offset 5 hours behind Coordinated Universal Time\./);
+    expect(offsetMetaDescription(minus5, usage)).toMatch(/^Current time at UTC-5 \(UTC−05:00\), 5 hours behind UTC, used in /);
+    expect(offsetMetaDescription(minus5, usage).length).toBeLessThanOrEqual(170);
     const faqs = offsetFaqs(minus5, usage, JAN);
     expect(faqs[0]?.answer).toContain('When it is 12:00 PM UTC, it is 7:00 AM at UTC-5.');
     expect(faqs.find((f) => f.question.startsWith('Is UTC-5 the same as GMT-5'))).toBeDefined();

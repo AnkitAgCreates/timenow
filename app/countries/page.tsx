@@ -13,7 +13,7 @@ import { getRenderInstant } from '@/lib/server/render-instant';
 export const revalidate = 3600;
 
 const TITLE = 'Current Time by Country';
-const DESCRIPTION = 'Live local time in every country, grouped by continent, with each country’s time zone abbreviation. Open a country for its time zones, major cities and daylight saving rules.';
+const DESCRIPTION = 'Live local time in every country, grouped by continent, with each time zone abbreviation. Open a country for its zones, major cities and daylight saving rules.';
 
 export const metadata = buildMetadata({
   title: `${TITLE} – World Time Zones Directory`,

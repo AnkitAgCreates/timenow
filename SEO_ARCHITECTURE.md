@@ -119,6 +119,14 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 `lib/analytics.ts` `track()` is wired for `search_used`, `city_selected`, `timezone_selected`, `timer_started`, `timer_completed`, `converter_used`. GA4 loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.
 
+## Page-quality audit and Search Console workflow (Sprint 6)
+
+- `scripts/seo/audit-site.mts` (rules in `lib/seo/audit-rules.ts`) reads the prerendered HTML and sitemaps of a build. **Errors** fail CI: missing/mismatched canonical, missing title or description on an indexable page, H1 count ≠ 1, invalid JSON-LD, indexable page absent from sitemaps, noindex page in a sitemap, sitemap URL without a page, internal link to a non-page. **Warnings**: title outside 15–70 characters (site suffix included), description outside 50–170, duplicate titles/descriptions, no inbound internal links, `<main>` under 200 words, missing BreadcrumbList/WebPage schema.
+- `scripts/seo/analyze-gsc.mts` (logic in `lib/seo/gsc-analysis.ts`) takes Search Console exports and the audit's inventory and reports high-impression/low-CTR pages, positions 5–20, missing pages by intent (city/country, abbreviation, timer length, converter corridor — each mapped to the candidate path but never created automatically), cannibalisation, internal-link suggestions from the link graph, and titles that lack their top query's wording. See `seo/SEARCH_CONSOLE_WORKFLOW.md`.
+- **Title budget:** 60 characters before " | TimeNow" (`lib/seo/title.ts` `fitTitle` picks a compact pattern when the descriptive one does not fit). **Description budget:** 160 characters (`fitDescription`, same idea: city, country and abbreviation templates fall back to an abbreviation-only form when the zone's long name would not fit). Every template was tightened in Sprint 6 after the first audit (city, country, abbreviation, UTC offset and zone-converter descriptions; converter, city, country, abbreviation, UTC/GMT and converter-hub titles).
+- **Orphans:** country pages list every city in the country (not only the 12 major ones), so every city page has at least one inbound link besides nearby-city links.
+- **Ambiguous city names** (Columbus, Ohio vs Columbus, Georgia) are qualified in descriptions so no two pages share one.
+
 ## Decisions
 
 1. **`/utc/` and `/gmt/` are canonical** (decided before Sprint 2, implemented in Sprint 2): the `/timezones/` variants redirect, and the hubs add the offsets directory.

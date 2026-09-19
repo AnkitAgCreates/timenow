@@ -92,8 +92,8 @@ export function offsetTitle(page: OffsetPage): string {
 
 export function offsetMetaDescription(page: OffsetPage, usages: OffsetUsage[]): string {
   const places = usages.flatMap((u) => u.cities.slice(0, 2).map((c) => c.name)).slice(0, 4);
-  const where = places.length ? ` Used in ${joinList(places)} and more.` : '';
-  return `Current time at ${page.label} (${page.iso}), the offset ${describeOffset(page.offsetMinutes)}.${where} See which places use ${page.label}, convert it to your time zone and to UTC.`;
+  const where = places.length ? `, used in ${joinList(places.slice(0, 2))}` : '';
+  return `Current time at ${page.label} (${page.iso}), ${describeOffset(page.offsetMinutes).replace('Coordinated Universal Time', 'UTC')}${where}. See every place on ${page.label} and convert it to your time zone.`;
 }
 
 /** "5 hours behind Coordinated Universal Time" */

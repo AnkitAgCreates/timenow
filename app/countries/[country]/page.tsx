@@ -19,6 +19,7 @@ import { getTimezonesForZone } from '@/lib/data/timezones';
 import { routes } from '@/lib/routes';
 import { faqJsonLd, webPageJsonLd } from '@/lib/seo/jsonld';
 import { buildMetadata } from '@/lib/seo/metadata';
+import { fitTitle } from '@/lib/seo/title';
 import { getRenderInstant } from '@/lib/server/render-instant';
 import { formatOffset } from '@/lib/time';
 
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!country?.published) return {};
   const groups = getCountryZoneGroups(country, getRenderInstant());
   return buildMetadata({
-    title: `${countryTitle(country)} – Time Zones, DST & Major Cities`,
+    title: fitTitle(fitTitle(`${countryTitle(country)} – Time Zones, DST & Major Cities`, `${countryTitle(country)} – Time Zones & DST`), countryTitle(country)),
     description: countryMetaDescription(country, groups),
     path: routes.country(country.slug),
     indexable: country.indexable,
@@ -75,6 +76,7 @@ export default async function CountryPage({ params }: Props) {
   const groups = getCountryZoneGroups(country, renderedAt);
   const primaryGroup = groups.find((g) => g.zones.includes(country.primaryZone)) ?? groups[0]!;
   const cities = getCitiesInCountry(country.code, 12);
+  const allCities = getCitiesInCountry(country.code);
   const capital = country.capitalSlug ? getCitiesInCountry(country.code).find((c) => c.slug === country.capitalSlug) : undefined;
   const comparisons = getComparisonCitiesForZone(country.primaryZone, 5);
   const neighbours = getNeighbours(country);
@@ -210,6 +212,20 @@ export default async function CountryPage({ params }: Props) {
                 <CityCard key={city.slug} city={city} renderedAt={renderedAt} layout="stacked" />
               ))}
             </div>
+            {allCities.length > cities.length && (
+              <div className="mt-4">
+                <h3 className="text-sm font-semibold text-heading">All {allCities.length} cities in {country.name}</h3>
+                <ul className="mt-2 flex flex-wrap gap-2">
+                  {allCities.map((city) => (
+                    <li key={city.slug}>
+                      <Link href={routes.city(city.slug)} className="inline-flex min-h-11 items-center rounded-md border border-border bg-white px-3 text-sm font-medium text-heading hover:border-blue-border hover:text-primary">
+                        {city.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Section>
         )}
 

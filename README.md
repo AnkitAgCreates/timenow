@@ -5,7 +5,7 @@ SEO-first time utility platform: current time, city clocks, time zone abbreviati
 - **Design source of truth:** `references/visual-prd.png` (layout and visual language only).
 - **Time source of truth:** IANA time zone data via `Intl.DateTimeFormat`, through the time engine in `lib/time/`. Never copy times, offsets or DST states from the PRD mockups.
 
-Status: **Sprint 5 complete** (product expansion: World Clock, Meeting Planner, Alarm, Stopwatch, Date Difference, Hours Calculator, Military Time and Unix Timestamp tools; every hub indexable), on top of Sprints 0–4 (reference pages, ~470 cities, 96 countries, UTC/GMT hubs and offsets, 50 abbreviation pages, 30 timers, 156 conversion pages). See `CLAUDE.md` for the full roadmap.
+Status: **Sprint 6 complete** (SEO optimisation: static page-quality audit in CI, Search Console opportunity analysis, metadata tightened across every template) — all six sprints in `CLAUDE.md` delivered. See `CLAUDE.md` for the roadmap and `seo/SEARCH_CONSOLE_WORKFLOW.md` for the SEO workflow.
 
 ## Stack
 
@@ -71,9 +71,18 @@ node scripts/generate-geo-data.mjs
 
 `node scripts/generate-geo-data.mjs --check` exits non-zero when the committed output is stale. Selection rules, quotas and curated overrides live in the script and are described in `DATA_MODEL.md`.
 
+## SEO audit and Search Console workflow
+
+```bash
+npm run seo:audit -- --site-url https://timenow.example      # audits the build in .next → seo/reports/site-audit.md (+ site-inventory.json)
+npm run seo:gsc -- --queries Queries.csv --pages Pages.csv    # Search Console exports → seo/reports/gsc-opportunities.md
+```
+
+The audit checks every prerendered page (title/description length and duplicates, one H1, canonical, robots vs sitemap, JSON-LD, broken internal links, orphans, thin pages) and fails CI on errors; the analysis turns Search Console exports into a reviewed list of opportunities (low CTR, positions 5–20, missing pages by intent, cannibalisation, internal-link and metadata suggestions). Nothing is published automatically. Details in `seo/SEARCH_CONSOLE_WORKFLOW.md`; synthetic samples in `seo/samples/`.
+
 ## Continuous integration
 
-`.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.
+`.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). A third job, "SEO audit", builds the indexed variant and runs `npm run seo:audit`, uploading `seo/reports/` as an artifact. `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.
 
 ## Project structure
 
@@ -96,7 +105,7 @@ app/                    Routes (Server Components by default)
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
 data/                   Structured records: cities + countries (generated), timezones (+ timezones-world), timers, converters, tools
-scripts/                generate-geo-data.mjs (GeoNames → data/*.generated.ts, lib/time/zone-names.generated.ts)
+scripts/                generate-geo-data.mjs (GeoNames → generated data); seo/audit-site.mts, seo/analyze-gsc.mts (Sprint 6)
 lib/
   time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
   tools/                Pure calculator logic (date difference, hours, military time, Unix timestamps, stopwatch, alarm)
