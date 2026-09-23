@@ -29,5 +29,10 @@ export function LiveDifference({
   const minutes = getTimeDifference(fromZone, toZone, instant);
   const text =
     format === 'sentence' ? describeDifference(subject ?? fromZone, reference ?? toZone, -minutes) : formatSignedDifference(minutes);
-  return <span className={className}>{text}</span>;
+  // Same reasoning as LiveZoneInfo: the difference depends on both zones' tzdata.
+  return (
+    <span className={className} suppressHydrationWarning>
+      {text}
+    </span>
+  );
 }

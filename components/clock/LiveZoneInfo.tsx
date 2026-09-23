@@ -79,5 +79,12 @@ export function LiveZoneInfo({
       text = next ? `${next.kind === 'dst-start' ? 'Starts' : next.kind === 'dst-end' ? 'Ends' : 'Changes'} ${next.dateShort}` : 'No DST changes';
       break;
   }
-  return <span className={className}>{text}</span>;
+  // Zone names and offsets come from the runtime's tzdata/ICU, which can differ between the server
+  // and a visitor's browser (e.g. a rule change present in one release only). The server text stays
+  // until the live value takes over after mount, so such differences never break hydration.
+  return (
+    <span className={className} suppressHydrationWarning>
+      {text}
+    </span>
+  );
 }

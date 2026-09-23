@@ -88,6 +88,8 @@ When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a
 
 ## Live values (no flash, no hydration mismatch)
 
+Text derived from tzdata (zone abbreviations, offsets, differences) is rendered on the server from the render instant and again on the client, and the two runtimes can carry different tzdata releases (CI's Node 24.20 shipped 2026c while the test browser lagged, which relabelled Morocco for a few days). `LiveZoneInfo` and `LiveDifference` therefore mark their text with `suppressHydrationWarning`, like `LiveTime`: the server text stays until the live value replaces it after mount, and a divergence never becomes a hydration error.
+
 Clock text is filled **before first paint** by an inline bootstrap (`lib/clock/bootstrap.ts`, following the Next.js "Preventing flash before hydration" guide), then kept current by a single shared once-per-second store (`lib/clock/stores.ts`).
 
 - Clock digits are server-rendered as a placeholder (`--:--:--`) so a cached page never shows a stale time. Slow-changing values (UTC offset, date) are server-rendered as real text from the render instant, so crawlers see them. A tiny inline call replaces both with live values during HTML parsing, and `suppressHydrationWarning` keeps the result.
