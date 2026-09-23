@@ -84,7 +84,7 @@ Every other city keeps `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline s
 
 ## Consent banner
 
-When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a fixed bar (card style, restrained shadow) above the mobile bottom navigation and at the bottom on desktop: one sentence, a Privacy link, Decline and Accept buttons with 44 px targets. It is `position: fixed`, so it never shifts content (CLS stays 0), and it is rendered only after hydration so returning visitors never see it flash. It appears once; the privacy page offers a "Change my choice" control.
+When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a fixed bar (card style, restrained shadow) above the mobile bottom navigation and at the bottom on desktop: one sentence, a Privacy link, Decline and Accept buttons with 44 px targets. It is `position: fixed`, so it never shifts content (CLS stays 0), and it is rendered only after hydration so returning visitors never see it flash. It appears once, and only for visitors in the regions that require consent (EU/EEA, UK, Switzerland, or unknown); elsewhere analytics runs without a banner and the privacy page offers a "Turn analytics off" control.
 
 ## Live values (no flash, no hydration mismatch)
 

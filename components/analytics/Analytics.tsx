@@ -1,8 +1,8 @@
 'use client';
 
 import Script from 'next/script';
-import { useSyncExternalStore } from 'react';
-import { analyticsConsentStore, GA_MEASUREMENT_ID, setAnalyticsConsent } from '@/lib/analytics';
+import { useEffect, useSyncExternalStore } from 'react';
+import { analyticsConsentStore, GA_MEASUREMENT_ID, loadRegion, regionStore, requiresConsent, setAnalyticsConsent } from '@/lib/analytics';
 import { usePersisted } from '@/lib/clock/persisted';
 import { ConsentBanner } from './ConsentBanner';
 
@@ -11,16 +11,26 @@ const subscribeNoop = () => () => {};
 const useHydrated = () => useSyncExternalStore(subscribeNoop, () => true, () => false);
 
 /**
- * Loads Google Analytics 4 only when a measurement ID is configured AND the
- * visitor has accepted the banner. Before a choice the banner is shown and no
- * request goes to Google; after a refusal nothing is rendered at all.
+ * Loads Google Analytics 4 when a measurement ID is configured and either the
+ * visitor accepted the banner or they are outside the regions that require
+ * consent (EU/EEA, UK, Switzerland). A stored "denied" always wins. Before a
+ * choice in a consent region the banner is shown and nothing goes to Google.
  */
 export function Analytics() {
   const hydrated = useHydrated();
   const consent = usePersisted(analyticsConsentStore);
+  const region = useSyncExternalStore(regionStore.subscribe, regionStore.get, regionStore.getServer);
+  const needRegion = hydrated && Boolean(GA_MEASUREMENT_ID) && consent === null;
+
+  useEffect(() => {
+    if (needRegion) loadRegion();
+  }, [needRegion]);
+
   if (!GA_MEASUREMENT_ID || !hydrated) return null;
   if (consent === 'granted') return <GoogleTag id={GA_MEASUREMENT_ID} />;
   if (consent === 'denied') return null;
+  if (region === null) return null; // still resolving
+  if (!requiresConsent(region)) return <GoogleTag id={GA_MEASUREMENT_ID} />;
   return <ConsentBanner onChoice={setAnalyticsConsent} />;
 }
 

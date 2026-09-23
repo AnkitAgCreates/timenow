@@ -22,13 +22,13 @@ export default function PrivacyPage() {
       crumb="Privacy"
       description={DESCRIPTION}
       path={routes.privacy()}
-      intro="The short version: this site does not know who you are, does not set cookies, and does not load trackers. The details are below in plain language."
-      updated="20 September 2026"
+      intro="The short version: this site does not know who you are and sets no cookies of its own. The only third party is Google Analytics, which asks first in Europe and can be switched off anywhere. The details are below in plain language."
+      updated="23 September 2026"
     >
       <InfoSection id="collect" title="What we collect">
         <p>
           Nothing that identifies you. There are no accounts, sign-ups, forms or comment fields, so there is nothing for you to submit and nothing for us to keep. The site sets
-          no cookies.
+          no cookies of its own; the only cookies that can appear are Google Analytics&rsquo; ones, described below.
         </p>
       </InfoSection>
 
@@ -67,11 +67,17 @@ export default function PrivacyPage() {
         {ANALYTICS_CONFIGURED ? (
           <>
             <p>
-              No advertising. For analytics we use Google Analytics 4, and only if you accept the banner shown on your first visit. Until you accept, nothing is requested
-              from Google and no analytics cookie is set; if you decline, the same is true and the banner does not return.
+              No advertising. For analytics we use Google Analytics 4. If you visit from the European Union, the wider European Economic Area, the United Kingdom or
+              Switzerland, a banner asks first: until you accept, nothing is requested from Google and no analytics cookie is set, and if you decline, the same is true and the
+              banner does not return. Everywhere else analytics is on by default and you can switch it off with the control at the end of this section; your choice is kept on
+              your device and respected on every page.
             </p>
             <p>
-              After you accept, Google Analytics records which pages are viewed, which tools are used (for example that a timer was started or a conversion was made), the type
+              To know which applies, the page asks this site&rsquo;s own server once per visit which country your connection appears to come from. Only the answer
+              &ldquo;ask first&rdquo; or &ldquo;on by default&rdquo; reaches your browser; the country itself is not stored or sent anywhere.
+            </p>
+            <p>
+              When it runs, Google Analytics records which pages are viewed, which tools are used (for example that a timer was started or a conversion was made), the type
               of device and browser, and an approximate location derived from your IP address at country or city level. Google does not store the IP address itself. It sets
               first-party cookies named <code>_ga</code> and <code>_ga_…</code> on this domain so that repeat visits count as one visitor; they expire after two years. All
               advertising features are switched off, and we do not link analytics data to any identity, because there is none to link to.
@@ -96,7 +102,7 @@ export default function PrivacyPage() {
       <InfoSection id="third-parties" title="Third-party content">
         <p>
           Fonts, scripts, styles and city photographs are served from this site&rsquo;s own domain, so opening a page makes no requests to other companies
-          {ANALYTICS_CONFIGURED ? ', apart from Google Analytics after you have accepted it' : ''}. Where a page links out, for example to GeoNames, Wikimedia Commons or
+          {ANALYTICS_CONFIGURED ? ', apart from Google Analytics when it is on' : ''}. Where a page links out, for example to GeoNames, Wikimedia Commons or
           GitHub, those sites have their own privacy policies once you follow the link.
         </p>
       </InfoSection>
