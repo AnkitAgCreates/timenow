@@ -26,6 +26,7 @@ function Z(z){var id=z||F().resolvedOptions().timeZone||"UTC";id=${JSON.stringif
 function fmt(ms,z,k,h){var r=P(ms,z);switch(k){
 case"time":return H(r,true,h);
 case"time-short":return H(r,false,h);
+case"weekday-time-short":return WS[r.weekday]+" "+H(r,false,h);
 case"date-full":return W[r.weekday]+", "+M[r.month-1]+" "+r.day+", "+r.year;
 case"date-medium":return WS[r.weekday]+", "+MS[r.month-1]+" "+r.day+", "+r.year;
 case"date-weekday-short":return WS[r.weekday]+", "+MS[r.month-1]+" "+r.day;

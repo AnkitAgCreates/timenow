@@ -21,7 +21,7 @@ describe('clock bootstrap script', () => {
     Date.parse('2026-12-31T23:30:05Z'),
     Date.parse('2028-02-29T12:00:00Z'),
   ];
-  const kinds: LiveKind[] = ['time', 'time-short', 'date-full', 'date-medium', 'date-weekday-short', 'offset', 'zone-city'];
+  const kinds: LiveKind[] = ['time', 'time-short', 'weekday-time-short', 'date-full', 'date-medium', 'date-weekday-short', 'offset', 'zone-city'];
 
   it('produces output identical to the React formatter for every kind, zone and hour cycle', () => {
     for (const zone of zones) {

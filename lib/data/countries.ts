@@ -1,4 +1,4 @@
-import { COUNTRIES } from '@/data/countries';
+import { COUNTRIES, HOMEPAGE_COUNTRY_SLUGS } from '@/data/countries';
 import type { Country } from '@/types/data';
 
 const byCode = new Map(COUNTRIES.map((country) => [country.code, country]));
@@ -13,6 +13,11 @@ export function getCountry(slug: string): Country | undefined {
 }
 
 /** All countries, alphabetical. */
+/** Countries in the homepage directory column, in display order (unknown slugs are skipped). */
+export function getHomepageCountries(): Country[] {
+  return HOMEPAGE_COUNTRY_SLUGS.map((slug) => getCountry(slug)).filter((c): c is Country => Boolean(c));
+}
+
 export function getAllCountries(): Country[] {
   return [...COUNTRIES].sort((a, b) => a.name.localeCompare(b.name));
 }

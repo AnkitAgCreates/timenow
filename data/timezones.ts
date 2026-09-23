@@ -312,4 +312,4 @@ const CORE_TIMEZONES: TimeZoneEntry[] = [
 export const TIMEZONES: TimeZoneEntry[] = [...CORE_TIMEZONES, ...WORLD_TIMEZONES];
 
 /** Homepage "Popular Time Zones", in display order. */
-export const POPULAR_TIMEZONE_SLUGS = ['utc', 'est', 'cst', 'pst', 'ist', 'gmt'];
+export const POPULAR_TIMEZONE_SLUGS = ['utc', 'est', 'cst', 'pst', 'ist', 'gmt', 'cet', 'jst', 'aest', 'mst'];

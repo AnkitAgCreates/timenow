@@ -1,12 +1,13 @@
-import { canonicalZone, formatDate, formatOffset, formatTime, getUTCOffset, type HourCycle } from '@/lib/time';
+import { canonicalZone, formatDate, formatOffset, formatTime, getUTCOffset, getZonedParts, WEEKDAYS_SHORT, type HourCycle } from '@/lib/time';
 
 /** Display variants supported by <LiveTime> and the inline bootstrap script. */
-export type LiveKind = 'time' | 'time-short' | 'date-full' | 'date-medium' | 'date-weekday-short' | 'offset' | 'zone-city';
+export type LiveKind = 'time' | 'time-short' | 'weekday-time-short' | 'date-full' | 'date-medium' | 'date-weekday-short' | 'offset' | 'zone-city';
 
 /** Placeholder text rendered on the server before the bootstrap fills real values. */
 export const LIVE_PLACEHOLDER: Record<LiveKind, string> = {
   time: '--:--:--',
   'time-short': '--:--',
+  'weekday-time-short': '--- --:--',
   'date-full': ' ',
   'date-medium': ' ',
   'date-weekday-short': ' ',
@@ -26,6 +27,8 @@ export function formatKind(instant: number, timeZone: string, kind: LiveKind, ho
       return formatTime(instant, timeZone, { hourCycle, seconds: true });
     case 'time-short':
       return formatTime(instant, timeZone, { hourCycle, seconds: false });
+    case 'weekday-time-short':
+      return `${WEEKDAYS_SHORT[getZonedParts(instant, timeZone).weekday]} ${formatTime(instant, timeZone, { hourCycle, seconds: false })}`;
     case 'date-full':
       return formatDate(instant, timeZone, 'full');
     case 'date-medium':

@@ -107,6 +107,8 @@ The 25 Sprint 1 seed cities (Phoenix, Regina, Mexico City, Tijuana, New Delhi, S
 
 **To add a city:** add its GeoNames id to `MUST_INCLUDE` (or raise the country quota) in the generator, regenerate, and if the zone is new add it to `ZONE_METADATA`. Run `npm test`.
 
+**Homepage directory lists** (`HOMEPAGE_CITY_SLUGS` in `data/cities.ts`, `HOMEPAGE_COUNTRY_SLUGS` in `data/countries.ts`, `POPULAR_TIMEZONE_SLUGS` in `data/timezones.ts`): ten slugs each, in display order, rendered by `components/home/WorldTimeDirectory.tsx` with a live weekday + time per row. Cities and countries use their IANA zones; abbreviations show the time at their defined offset via a fixed-offset pseudo-zone (EST is always UTC-5 there, matching the page it links to). `lib/data/homepage.test.ts` checks every slug resolves and the six abbreviations from the brief come first.
+
 **To add a city photo:** add `{ "slug": "…", "alt": "…" }` to `data/sources/city-images.json` — optionally `"file": "File:…"` to pick a specific Commons file instead of the city's Wikidata main image — then run `node scripts/fetch-city-images.mjs --contact review.jpg`, look at the review sheet, and commit `public/cities/<slug>.webp`, `public/cities/<slug>-card.webp` and the regenerated manifest. The script skips files whose licence is not free and reports why; `--refresh` re-downloads files that already exist. Run `npm test`.
 
 ### Country — `data/countries.ts`

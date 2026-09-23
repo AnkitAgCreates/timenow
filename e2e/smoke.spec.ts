@@ -157,3 +157,27 @@ test.describe('routing', () => {
     expect((await request.get('/time/atlantis/')).status()).toBe(404);
   });
 });
+
+test.describe('World time directory', () => {
+  test('homepage lists ten cities, countries and time zones with live weekday + time and working links', async ({ page, request }) => {
+    await page.goto('/');
+    const directory = page.locator('[data-world-time-directory]');
+    await expect(directory).toBeVisible();
+    for (const id of ['directory-cities', 'directory-countries', 'directory-time-zones']) {
+      const links = directory.locator(`#${id} ul a`);
+      await expect(links).toHaveCount(10);
+      // Bootstrap fills the placeholder before hydration; the store keeps it current.
+      await expect(links.first().locator('[data-kind="weekday-time-short"]')).toHaveText(/^(Sun|Mon|Tue|Wed|Thu|Fri|Sat) \d{1,2}:\d{2}( [AP]M)?$/);
+    }
+    // One link per column resolves to a real page.
+    for (const href of ['/time/paris/', '/countries/japan/', '/timezones/cet/']) {
+      await expect(directory.locator(`a[href="${href}"]`)).toHaveCount(1);
+      expect((await request.get(href)).status(), href).toBe(200);
+    }
+    // The abbreviation column shows the abbreviation at its defined offset: UTC and GMT agree, EST is UTC-5.
+    const text = async (href: string) => (await directory.locator(`a[href="${href}"] [data-kind]`).textContent()) ?? '';
+    expect(await text('/timezones/utc/')).toBe(await text('/timezones/gmt/'));
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+});

@@ -1,4 +1,4 @@
-import { CITIES, COMPARISON_CITY_SLUGS, POPULAR_CITY_SLUGS } from '@/data/cities';
+import { CITIES, COMPARISON_CITY_SLUGS, HOMEPAGE_CITY_SLUGS, POPULAR_CITY_SLUGS } from '@/data/cities';
 import { canonicalZone } from '@/lib/time';
 import type { City } from '@/types/data';
 
@@ -18,6 +18,11 @@ function resolve(slugs: string[]): City[] {
 
 export function getPopularCities(): City[] {
   return resolve(POPULAR_CITY_SLUGS);
+}
+
+/** Cities in the homepage directory column, in display order. */
+export function getHomepageCities(): City[] {
+  return resolve(HOMEPAGE_CITY_SLUGS);
 }
 
 export function getCitiesInZones(zones: string[]): City[] {

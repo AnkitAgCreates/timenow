@@ -22,6 +22,9 @@ export const CITY_IMAGE_SIZES = {
 /** Homepage "Popular Cities", in display order. */
 export const POPULAR_CITY_SLUGS = ['new-york', 'london', 'dubai', 'singapore', 'tokyo', 'sydney'];
 
+/** Homepage directory column "Cities" (live weekday + time, linked), in display order. */
+export const HOMEPAGE_CITY_SLUGS = ['new-york', 'london', 'tokyo', 'paris', 'sydney', 'dubai', 'singapore', 'los-angeles', 'chicago', 'hong-kong'];
+
 /**
  * Global reference cities used for "time difference" tables on city and
  * country pages, in order of preference. The current city and cities sharing

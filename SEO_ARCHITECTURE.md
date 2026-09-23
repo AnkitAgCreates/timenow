@@ -122,6 +122,10 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 `lib/analytics.ts` `track()` is wired for `search_used`, `city_selected`, `timezone_selected`, `timer_started`, `timer_completed`, `converter_used`. GA4 loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.
 
+## Homepage internal links
+
+The homepage directory (`components/home/WorldTimeDirectory.tsx`) links thirty high-value pages — ten cities, ten countries, ten abbreviation pages — with their names as anchor text, plus the three hubs. The lists are curated in data, not generated, so the homepage stays focused; it is the strongest internal-link source on the site and should keep pointing at the pages that matter most.
+
 ## One host, one case (`proxy.ts`)
 
 The proxy permanently redirects (308) two kinds of duplicates before any page renders: mixed-case paths to their lowercase form, and — only when indexing is on — requests that arrive on a non-canonical host (the `*.vercel.app` aliases and per-deployment URLs) to the same path on `NEXT_PUBLIC_SITE_URL`. Local hosts (`localhost`, `127.0.0.1`) are never redirected, so the dev server, the e2e servers and CI keep working; previews have indexing off and are left alone. Logic and tests: `lib/seo/canonical-host.ts`. `www.whattimein.world` is redirected to the apex by Vercel itself (domain-level redirect).

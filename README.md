@@ -101,6 +101,10 @@ The site is a standard Next.js build: static pages with hourly ISR, no custom se
 
 Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.
 
+## Homepage directory
+
+Below the popular-city cards, the homepage lists ten cities, ten countries and ten time zone abbreviations with a live weekday and time each and a link to the page (`components/home/WorldTimeDirectory.tsx`; lists in `data/cities.ts`, `data/countries.ts`, `data/timezones.ts`). Times use the existing live-clock machinery: filled before hydration by the inline bootstrap, then ticking from the shared store, following the 12/24-hour toggle. Abbreviations show their defined offset (EST = UTC-5), the same convention as their pages.
+
 ## Analytics (Google Analytics 4)
 
 Off by default. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` (Production only on Vercel) and redeploy. The gate is region-aware: visitors from the EU/EEA, the UK and Switzerland (`lib/analytics-region.ts`, from Vercel's `x-vercel-ip-country` header via `/api/geo/`; unknown = ask) see a consent banner and the Google tag loads only after **Accept** (no request to Google and no cookie before that; **Decline** is remembered on the device). Everyone else gets the tag by default and can switch it off on the privacy page; a stored choice always wins over the region. Advertising signals are denied in the tag's consent defaults. Page views, including client-side navigations, come from GA4's enhanced measurement, which is on by default in the property; the site sends its own events too: `search_used`, `city_selected`, `timer_started`, `timer_completed`, `converter_used`, `meeting_planner_used`, `tool_selected` (`lib/analytics.ts`). The e2e suite renders the gate with a fake id, simulates countries with the header, and intercepts every request to Google.

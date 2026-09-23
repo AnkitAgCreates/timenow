@@ -82,6 +82,10 @@ Priority cities (homepage, comparison and seed cities — the `data/sources/city
 
 Every other city keeps `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline silhouette on a light-blue gradient, defined once in CSS, which preserves the PRD's card rhythm with no network requests.
 
+## Homepage directory
+
+"Current time around the world": three lists (Cities, Countries, Time Zones), one card each with divided 44 px rows — name on the left (countries carry a small ISO code, abbreviations their full name from `sm`), live "Wed 11:08" on the right in tabular numerals with a fixed placeholder width so the fill never shifts the row. Three columns from `md`, stacked below. Each column header links to its hub. It replaced the abbreviation chip row; the photo cards above it stay.
+
 ## Consent banner
 
 When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a fixed bar (card style, restrained shadow) above the mobile bottom navigation and at the bottom on desktop: one sentence, a Privacy link, Decline and Accept buttons with 44 px targets. It is `position: fixed`, so it never shifts content (CLS stays 0), and it is rendered only after hydration so returning visitors never see it flash. It appears once, and only for visitors in the regions that require consent (EU/EEA, UK, Switzerland, or unknown); elsewhere analytics runs without a banner and the privacy page offers a "Turn analytics off" control.

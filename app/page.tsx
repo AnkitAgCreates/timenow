@@ -6,9 +6,9 @@ import { GlobalSearch } from '@/components/search/GlobalSearch';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ToolCard } from '@/components/tools/ToolCard';
 import { Icon } from '@/components/ui/Icon';
+import { WorldTimeDirectory } from '@/components/home/WorldTimeDirectory';
 import { Section } from '@/components/ui/Section';
 import { getPopularCities } from '@/lib/data/cities';
-import { getPopularTimezones } from '@/lib/data/timezones';
 import { getHomeTools } from '@/lib/data/tools';
 import { routes } from '@/lib/routes';
 import { faqJsonLd, webPageJsonLd, websiteJsonLd } from '@/lib/seo/jsonld';
@@ -44,7 +44,6 @@ export const metadata = buildMetadata({ title: TITLE, absoluteTitle: true, descr
 export default function HomePage() {
   const renderedAt = getRenderInstant();
   const cities = getPopularCities();
-  const timezones = getPopularTimezones();
   const tools = getHomeTools();
 
   return (
@@ -83,20 +82,8 @@ export default function HomePage() {
           </div>
         </Section>
 
-        <Section id="popular-time-zones" title="Popular Time Zones" action={{ label: 'See all', href: routes.timezonesHub() }}>
-          <ul className="flex flex-wrap gap-2">
-            {timezones.map((tz) => (
-              <li key={tz.slug}>
-                <Link
-                  href={routes.timezone(tz.slug)}
-                  title={tz.name}
-                  className="inline-flex h-11 min-w-16 items-center justify-center rounded-lg border border-border bg-white px-4 text-sm font-semibold text-heading shadow-card hover:border-blue-border hover:text-primary"
-                >
-                  {tz.abbreviation}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <Section id="world-times" title="Current time around the world">
+          <WorldTimeDirectory />
         </Section>
 
         <Section id="time-tools" title="Time Tools">

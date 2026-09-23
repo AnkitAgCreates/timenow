@@ -8,3 +8,6 @@ import { GENERATED_COUNTRIES } from './countries.generated';
  * output can be regenerated deterministically.
  */
 export const COUNTRIES: Country[] = GENERATED_COUNTRIES;
+
+/** Homepage directory column "Countries" (live time in the primary zone, linked), in display order. */
+export const HOMEPAGE_COUNTRY_SLUGS = ['united-states', 'united-kingdom', 'japan', 'france', 'australia', 'china', 'germany', 'india', 'canada', 'brazil'];
