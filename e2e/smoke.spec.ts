@@ -182,3 +182,28 @@ test.describe('World time directory', () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 });
+
+test.describe('Footer directory', () => {
+  test('every page links the major cities, countries and time zones from the footer', async ({ page, isMobile }) => {
+    await page.goto('/timer/1-hour/');
+    const footer = page.locator('[data-footer-directory]');
+    await expect(footer).toBeVisible();
+    await expect(footer.locator('nav[aria-label="Current time in major cities"] a[href^="/time/"]')).toHaveCount(64);
+    // 40 country pages; the "All countries" link to the hub is excluded.
+    await expect(footer.locator('nav[aria-label="Current time in major countries"] a[href^="/countries/"]:not([href="/countries/"])')).toHaveCount(40);
+    await expect(footer.locator('nav[aria-label="Current time in time zones"] a')).toHaveCount(19); // 18 abbreviations + hub
+    await expect(footer.locator('a[href="/time/tokyo/"]')).toHaveCount(1);
+    await expect(footer.locator('a[href="/countries/india/"]')).toContainText(/IN\s*India/);
+    await expect(footer.locator('a[href="/timezones/cet/"]')).toHaveText('CET');
+    // On phones only the first rows are visible, with links to the full directories.
+    const visibleCities = await footer.locator('nav[aria-label="Current time in major cities"] li:visible').count();
+    if (isMobile) {
+      expect(visibleCities).toBe(25); // 24 cities + "More cities"
+      await expect(footer.locator('a[href="/world-clock/"]:visible')).toHaveCount(1);
+    } else {
+      expect(visibleCities).toBe(64);
+    }
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+});

@@ -86,6 +86,10 @@ Every other city keeps `.skyline` / `.skyline-alt`: a ~1 KB inline SVG skyline s
 
 "Current time around the world": three lists (Cities, Countries, Time Zones), one card each with divided 44 px rows — name on the left (countries carry a small ISO code, abbreviations their full name from `sm`), live "Wed 11:08" on the right in tabular numerals with a fixed placeholder width so the fill never shifts the row. Three columns from `md`, stacked below. Each column header links to its hub. It replaced the abbreviation chip row; the photo cards above it stay.
 
+## Footer directory
+
+Above the brand row, every page carries three plain-link lists (`components/layout/FooterDirectory.tsx`): the 64 largest priority-1 cities, the 40 most populous countries with their ISO code, and 18 time zone abbreviations in one wrapped line. Small primary-coloured links in an 8-column grid on desktop (4 on tablet, 2 on phones), 44 px rows on touch screens. Phones show the first 24 cities and 16 countries plus a "More…" link; the rest stay in the HTML with `hidden md:block`. No live values here — the lists are static links, so the footer costs nothing at runtime.
+
 ## Consent banner
 
 When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a fixed bar (card style, restrained shadow) above the mobile bottom navigation and at the bottom on desktop: one sentence, a Privacy link, Decline and Accept buttons with 44 px targets. It is `position: fixed`, so it never shifts content (CLS stays 0), and it is rendered only after hydration so returning visitors never see it flash. It appears once, and only for visitors in the regions that require consent (EU/EEA, UK, Switzerland, or unknown); elsewhere analytics runs without a banner and the privacy page offers a "Turn analytics off" control.

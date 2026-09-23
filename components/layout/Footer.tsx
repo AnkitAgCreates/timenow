@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { FooterDirectory } from '@/components/layout/FooterDirectory';
 import { BrandName } from '@/components/layout/Logo';
 import { routes } from '@/lib/routes';
 import { SITE_TAGLINE } from '@/lib/seo/site';
@@ -24,7 +25,8 @@ const VALUES = ['Fast', 'Accurate', 'Global', 'Free'];
 export function Footer() {
   return (
     <footer className="mt-12 border-t border-border bg-white pb-20 md:pb-0">
-      <div className="container-page flex flex-col gap-4 py-6 md:flex-row md:items-center md:justify-between">
+      <FooterDirectory />
+      <div className="container-page flex flex-col gap-4 border-t border-border py-6 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
           <BrandName className="text-lg font-extrabold tracking-[-0.03em] text-heading" />
           <span className="text-sm text-muted">{SITE_TAGLINE}</span>

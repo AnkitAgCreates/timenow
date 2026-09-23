@@ -313,3 +313,6 @@ export const TIMEZONES: TimeZoneEntry[] = [...CORE_TIMEZONES, ...WORLD_TIMEZONES
 
 /** Homepage "Popular Time Zones", in display order. */
 export const POPULAR_TIMEZONE_SLUGS = ['utc', 'est', 'cst', 'pst', 'ist', 'gmt', 'cet', 'jst', 'aest', 'mst'];
+
+/** Footer "Current time now in time zones" links, in display order (west to east after the two universal ones). */
+export const FOOTER_TIMEZONE_SLUGS = ['utc', 'gmt', 'pst', 'mst', 'cst', 'est', 'wet', 'cet', 'eet', 'msk', 'sast', 'gst', 'ist', 'sgt', 'hkt', 'jst', 'aest', 'nzst'];

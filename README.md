@@ -113,6 +113,10 @@ Off by default. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` (Production only on Vercel) 
 
 `browserslist` in `package.json` declares the support policy: browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+). Older browsers are not tested. Widen the list if analytics show a meaningful share of them. Note that Next.js ships its own small polyfill set (`Array.prototype.at`, `Object.hasOwn`, …) inside its runtime chunk regardless of this list; Lighthouse reports it as about 14 KB of legacy JavaScript, and it cannot be removed from app configuration.
 
+## Building on a busy machine
+
+`next build` forks one static-generation worker per CPU (15 on the development laptop). When memory is short the workers die and the build fails with `ENOENT`/`UNKNOWN` file errors or a Node fatal error. Cap them for local builds and e2e runs: `TIMENOW_BUILD_CPUS=4 npm run build` (the Playwright web server inherits it). CI and Vercel leave it unset.
+
 ## Continuous integration
 
 `.github/workflows/ci.yml` runs on every push to `main` and every pull request: one job for typecheck, lint, unit tests and the production build, and one for the Playwright suite against the two production builds (desktop, mobile and kill-switch projects; the HTML report is uploaded on failure). A third job, "SEO audit", builds the indexed variant and runs `npm run seo:audit`, uploading `seo/reports/` as an artifact. `.github/workflows/geonames-drift.yml` is manual (Actions → "GeoNames drift check"): it downloads today's GeoNames export and runs `node scripts/generate-geo-data.mjs --check`, so a failure there means upstream data moved, not that the code is broken.

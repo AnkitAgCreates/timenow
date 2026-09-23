@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
   reactStrictMode: true,
+  // Static generation forks one worker per CPU by default (15 here). On a loaded laptop that
+  // exhausts memory and the build dies with ENOENT/UNKNOWN file errors or a Node fatal error,
+  // so local builds can cap it: TIMENOW_BUILD_CPUS=4 npm run build. Unset in CI and on Vercel.
+  ...(process.env.TIMENOW_BUILD_CPUS ? { experimental: { cpus: Number(process.env.TIMENOW_BUILD_CPUS) } } : {}),
   async redirects() {
     return [
       // UTC and GMT are canonical at their hubs; GMT offsets are the same offsets as UTC.
