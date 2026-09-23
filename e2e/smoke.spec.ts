@@ -174,9 +174,10 @@ test.describe('World time directory', () => {
       await expect(directory.locator(`a[href="${href}"]`)).toHaveCount(1);
       expect((await request.get(href)).status(), href).toBe(200);
     }
-    // The abbreviation column shows the abbreviation at its defined offset: UTC and GMT agree, EST is UTC-5.
-    const text = async (href: string) => (await directory.locator(`a[href="${href}"] [data-kind]`).textContent()) ?? '';
-    expect(await text('/timezones/utc/')).toBe(await text('/timezones/gmt/'));
+    // The abbreviation column shows each abbreviation at its defined offset, so UTC and GMT always agree.
+    // (Their rows link to the canonical hubs /utc/ and /gmt/, hence the lookup by full name.)
+    const text = async (name: string) => (await directory.locator(`#directory-time-zones a[title="${name}"] [data-kind]`).textContent()) ?? '';
+    expect(await text('Coordinated Universal Time')).toBe(await text('Greenwich Mean Time'));
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
   });
