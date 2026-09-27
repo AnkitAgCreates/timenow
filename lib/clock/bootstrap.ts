@@ -9,6 +9,7 @@
  * lib/clock/format-kind.ts — enforced by lib/clock/bootstrap.test.ts.
  */
 import { ZONE_ALIASES } from '@/lib/time/aliases';
+import { INTL_ZONE_FALLBACKS } from '@/lib/time/zone';
 import { HOUR_CYCLE_STORAGE_KEY } from './constants';
 
 export const CLOCK_BOOTSTRAP_SCRIPT = `(function(){
@@ -18,6 +19,7 @@ M=["January","February","March","April","May","June","July","August","September"
 MS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],C={};
 function F(z){var k=z||"";if(!C[k]){var o={hourCycle:"h23",year:"numeric",month:"numeric",day:"numeric",hour:"numeric",minute:"numeric",second:"numeric"};if(z)o.timeZone=z;C[k]=new Intl.DateTimeFormat("en-US",o)}return C[k]}
 function P(ms,z){var x=z&&/^UTC([+-])(\\d{2}):(\\d{2})$/.exec(z);if(x){var o=(x[1]==="-"?-1:1)*(+x[2]*60+ +x[3]),d0=new Date(Math.floor(ms/1000)*1000+o*60000);return{year:d0.getUTCFullYear(),month:d0.getUTCMonth()+1,day:d0.getUTCDate(),hour:d0.getUTCHours(),minute:d0.getUTCMinutes(),second:d0.getUTCSeconds(),weekday:d0.getUTCDay()}}var r={},a=F(z).formatToParts(ms);for(var i=0;i<a.length;i++){if(a[i].type!=="literal")r[a[i].type]=+a[i].value}r.hour=r.hour%24;var d=new Date(0);d.setUTCFullYear(r.year,r.month-1,r.day);r.weekday=d.getUTCDay();return r}
+function S(z){if(!z||z==="UTC"||/^UTC[+-]/.test(z))return z;try{new Intl.DateTimeFormat("en-US",{timeZone:z});return z}catch(e){var f=${JSON.stringify(INTL_ZONE_FALLBACKS)}[z];return f||null}}
 function T(n){return(n<10?"0":"")+n}
 function Y(){try{return localStorage.getItem(${JSON.stringify(HOUR_CYCLE_STORAGE_KEY)})==="24h"?"24h":"12h"}catch(e){return"12h"}}
 function H(r,s,h){var t=s?":"+T(r.second):"";if(h==="24h")return T(r.hour)+":"+T(r.minute)+t;return(r.hour%12||12)+":"+T(r.minute)+t+" "+(r.hour<12?"AM":"PM")}
@@ -33,7 +35,7 @@ case"date-weekday-short":return WS[r.weekday]+", "+MS[r.month-1]+" "+r.day;
 case"offset":return O(ms,z);
 case"zone-city":return Z(z)}
 return""}
-window.__tn={fmt:fmt,cycle:Y,fill:function(id){var e=document.getElementById(id);if(e)e.textContent=fmt(Date.now(),e.getAttribute("data-tz")||void 0,e.getAttribute("data-kind"),Y())}};
+window.__tn={fmt:fmt,cycle:Y,fill:function(id){try{var e=document.getElementById(id);if(!e)return;var z=e.getAttribute("data-tz")||void 0;if(z){z=S(z);if(z===null)return}e.textContent=fmt(Date.now(),z,e.getAttribute("data-kind"),Y())}catch(x){}}};
 })();`;
 
 /** Per-element call emitted right after a live element. */

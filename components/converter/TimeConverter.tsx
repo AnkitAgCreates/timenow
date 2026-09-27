@@ -59,7 +59,7 @@ export function TimeConverter({ defaultFrom, defaultTo, renderedAt }: { defaultF
   const labelInstant = result?.instant ?? now;
 
   const inputClass =
-    'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+    'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
   return (
     <div className="space-y-3">

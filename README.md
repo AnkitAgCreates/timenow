@@ -113,6 +113,10 @@ Off by default. Set `NEXT_PUBLIC_GA_MEASUREMENT_ID` (Production only on Vercel) 
 
 `browserslist` in `package.json` declares the support policy: browsers released from 2023 onward (Chrome/Edge 109+, Firefox 115+, Safari/iOS 16+). Older browsers are not tested. Widen the list if analytics show a meaningful share of them. Note that Next.js ships its own small polyfill set (`Array.prototype.at`, `Object.hasOwn`, …) inside its runtime chunk regardless of this list; Lighthouse reports it as about 14 KB of legacy JavaScript, and it cannot be removed from app configuration.
 
+## Browsers covered by the e2e suite
+
+Playwright runs four projects: `desktop` (Chrome), `mobile` (Pixel 7, Chromium), `ios` (iPhone 15, WebKit — the iOS Safari engine) and `kill-switch`. CI installs both Chromium and WebKit. Tests that differ by layout use `testInfo.project.use.isMobile`, never the project name.
+
 ## Building on a busy machine
 
 `next build` forks one static-generation worker per CPU (15 on the development laptop). When memory is short the workers die and the build fails with `ENOENT`/`UNKNOWN` file errors or a Node fatal error. Cap them for local builds and e2e runs: `TIMENOW_BUILD_CPUS=4 npm run build` (the Playwright web server inherits it). CI and Vercel leave it unset.

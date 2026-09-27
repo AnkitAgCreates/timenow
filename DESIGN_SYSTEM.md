@@ -96,6 +96,8 @@ When analytics is configured, `components/analytics/ConsentBanner.tsx` renders a
 
 ## Live values (no flash, no hydration mismatch)
 
+Browsers can lack zones that the server knows (WebKit 26 has no `America/Coyhaique`, added in tzdata 2025b), and `Intl` throws for them. The time engine resolves every zone through `runtimeZone()` (`lib/time/zone.ts`): unsupported zones use a listed equivalent (`INTL_ZONE_FALLBACKS`), else a fixed offset from the generated zone table, else UTC; the inline bootstrap uses the same list and never throws. Form fields use 16 px text on phones (`text-base sm:text-[15px]`) because iOS Safari zooms into any focused field below 16 px.
+
 Text derived from tzdata (zone abbreviations, offsets, differences) is rendered on the server from the render instant and again on the client, and the two runtimes can carry different tzdata releases (CI's Node 24.20 shipped 2026c while the test browser lagged, which relabelled Morocco for a few days). `LiveZoneInfo` and `LiveDifference` therefore mark their text with `suppressHydrationWarning`, like `LiveTime`: the server text stays until the live value replaces it after mount, and a divergence never becomes a hydration error.
 
 Clock text is filled **before first paint** by an inline bootstrap (`lib/clock/bootstrap.ts`, following the Next.js "Preventing flash before hydration" guide), then kept current by a single shared once-per-second store (`lib/clock/stores.ts`).

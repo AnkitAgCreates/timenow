@@ -100,7 +100,7 @@ export function AlarmClock() {
     setRinging(null);
   };
 
-  const inputClass = 'mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+  const inputClass = 'mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
   return (
     <div className="space-y-4">

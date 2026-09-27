@@ -41,7 +41,7 @@ function classify(minutes: number, duration: number, hours: WorkingHours): Quali
   return 'off';
 }
 
-const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
 /**
  * 2–4 participants, a date, working hours and a duration → an hour grid with

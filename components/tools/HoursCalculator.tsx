@@ -5,7 +5,7 @@ import { Icon } from '@/components/ui/Icon';
 import { track } from '@/lib/analytics';
 import { formatDecimalHours, formatHoursMinutes, payFor, shiftMinutes, totalMinutes, type ShiftRow } from '@/lib/tools/hours-calculator';
 
-const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
 type Row = ShiftRow & { id: number };
 
@@ -67,7 +67,7 @@ export function HoursCalculator() {
         </button>
         <label className="text-xs font-medium text-muted">
           Hourly rate (optional)
-          <input type="number" min={0} step="0.01" inputMode="decimal" value={rate} placeholder="20.00" onChange={(e) => { setRate(e.target.value); markUsed(); }} className="tabular mt-1 h-11 w-36 rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
+          <input type="number" min={0} step="0.01" inputMode="decimal" value={rate} placeholder="20.00" onChange={(e) => { setRate(e.target.value); markUsed(); }} className="tabular mt-1 h-11 w-36 rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20" />
         </label>
       </div>
 

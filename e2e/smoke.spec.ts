@@ -128,7 +128,7 @@ test.describe('interactions', () => {
   });
 
   test('mobile bottom navigation and menu work', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'mobile', 'Bottom navigation is mobile-only');
+    test.skip(!testInfo.project.use.isMobile, 'Bottom navigation is mobile-only');
     await page.goto('/timer/1-hour/');
     const bottomNav = page.getByRole('navigation', { name: 'Quick navigation' });
     await expect(bottomNav).toBeVisible();
@@ -205,5 +205,20 @@ test.describe('Footer directory', () => {
     }
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
+  });
+});
+
+test.describe('Time zones newer than some browsers know', () => {
+  // America/Coyhaique (tzdata 2025b) is missing from WebKit's data; the ios project exercises the fallback.
+  test('the Chile page renders every zone and survives a clock-format change', async ({ page, pageErrors }) => {
+    await page.goto('/countries/chile/');
+    await expect(page.locator('h1')).toHaveText('Current Time in Chile');
+    const aysen = page.locator('[data-tz="America/Coyhaique"][data-kind="time-short"]').first();
+    await expect(aysen).toHaveText(/^\d{1,2}:\d{2}( [AP]M)?$/);
+    await page.locator('button[aria-pressed]').nth(1).click(); // 24-hour
+    await expect(page.locator('h1')).toHaveText('Current Time in Chile');
+    await expect(aysen).toHaveText(/^\d{2}:\d{2}$/);
+    await page.waitForTimeout(500);
+    expect(pageErrors).toEqual([]);
   });
 });

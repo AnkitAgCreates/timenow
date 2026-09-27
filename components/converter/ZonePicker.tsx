@@ -137,7 +137,7 @@ export function ZonePicker({
             ensureIndex();
           }}
           onKeyDown={onKeyDown}
-          className="h-11 w-full rounded-lg border border-border bg-white pl-3 pr-9 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="h-11 w-full rounded-lg border border-border bg-white pl-3 pr-9 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
         <Icon name="chevron-down" className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
       </div>

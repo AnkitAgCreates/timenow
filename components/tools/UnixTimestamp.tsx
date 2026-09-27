@@ -10,7 +10,7 @@ import { parseClockTime } from '@/lib/tools/hours-calculator';
 import { isoUtc, parseTimestamp, relativeTime, toSeconds, wallTimeToTimestamp } from '@/lib/tools/unix-timestamp';
 import { parseIsoDate } from '@/lib/tools/date-difference';
 
-const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
 function CopyButton({ value, label }: { value: string; label: string }) {
   const [copied, setCopied] = useState(false);

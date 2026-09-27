@@ -36,7 +36,7 @@ test.describe('Sprint 2 pages', () => {
     await expect(hero.locator('[data-clock-time]')).toHaveText('1:00:00 PM');
     await expect(hero).toContainText('EST · UTC-5');
     // Phones get one card per zone group; wider screens get the table. Only one variant is visible.
-    const isMobile = testInfo.project.name === 'mobile';
+    const isMobile = Boolean(testInfo.project.use.isMobile);
     await expect(page.locator('#zones table')).toBeVisible({ visible: !isMobile });
     await expect(page.locator('#zones li[data-zone-group]').first()).toBeVisible({ visible: isMobile });
     const rows = page.locator('#zones [data-zone-group]:visible');

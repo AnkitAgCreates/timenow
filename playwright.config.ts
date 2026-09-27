@@ -34,6 +34,12 @@ export default defineConfig({
       use: { ...devices['Pixel 7'], channel, baseURL: `http://127.0.0.1:${INDEXED_PORT}` },
     },
     {
+      // iOS Safari's engine. Catches WebKit-only failures (e.g. time zones missing from its tz data).
+      name: 'ios',
+      testMatch: /(smoke|sprint2|sprint3|sprint4|sprint5|images|analytics)\.spec\.ts/,
+      use: { ...devices['iPhone 15'], baseURL: `http://127.0.0.1:${INDEXED_PORT}` },
+    },
+    {
       name: 'kill-switch',
       testMatch: /kill-switch\.spec\.ts/,
       use: { ...devices['Desktop Chrome'], channel, baseURL: `http://127.0.0.1:${NOINDEX_PORT}` },

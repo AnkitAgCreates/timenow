@@ -94,7 +94,7 @@ export function GlobalSearch({ size = 'md', autoFocus, onNavigate, className = '
     }
   };
 
-  const inputHeight = size === 'lg' ? 'h-12 text-base' : 'h-11 text-[15px]';
+  const inputHeight = size === 'lg' ? 'h-12 text-base' : 'h-11 text-base sm:text-[15px]';
   let optionIndex = -1;
 
   return (

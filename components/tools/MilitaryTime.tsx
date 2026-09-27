@@ -28,7 +28,7 @@ export function MilitaryTime() {
           onChange={(e) => onChange(e.target.value)}
           autoComplete="off"
           spellCheck={false}
-          className="tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+          className="tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
         />
       </label>
       <div className="mt-2 flex flex-wrap gap-2">

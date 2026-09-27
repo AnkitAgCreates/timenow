@@ -9,7 +9,7 @@ const iso = (d: CalendarDate) => `${d.year}-${String(d.month).padStart(2, '0')}-
 const pretty = (d: CalendarDate) => `${WEEKDAYS_SHORT[weekday(d)]}, ${MONTHS_SHORT[d.month - 1]} ${d.day}, ${d.year}`;
 const plural = (n: number, unit: string) => `${n.toLocaleString('en-US')} ${unit}${n === 1 ? '' : 's'}`;
 
-const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
+const inputClass = 'tabular mt-1 h-11 w-full rounded-lg border border-border bg-white px-3 text-base sm:text-[15px] text-heading focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20';
 
 /** `today` is the server's render date (ISO), so the first paint matches on both sides. */
 export function DateDifference({ today }: { today: string }) {

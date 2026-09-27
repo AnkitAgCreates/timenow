@@ -1,3 +1,5 @@
+import { GENERATED_ZONE_NAMES } from './zone-names.generated';
+
 /**
  * Core IANA time zone primitives built on Intl.DateTimeFormat.
  *
@@ -40,6 +42,57 @@ export type WallTime = {
 export type CalendarDate = { year: number; month: number; day: number };
 
 const formatterCache = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Zones newer than some browsers' time-zone data, mapped to a zone with the same
+ * rules for every date the site shows. Without this, Intl throws "invalid time
+ * zone" in those browsers and the page crashes on the client.
+ */
+export const INTL_ZONE_FALLBACKS: Readonly<Record<string, string>> = {
+  // Added in tzdata 2025b: Chile's Aysén region, permanent UTC-3 since 2025-03-20 — the
+  // same rules as Punta Arenas (permanent UTC-3 since 2016). WebKit 26 still lacks it.
+  'America/Coyhaique': 'America/Punta_Arenas',
+};
+
+/**
+ * The zone to hand to Intl on this runtime: the zone itself when supported, else
+ * its listed equivalent, else a fixed offset from the generated zone table
+ * (exact for zones without daylight saving), else UTC. Pure; `supported` is
+ * injected so tests can simulate an older browser.
+ */
+export function resolveIntlZone(timeZone: string, supported: (zone: string) => boolean): string {
+  if (timeZone === 'UTC' || parseFixedOffsetZone(timeZone) !== null || supported(timeZone)) return timeZone;
+  const mapped = INTL_ZONE_FALLBACKS[timeZone];
+  if (mapped && supported(mapped)) return mapped;
+  const row = GENERATED_ZONE_NAMES.find((entry) => entry[0] === timeZone);
+  return row ? fixedOffsetZoneId(row[1]) : 'UTC';
+}
+
+const intlSupport = new Map<string, boolean>();
+function intlSupports(timeZone: string): boolean {
+  let ok = intlSupport.get(timeZone);
+  if (ok === undefined) {
+    try {
+      new Intl.DateTimeFormat('en-US', { timeZone });
+      ok = true;
+    } catch {
+      ok = false;
+    }
+    intlSupport.set(timeZone, ok);
+  }
+  return ok;
+}
+
+const runtimeZoneCache = new Map<string, string>();
+/** `resolveIntlZone` for the current runtime, cached per zone. */
+export function runtimeZone(timeZone: string): string {
+  let zone = runtimeZoneCache.get(timeZone);
+  if (zone === undefined) {
+    zone = resolveIntlZone(timeZone, intlSupports);
+    runtimeZoneCache.set(timeZone, zone);
+  }
+  return zone;
+}
 
 function getPartsFormatter(timeZone: string): Intl.DateTimeFormat {
   let formatter = formatterCache.get(timeZone);
@@ -120,8 +173,9 @@ export function parseFixedOffsetZone(timeZone: string): number | null {
 }
 
 /** Calendar fields for an instant in the given zone. */
-export function getZonedParts(instant: Instant, timeZone: string): ZonedParts {
+export function getZonedParts(instant: Instant, requestedZone: string): ZonedParts {
   const ms = toEpochMs(instant);
+  const timeZone = runtimeZone(requestedZone);
   const fixed = parseFixedOffsetZone(timeZone);
   if (fixed !== null) {
     const d = new Date(Math.floor(ms / 1000) * 1000 + fixed * MINUTE_MS);
