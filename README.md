@@ -146,7 +146,7 @@ app/                    Routes (Server Components by default)
   robots.ts  not-found.tsx  api/search-index/
 components/             Reusable UI (clock, city, timezone, timer, converter, search, layout, seo, ui)
 data/                   Structured records: cities + countries (generated), timezones (+ timezones-world), timers, converters, tools
-scripts/                generate-geo-data.mjs (GeoNames → generated data); fetch-city-images.mjs (Commons photos → public/cities + manifest); seo/audit-site.mts, seo/analyze-gsc.mts, seo/indexnow.mts
+scripts/                generate-geo-data.mjs (GeoNames → generated data); generate-icons.mjs (favicon.ico / PNG icons from app/icon.svg); fetch-city-images.mjs (Commons photos → public/cities + manifest); seo/audit-site.mts, seo/analyze-gsc.mts, seo/indexnow.mts
 lib/
   time/                 Time engine (pure, tested): zone, dst, zone-metadata, zone-names, transitions, sun, meeting
   tools/                Pure calculator logic (date difference, hours, military time, Unix timestamps, stopwatch, alarm)

@@ -76,6 +76,10 @@ The `card` utility = white background + `border` + `radius-lg` + `shadow-card`.
 
 Icons are hand-drawn 24×24 stroke SVGs in `components/ui/Icon.tsx`, with no icon dependency.
 
+## Favicons
+
+`app/icon.svg` is the single source of the icon (blue rounded square, white clock). `npm run icons` (`scripts/generate-icons.mjs`) renders the raster versions Next.js serves next to it: `app/favicon.ico` (16, 32, 48 px), `app/icon1.png` (96 px, a multiple of 48 px as Google asks) and `app/apple-icon.png` (180 px, full-bleed because iOS rounds the corners itself). Google shows the SVG in its results; Bing only shows raster icons, which is why these exist. Re-run the script after changing the SVG; `lib/seo/icons.test.ts` checks sizes and colour.
+
 ## City photos and the skyline fallback
 
 Priority cities (homepage, comparison and seed cities — the `data/sources/city-images.json` list) show a curated Wikimedia Commons photo: a 1600×400 WebP hero on the city page (`h-28`, `md:h-40`, `object-cover`, rendered with `next/image`, `priority` and `fetchPriority="high"` because it is the page's largest element and sits above the clock) and a 640×256 card crop on `CityCard` (lazy, decorative `alt=""` because the card text names the city). A small white credit chip in the hero's bottom-right corner links the author and licence to the Commons file page. Files are local and pre-sized (heroes 20–215 KB, cards under 55 KB; the unit test caps each at 260 KB), so there are no third-party requests and no layout shift (explicit width/height); `next/image` still serves the responsive variants.

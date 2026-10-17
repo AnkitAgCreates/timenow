@@ -15,6 +15,7 @@
     "seo:audit": "node scripts/seo/audit-site.mts",
     "seo:gsc": "node scripts/seo/analyze-gsc.mts",
     "seo:indexnow": "node scripts/seo/indexnow.mts",
+    "icons": "node scripts/generate-icons.mjs",
     "test:e2e": "playwright test",
     "verify:full": "npm run verify && npm run test:e2e"
   },

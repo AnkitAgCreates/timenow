@@ -19,6 +19,23 @@ test.describe('SEO with indexing enabled', () => {
     });
   }
 
+  test('the homepage declares SVG, ICO, PNG and Apple icons, and each one is served', async ({ page, request }) => {
+    await page.goto('/');
+    const links = await page.locator('head link[rel="icon"], head link[rel="apple-touch-icon"]').evaluateAll((els) =>
+      els.map((el) => ({ rel: el.getAttribute('rel'), href: el.getAttribute('href') ?? '', type: el.getAttribute('type'), sizes: el.getAttribute('sizes') })),
+    );
+    const find = (pattern: RegExp) => links.find((l) => pattern.test(l.href));
+    expect(find(/^\/favicon\.ico/), 'favicon.ico').toBeTruthy();
+    expect(find(/^\/icon\.svg/)?.type).toBe('image/svg+xml');
+    expect(find(/^\/icon1\.png/)?.sizes).toBe('96x96');
+    expect(links.find((l) => l.rel === 'apple-touch-icon')?.sizes).toBe('180x180');
+    for (const [href, type] of [['/favicon.ico', /image\/(x-icon|vnd\.microsoft\.icon)/], ['/icon1.png', /image\/png/], ['/apple-icon.png', /image\/png/]] as const) {
+      const res = await request.get(href);
+      expect(res.status(), href).toBe(200);
+      expect(res.headers()['content-type'], href).toMatch(type);
+    }
+  });
+
   test('robots.txt allows crawling and references the sitemap', async ({ request }) => {
     const body = await (await request.get('/robots.txt')).text();
     expect(body).toContain('Allow: /');
