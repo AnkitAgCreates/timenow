@@ -9,11 +9,14 @@
  *   app/icon1.png       96 x 96, a multiple of 48 px as Google asks for search results
  *   app/apple-icon.png  180 x 180, full-bleed square (iOS rounds the corners itself and
  *                       would fill transparent corners with black)
+ *   public/icons/icon-192.png, icon-512.png       web app manifest icons ("any")
+ *   public/icons/maskable-512.png                 full-bleed manifest icon ("maskable"): Android
+ *                       crops it to a circle or squircle; the clock sits inside the 80% safe zone
  *
  * Search engines differ: Google shows the SVG, Bing only picked up raster icons.
  * Re-run after changing app/icon.svg; lib/seo/icons.test.ts checks the outputs.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
@@ -79,11 +82,16 @@ async function ico(sizes) {
 
 const fullBleed = SVG.replace(/\srx="[^"]*"/, '');
 
+const square = (size) => render(fullBleed, size).flatten({ background: '#2563EB' }).png({ compressionLevel: 9 }).toBuffer();
 const outputs = [
   ['app/favicon.ico', await ico([16, 32, 48])],
   ['app/icon1.png', await render(SVG, 96).png({ compressionLevel: 9 }).toBuffer()],
-  ['app/apple-icon.png', await render(fullBleed, 180).flatten({ background: '#2563EB' }).png({ compressionLevel: 9 }).toBuffer()],
+  ['app/apple-icon.png', await square(180)],
+  ['public/icons/icon-192.png', await render(SVG, 192).png({ compressionLevel: 9 }).toBuffer()],
+  ['public/icons/icon-512.png', await render(SVG, 512).png({ compressionLevel: 9 }).toBuffer()],
+  ['public/icons/maskable-512.png', await square(512)],
 ];
+mkdirSync(path.join(ROOT, 'public/icons'), { recursive: true });
 for (const [file, buffer] of outputs) {
   writeFileSync(path.join(ROOT, file), buffer);
   console.log(`${file.padEnd(20)} ${buffer.length} bytes`);

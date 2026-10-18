@@ -2,8 +2,10 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
+import manifest, { MANIFEST_ICONS } from '@/app/manifest';
 
 const app = (file: string) => path.resolve(__dirname, '../../app', file);
+const pub = (src: string) => path.resolve(__dirname, '../../public', src.replace(/^\//, ''));
 const BRAND_BLUE = { r: 0x25, g: 0x63, b: 0xeb };
 
 /** Share of opaque pixels close to the brand blue: proves the raster is the real icon, not a blank. */
@@ -47,6 +49,29 @@ describe('raster favicons generated from app/icon.svg', () => {
     expect(await blueShare(apple)).toBeGreaterThan(0.6);
     // No transparent corners on the Apple icon (iOS would fill them with black).
     const { data } = await sharp(apple).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+    expect(data[3]).toBe(255);
+  });
+});
+
+describe('web app manifest', () => {
+  it('names the site, opens at the homepage and uses the site colours', () => {
+    const m = manifest();
+    expect(m.name).toBe('whattimein.world');
+    expect(m.short_name!.length).toBeLessThanOrEqual(12); // Android truncates longer home-screen labels
+    expect(m).toMatchObject({ id: '/', start_url: '/', scope: '/', display: 'standalone', background_color: '#ffffff', theme_color: '#ffffff' });
+  });
+
+  it('lists 192 px and 512 px icons plus a maskable 512 px icon, each matching its file', async () => {
+    const purposes = MANIFEST_ICONS.map((i) => `${i.sizes} ${i.purpose}`);
+    expect(purposes).toEqual(['192x192 any', '512x512 any', '512x512 maskable']);
+    for (const icon of MANIFEST_ICONS) {
+      const file = readFileSync(pub(icon.src));
+      const [w, h] = icon.sizes.split('x').map(Number);
+      expect(await sharp(file).metadata(), icon.src).toMatchObject({ format: 'png', width: w, height: h });
+      expect(await blueShare(file), icon.src).toBeGreaterThan(0.6);
+    }
+    // The maskable icon must be full-bleed: Android crops it, so no transparent corners.
+    const { data } = await sharp(readFileSync(pub('/icons/maskable-512.png'))).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
     expect(data[3]).toBe(255);
   });
 });

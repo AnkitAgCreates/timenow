@@ -29,6 +29,14 @@ test.describe('SEO with indexing enabled', () => {
     expect(find(/^\/icon\.svg/)?.type).toBe('image/svg+xml');
     expect(find(/^\/icon1\.png/)?.sizes).toBe('96x96');
     expect(links.find((l) => l.rel === 'apple-touch-icon')?.sizes).toBe('180x180');
+    // Web app manifest for Android home screens and installs.
+    await expect(page.locator('head link[rel="manifest"]')).toHaveAttribute('href', '/manifest.webmanifest');
+    const manifestRes = await request.get('/manifest.webmanifest');
+    expect(manifestRes.status()).toBe(200);
+    expect(manifestRes.headers()['content-type']).toMatch(/application\/manifest\+json/);
+    const manifest = (await manifestRes.json()) as { icons: Array<{ src: string; sizes: string; purpose?: string }> };
+    expect(manifest.icons.map((i) => `${i.sizes} ${i.purpose}`)).toEqual(['192x192 any', '512x512 any', '512x512 maskable']);
+    for (const icon of manifest.icons) expect((await request.get(icon.src)).status(), icon.src).toBe(200);
     for (const [href, type] of [['/favicon.ico', /image\/(x-icon|vnd\.microsoft\.icon)/], ['/icon1.png', /image\/png/], ['/apple-icon.png', /image\/png/]] as const) {
       const res = await request.get(href);
       expect(res.status(), href).toBe(200);

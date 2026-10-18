@@ -78,7 +78,7 @@ Icons are hand-drawn 24×24 stroke SVGs in `components/ui/Icon.tsx`, with no ico
 
 ## Favicons
 
-`app/icon.svg` is the single source of the icon (blue rounded square, white clock). `npm run icons` (`scripts/generate-icons.mjs`) renders the raster versions Next.js serves next to it: `app/favicon.ico` (16, 32, 48 px), `app/icon1.png` (96 px, a multiple of 48 px as Google asks) and `app/apple-icon.png` (180 px, full-bleed because iOS rounds the corners itself). Google shows the SVG in its results; Bing only shows raster icons, which is why these exist. Re-run the script after changing the SVG; `lib/seo/icons.test.ts` checks sizes and colour.
+`app/icon.svg` is the single source of the icon (blue rounded square, white clock). `npm run icons` (`scripts/generate-icons.mjs`) renders the raster versions Next.js serves next to it: `app/favicon.ico` (16, 32, 48 px), `app/icon1.png` (96 px, a multiple of 48 px as Google asks) and `app/apple-icon.png` (180 px, full-bleed because iOS rounds the corners itself). Google shows the SVG in its results; Bing only shows raster icons, which is why these exist. The same script writes the web app manifest icons in `public/icons/` (192 and 512 px, plus a full-bleed 512 px "maskable" icon that Android crops to its own shape; the clock sits inside the 80% safe zone), referenced from `app/manifest.ts` (`/manifest.webmanifest`: name, short name "whattimein", standalone display, white theme and background). Re-run the script after changing the SVG; `lib/seo/icons.test.ts` checks sizes and colour.
 
 ## City photos and the skyline fallback
 
