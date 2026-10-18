@@ -74,6 +74,11 @@ describe('clock changes guide', () => {
     expect(row(OCT_18_2026, 'AU')!.notes).toContain('Lord Howe Island moves its clocks by 30 minutes instead of 1 hour.');
   });
 
+  it('says so when a country has stopped changing its clocks', () => {
+    // Viewed in November 2022, just after Mexico abolished daylight saving time.
+    expect(row(Date.UTC(2022, 10, 15), 'MX')!.notes).toContain('The clocks last went back 1 hour, to UTC-6, on Oct 30, 2022. No further changes are scheduled.');
+  });
+
   it("describes Morocco's Ramadan rule only while tzdata still schedules a change", () => {
     // tzdata 2026a still predicts Ramadan changes for 2027; newer releases (Node 24.20's 2026c) end them in 2026.
     const morocco = row(OCT_18_2026, 'MA')!;
@@ -82,7 +87,7 @@ describe('clock changes guide', () => {
     if (scheduled) {
       expect(notes).toMatch(/Ramadan/);
     } else {
-      expect(notes).toMatch(/^No further changes are scheduled after [A-Z][a-z]{2} \d{1,2}, 2026\.$/);
+      expect(notes).toMatch(/^The clocks last went (back|forward) 1 hour, to UTC[+-]\d+, on [A-Z][a-z]{2} \d{1,2}, 2026\. No further changes are scheduled\.$/);
     }
   });
 

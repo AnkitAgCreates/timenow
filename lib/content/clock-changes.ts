@@ -9,7 +9,7 @@ import { getCity } from '@/lib/data/cities';
 import { getConverterPair } from '@/lib/data/converters';
 import { getPublishedCountries } from '@/lib/data/countries';
 import type { FaqItem } from '@/lib/seo/jsonld';
-import { DAY_MS, MINUTE_MS, formatDate, formatDuration, getTransitionsInYear, getUTCOffset, getZonedParts, type OffsetTransition } from '@/lib/time';
+import { DAY_MS, MINUTE_MS, formatDate, formatDuration, formatOffset, getTransitionsInYear, getUTCOffset, getZonedParts, type OffsetTransition } from '@/lib/time';
 import { getDifferencePeriods, toTransitionInfo, type TransitionInfo } from '@/lib/time/transitions';
 import type { Country } from '@/types/data';
 import { getCountryZoneGroups, type ZoneGroup } from './country';
@@ -126,7 +126,12 @@ export function getCountryChangeRows(now: number): CountryChangeRow[] {
     }
     // tzdata can end a country's changes (a rule abolished); then say so instead of describing the old rule.
     const ahead = reference.changes.some((c) => c.instant >= now);
-    if (!ahead) notes.push(`No further changes are scheduled after ${reference.changes[reference.changes.length - 1]!.dateShort}.`);
+    if (!ahead) {
+      const last = reference.changes[reference.changes.length - 1]!;
+      notes.push(
+        `The clocks last went ${last.direction} ${describeShift(last.shiftMinutes)}, to ${formatOffset(last.offsetAfter)}, on ${last.dateShort}. No further changes are scheduled.`,
+      );
+    }
     const note = NOTES[country.code];
     if (note && ahead) notes.push(note);
     rows.push({
