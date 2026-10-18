@@ -72,7 +72,18 @@ describe('clock changes guide', () => {
     // Easter Island's next changes (late Saturday night there), not the ones already past.
     expect(row(OCT_18_2026, 'CL')!.notes).toContain('Easter Island changes on other dates: back on Apr 3, 2027, forward on Sep 4, 2027.');
     expect(row(OCT_18_2026, 'AU')!.notes).toContain('Lord Howe Island moves its clocks by 30 minutes instead of 1 hour.');
-    expect(row(OCT_18_2026, 'MA')!.notes.join(' ')).toMatch(/Ramadan/);
+  });
+
+  it("describes Morocco's Ramadan rule only while tzdata still schedules a change", () => {
+    // tzdata 2026a still predicts Ramadan changes for 2027; newer releases (Node 24.20's 2026c) end them in 2026.
+    const morocco = row(OCT_18_2026, 'MA')!;
+    const scheduled = morocco.years.some((y) => [y.forward, y.back].some((c) => c !== null && c.instant >= OCT_18_2026));
+    const notes = morocco.notes.join(' ');
+    if (scheduled) {
+      expect(notes).toMatch(/Ramadan/);
+    } else {
+      expect(notes).toMatch(/^No further changes are scheduled after [A-Z][a-z]{2} \d{1,2}, 2026\.$/);
+    }
   });
 
   it('lists countries that never change, and keeps changing ones out', () => {
@@ -132,9 +143,13 @@ describe('clock changes guide', () => {
     expect(clockChangesDescription(OCT_18_2026).length).toBeLessThanOrEqual(160);
   });
 
-  it('starts the next year with Morocco when viewed in January', () => {
-    const next = getUpcomingChanges(Date.UTC(2027, 0, 10));
-    expect(next[0]).toMatchObject({ direction: 'back' });
-    expect(next[0]!.moves[0]!.countries.map((c) => c.country.code)).toEqual(['MA']);
+  it('rolls over to the next year when viewed in January', () => {
+    const jan = Date.UTC(2027, 0, 10);
+    const next = getUpcomingChanges(jan);
+    expect(next.every((m) => m.instant >= jan)).toBe(true);
+    expect(next[0]!.dateShort).toMatch(/, 2027$/);
+    const us = next.find((m) => m.moves.some((mv) => mv.countries.some((c) => c.country.code === 'US')))!;
+    expect(us).toMatchObject({ dateShort: 'Mar 14, 2027', direction: 'forward' });
+    expect(dates(row(jan, 'US'))).toEqual(['2027: +Mar 14, 2027 -Nov 7, 2027', '2028: +Mar 12, 2028 -Nov 5, 2028']);
   });
 });

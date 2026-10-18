@@ -124,8 +124,11 @@ export function getCountryChangeRows(now: number): CountryChangeRow[] {
         notes.push(`${groupLabel(other.group)} moves its clocks by ${describeShift(other.changes[0]!.shiftMinutes)} instead of ${describeShift(refShift)}.`);
       }
     }
+    // tzdata can end a country's changes (a rule abolished); then say so instead of describing the old rule.
+    const ahead = reference.changes.some((c) => c.instant >= now);
+    if (!ahead) notes.push(`No further changes are scheduled after ${reference.changes[reference.changes.length - 1]!.dateShort}.`);
     const note = NOTES[country.code];
-    if (note) notes.push(note);
+    if (note && ahead) notes.push(note);
     rows.push({
       country,
       years: years.map((year) => {
