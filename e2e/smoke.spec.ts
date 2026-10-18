@@ -222,3 +222,19 @@ test.describe('Time zones newer than some browsers know', () => {
     expect(pageErrors).toEqual([]);
   });
 });
+
+test.describe('Clock changes guide', () => {
+  test('shows the next change, a row per changing country and the countries that never change', async ({ page }) => {
+    await page.goto('/guides/clock-changes/');
+    const next = page.locator('[data-next-change]');
+    await expect(next).toContainText(/Next clock change · (today|tomorrow|in \d+ days)/);
+    await expect(next.locator('h2')).toHaveText(/^(Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday), [A-Z][a-z]+ \d{1,2}, \d{4}$/);
+    await expect(next.locator('a[href^="/countries/"]').first()).toBeVisible();
+    // Date cells or card lines use "Mon D" without the year (the column or line already names it).
+    const uk = page.locator('[data-change-row="GB"]:visible');
+    await expect(uk).toHaveCount(1);
+    await expect(uk).toContainText(/[A-Z][a-z]{2} \d{1,2}/);
+    await expect(page.locator('[data-no-change] a[href="/countries/india/"]')).toHaveCount(1);
+    await expect(page.locator('[data-change-row="IN"]')).toHaveCount(0);
+  });
+});

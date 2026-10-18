@@ -9,6 +9,7 @@ import { Logo } from './Logo';
 import { PRIMARY_NAV } from './navigation';
 
 const SECONDARY_LINKS = [
+  { label: 'When do the clocks change?', href: routes.clockChanges() },
   { label: 'Current time by country', href: routes.countriesHub() },
   { label: 'UTC time now', href: routes.utcHub() },
   { label: 'Current time in New York', href: routes.city('new-york') },

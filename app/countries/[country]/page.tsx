@@ -202,6 +202,15 @@ export default async function CountryPage({ params }: Props) {
             {multi
               ? `Zones are grouped by behaviour: standard offset and daylight saving rules. Offsets: ${groups.map((g) => formatOffset(g.standardOffset)).join(', ')}.`
               : `IANA time zone${country.zones.length > 1 ? 's' : ''}: ${country.zones.join(', ')}.`}
+            {groups.some((g) => g.daylightOffset !== null) && (
+              <>
+                {' '}
+                <Link href={routes.clockChanges()} className="underline hover:text-primary">
+                  When the clocks change in every country
+                </Link>
+                .
+              </>
+            )}
           </p>
         </Section>
 

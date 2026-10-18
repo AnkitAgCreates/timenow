@@ -9,6 +9,7 @@ export const REFERENCE_PAGES = [
   { path: '/about/', h1: 'About whattimein.world' },
   { path: '/privacy/', h1: 'Privacy Policy' },
   { path: '/contact/', h1: 'Contact' },
+  { path: '/guides/clock-changes/', h1: 'When do the clocks change?' },
 ] as const;
 
 /**

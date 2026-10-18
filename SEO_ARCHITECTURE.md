@@ -122,6 +122,10 @@ Global search is client-side over a static JSON index (`/api/search-index/`, `X-
 
 `lib/analytics.ts` `track()` is wired for `search_used`, `city_selected`, `timezone_selected`, `timer_started`, `timer_completed`, `converter_used`. GA4 loads only when `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set.
 
+## Clock changes guide
+
+`/guides/clock-changes/` (`app/guides/clock-changes/page.tsx`, content in `lib/content/clock-changes.ts`) answers "when do the clocks change" for the render year and the next: the next change with a countdown, every upcoming change grouped by date with the local clock moves, what happens on the night, time differences that shift (New York and London, London and Sydney, New York and New Delhi, Los Angeles and Tokyo), a row per changing country, the countries that never change, and FAQs with FAQPage schema. Everything is computed from the time engine at render time (ISR hourly), so the URL stays the same every year and the years roll over in January. Linked from the footer, the mobile menu and every country page with daylight saving time; in the `pages` sitemap. There is no `/guides/` hub yet: one guide alone would be a thin page.
+
 ## Homepage internal links
 
 The homepage directory (`components/home/WorldTimeDirectory.tsx`) links thirty high-value pages — ten cities, ten countries, ten abbreviation pages — with their names as anchor text, plus the three hubs. The lists are curated in data, not generated, so the homepage stays focused; it is the strongest internal-link source on the site and should keep pointing at the pages that matter most.

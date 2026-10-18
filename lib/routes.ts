@@ -26,6 +26,7 @@ export const routes = {
   about: () => '/about/',
   privacy: () => '/privacy/',
   contact: () => '/contact/',
+  clockChanges: () => '/guides/clock-changes/',
 } as const;
 
 /** Abbreviation entries served by a dedicated hub instead of /timezones/[slug]/. */

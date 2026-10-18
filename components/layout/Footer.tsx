@@ -15,6 +15,7 @@ const FOOTER_LINKS = [
 ];
 
 const SITE_LINKS = [
+  { label: 'Clock changes', href: routes.clockChanges() },
   { label: 'About', href: routes.about() },
   { label: 'Privacy', href: routes.privacy() },
   { label: 'Contact', href: routes.contact() },

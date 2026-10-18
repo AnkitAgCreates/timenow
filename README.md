@@ -101,6 +101,10 @@ The site is a standard Next.js build: static pages with hourly ISR, no custom se
 
 Until the domain is attached, keep `NEXT_PUBLIC_ALLOW_INDEXING` unset so the `*.vercel.app` deployment is never indexed as a duplicate.
 
+## Clock changes guide
+
+`/guides/clock-changes/` lists every daylight saving change in this year and the next, computed from the time engine (`lib/content/clock-changes.ts`, tests in `lib/content/clock-changes.test.ts`). Nothing in it is hardcoded except a note on Morocco's Ramadan rule and the English names of six island regions (`PLACE_NAMES`, e.g. Lord Howe Island), so it needs no yearly update. Each country is listed under its main zone's change; regions that change on another date or by another amount are named separately ("Australia (Lord Howe Island)").
+
 ## Homepage directory
 
 Below the popular-city cards, the homepage lists ten cities, ten countries and ten time zone abbreviations with a live weekday and time each and a link to the page (`components/home/WorldTimeDirectory.tsx`; lists in `data/cities.ts`, `data/countries.ts`, `data/timezones.ts`). Times use the existing live-clock machinery: filled before hydration by the inline bootstrap, then ticking from the shared store, following the 12/24-hour toggle. Abbreviations show their defined offset (EST = UTC-5), the same convention as their pages.
